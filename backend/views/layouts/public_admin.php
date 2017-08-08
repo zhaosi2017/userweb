@@ -42,13 +42,7 @@ $module = $this->context->module->id;
                     <a class="J_menuItem" href="<?= Url::to(['/default/index']) ?>"><i class="fa fa-home"></i> <span class="nav-label">首页</span></a>
                 </li>
 
-                <li class="<?php if(Yii::$app->controller->id == 'user'){ echo 'active';}?>">
-                    <a href="#"><span class="nav-label">用户管理</span><span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li class="<?php if(Yii::$app->controller->id == 'user' && Yii::$app->controller->action->id != 'login-logs'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/admin/index']) ?>">用户列表</a>
-                        <li class="<?php if(Yii::$app->controller->id == 'user' && Yii::$app->controller->action->id == 'login-logs' ){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/admin/login-logs']) ?>">用户登陆日志</a>
-                    </ul>
-                </li>
+
 
                 <li class="<?php if(Yii::$app->controller->id == 'role' || Yii::$app->controller->id =='manager' || Yii::$app->controller->id == 'login-logs' ){ echo 'active';}?>">
                     <a href="#"><span class="nav-label">后台用户管理</span><span class="fa arrow"></span></a>
@@ -59,7 +53,7 @@ $module = $this->context->module->id;
                     </ul>
                 </li>
                 <li class="<?php if(Yii::$app->controller->id == 'customer'  ){ echo 'active';}?>">
-                    <a href="#"><span class="nav-label">客服管理</span><span class="fa arrow"></span></a>
+                    <a href="#"><span class="nav-label">客户管理</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li class="<?php if(Yii::$app->controller->id == 'customer'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/customer/index']) ?>">客服管理</a>
                         </li>

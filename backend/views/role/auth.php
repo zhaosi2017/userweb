@@ -7,7 +7,7 @@ use yii\helpers\Html;
 $this->title = '权限设置角色: ' . $model->name ;
 
 
-$this->title = '防骚扰';
+$this->title = '权限授权';
 $this->params['breadcrumbs'][] = ['label' => '管理员角色', 'url' => ['index']];
 $this->params['breadcrumbs'][] = '权限授权' ;
 
@@ -70,10 +70,10 @@ $data = [
 
     ],
     [
-        'module' => '客服管理',
+        'module' => '客户管理',
         'items' => [
             [
-                'page_name' => '客服管理',
+                'page_name' => '客户管理',
                 'permission' => ['customer/index',2=>'customer/create',3=>'customer/update',5=>'customer/delete',],
             ],
         ],
