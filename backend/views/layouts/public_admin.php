@@ -58,6 +58,13 @@ $module = $this->context->module->id;
                         <li class="<?php if(Yii::$app->controller->id == 'login-logs'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/admin/login-logs']) ?>">登录日志</a>
                     </ul>
                 </li>
+                <li class="<?php if(Yii::$app->controller->id == 'customer'  ){ echo 'active';}?>">
+                    <a href="#"><span class="nav-label">客服管理</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if(Yii::$app->controller->id == 'customer'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/customer/index']) ?>">客服管理</a>
+                        </li>
+                    </ul>
+                </li>
 
 
             </ul>

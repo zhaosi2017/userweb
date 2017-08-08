@@ -131,6 +131,14 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('role/recover', 2, 'permission:role/recover', NULL, NULL, NULL, NULL),
 ('role/trash', 2, 'permission:role/trash', NULL, NULL, NULL, NULL),
 ('role/update', 2, 'permission:role/update', NULL, NULL, NULL, NULL);
+('customer/index', 2, 'permission:customer/index', NULL, NULL, NULL, NULL);
+('customer/create', 2, 'permission:customer/create', NULL, NULL, NULL, NULL);
+('customer/update', 2, 'permission:customer/update', NULL, NULL, NULL, NULL);
+('customer/view', 2, 'permission:customer/view', NULL, NULL, NULL, NULL);
+('customer/delete', 2, 'permission:customer/delete', NULL, NULL, NULL, NULL);
+
+
+
 
 -- --------------------------------------------------------
 

@@ -69,6 +69,16 @@ $data = [
         ],
 
     ],
+    [
+        'module' => '客服管理',
+        'items' => [
+            [
+                'page_name' => '客服管理',
+                'permission' => ['customer/index',2=>'customer/create',3=>'customer/update',5=>'customer/delete',],
+            ],
+        ],
+
+    ],
 
 ];
 ?>

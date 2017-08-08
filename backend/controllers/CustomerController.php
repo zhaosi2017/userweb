@@ -8,11 +8,11 @@ use backend\models\CustomerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use backend\controllers\PController;
 /**
  * CustomerController implements the CRUD actions for Customer model.
  */
-class CustomerController extends Controller
+class CustomerController extends PController
 {
     /**
      * @inheritdoc
