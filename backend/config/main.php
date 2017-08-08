@@ -14,6 +14,7 @@ return [
     'modules' => [
         'redactor' => 'yii\redactor\RedactorModule',
     ],
+    'defaultRoute'=>'default/index',
     'components' => [
         'request' => [
 //            'csrfParam' => '_csrf-backend',
