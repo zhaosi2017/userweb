@@ -3,7 +3,7 @@
 namespace backend\models;
 
 use Yii;
-
+use backend\models\GActiveRecord;
 /**
  * This is the model class for table "customer".
  *
@@ -19,8 +19,16 @@ use Yii;
  * @property integer $time
  * @property integer $admin_id
  */
-class Customer extends \yii\db\ActiveRecord
+class Customer extends GActiveRecord
 {
+    const GROUP_AGENCY = 1;
+    const COOPERATION_UNIT = 2;
+    const SOCIAL_CLIENTS = 3;
+    public static $customerType = [
+        self::GROUP_AGENCY     => '集团机构',
+        self::COOPERATION_UNIT => '合作单位',
+        self::SOCIAL_CLIENTS   => '社会客户',
+    ];
     /**
      * @inheritdoc
      */
@@ -48,16 +56,16 @@ class Customer extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'code' => 'Code',
-            'name' => 'Name',
-            'number' => 'Number',
-            'aide_name' => 'Aide Name',
-            'group_id' => 'Group ID',
-            'level' => 'Level',
-            'type' => 'Type',
+            'code' => '客户编号',
+            'name' => '客户主要名称',
+            'number' => '客户代号',
+            'aide_name' => '辅助名称',
+            'group_id' => '客户上级单位',
+            'level' => '级别',
+            'type' => '类型',
             'company' => 'Company',
-            'time' => 'Time',
-            'admin_id' => 'Admin ID',
+            'time' => '时间',
+            'admin_id' => '管理员ID',
         ];
     }
 

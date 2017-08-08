@@ -34,6 +34,7 @@ class PController extends Controller
         $arr = [
             'default/deny',
             'login/logout',
+            ''
         ];
 
 
