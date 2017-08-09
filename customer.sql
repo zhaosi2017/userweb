@@ -65,8 +65,10 @@ CREATE TABLE `agency` (
   `time` int(11) NOT NULL COMMENT '创建时间',
   `code` char(32) NOT NULL DEFAULT '' COMMENT '编号',
   `admin_id` int(11) NOT NULL COMMENT '创建者Id',
+  `update_id` int(11) NOT NULL COMMENT '修改者Id',
+  `status` tinyint(1) NULL NULL DEFAULT '0' COMMENT '状态：0 正常，1 失效',
   `create_at` int(11) NOT NULL COMMENT '创建时间',
-   `udapte_at` int(11) NOT NULL COMMENT '更新时间'
+   `update_at` int(11) NOT NULL COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -144,7 +146,9 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('agency/update', 2, 'permission:agency/update', NULL, NULL, NULL, NULL),
 ('agency/view', 2, 'permission:agency/view', NULL, NULL, NULL, NULL),
 ('agency/delete', 2, 'permission:agency/delete', NULL, NULL, NULL, NULL);
-
+('agency/trash', 2, 'permission:agency/trash', NULL, NULL, NULL, NULL);
+('agency/recover', 2, 'permission:agency/recover', NULL, NULL, NULL, NULL);
+('customer/agency-search', 2, 'permission:customer/agency-search', NULL, NULL, NULL, NULL);
 
 
 

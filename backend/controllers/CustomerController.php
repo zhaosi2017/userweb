@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\controllers\PController;
+use backend\models\AgencySearch;
 /**
  * CustomerController implements the CRUD actions for Customer model.
  */
@@ -121,4 +122,22 @@ class CustomerController extends PController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
+    public function actionAgencySearch()
+    {
+        $this->layout = '@app/views/layouts/list';
+        $searchModel = new AgencySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('agency_search', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+//    public function actionAgency()
+//    {
+//
+//    }
 }

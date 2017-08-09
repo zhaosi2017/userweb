@@ -44,8 +44,6 @@ $actionId = Yii::$app->requestedAction->id;
 
 
 
-
-
             [
                 'class' => 'yii\grid\DataColumn',
                 'header' => '上级单位',
@@ -70,7 +68,6 @@ $actionId = Yii::$app->requestedAction->id;
                     return $status;
                 },
             ],
-
             [
                 'class' => 'yii\grid\DataColumn',
                 'header' => '创建人／时间',

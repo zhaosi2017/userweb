@@ -24,6 +24,7 @@ $labels = [
     5 =>'删除',
     6 =>'防骚扰',
     7 =>'修改密码',
+    8 =>'选择上级单位'
 ];
 
 $data = [
@@ -74,11 +75,15 @@ $data = [
         'items' => [
             [
                 'page_name' => '客户管理',
-                'permission' => ['customer/index',2=>'customer/create',3=>'customer/update',5=>'customer/delete',],
+                'permission' => ['customer/index',2=>'customer/create',3=>'customer/update',5=>'customer/delete',8=>'customer/agency-search'],
             ],
             [
                 'page_name' => '机构管理',
                 'permission' => ['agency/index',2=>'agency/create',3=>'agency/update',5=>'agency/delete',],
+            ],
+            [
+                'page_name' => '机构管理-垃圾桶',
+                'permission' => ['agency/trash',4=>'agency/recover'],
             ],
         ],
 

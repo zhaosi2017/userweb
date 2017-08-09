@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="company-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => Yii::$app->requestedAction->id == 'index' ?['index']:['trash'],
         'method' => 'get',
         'options' => ['class'=>'form-inline'],
     ]); ?>
@@ -20,8 +20,9 @@ use yii\widgets\ActiveForm;
         <div class="col-lg-12">
             <div class="text-right no-padding">
                 <?= $form->field($model, 'search_type')->dropDownList([
-                    1 => '公司名称',
-                    2 => '上级公司',
+                    0 => '全部',
+                    1 => '单位名称',
+                    2 => '上级单位',
                 ])->label(false) ?>
                 <?= $form->field($model, 'search_keywords')->textInput()->label(false) ?>
                 <div class="form-group">

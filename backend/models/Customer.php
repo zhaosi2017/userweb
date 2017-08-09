@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 use backend\models\GActiveRecord;
+use backend\models\AgencySearch;
 /**
  * This is the model class for table "customer".
  *
