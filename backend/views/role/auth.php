@@ -76,6 +76,10 @@ $data = [
                 'page_name' => '客户管理',
                 'permission' => ['customer/index',2=>'customer/create',3=>'customer/update',5=>'customer/delete',],
             ],
+            [
+                'page_name' => '机构管理',
+                'permission' => ['agency/index',2=>'agency/create',3=>'agency/update',5=>'agency/delete',],
+            ],
         ],
 
     ],
