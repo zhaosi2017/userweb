@@ -63,7 +63,10 @@ CREATE TABLE `agency` (
   `name` char(32) NOT NULL DEFAULT '' COMMENT '单位名称',
   `parent_id` int(11) NOT NULL DEFAULT '0' COMMENT '上级机构的id',
   `time` int(11) NOT NULL COMMENT '创建时间',
-  `code` char(32) NOT NULL DEFAULT '' COMMENT '编号'
+  `code` char(32) NOT NULL DEFAULT '' COMMENT '编号',
+  `admin_id` int(11) NOT NULL COMMENT '创建者Id',
+  `create_at` int(11) NOT NULL COMMENT '创建时间',
+   `udapte_at` int(11) NOT NULL COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -130,12 +133,17 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('role/index', 2, 'permission:role/index', NULL, NULL, NULL, NULL),
 ('role/recover', 2, 'permission:role/recover', NULL, NULL, NULL, NULL),
 ('role/trash', 2, 'permission:role/trash', NULL, NULL, NULL, NULL),
-('role/update', 2, 'permission:role/update', NULL, NULL, NULL, NULL);
-('customer/index', 2, 'permission:customer/index', NULL, NULL, NULL, NULL);
-('customer/create', 2, 'permission:customer/create', NULL, NULL, NULL, NULL);
-('customer/update', 2, 'permission:customer/update', NULL, NULL, NULL, NULL);
-('customer/view', 2, 'permission:customer/view', NULL, NULL, NULL, NULL);
-('customer/delete', 2, 'permission:customer/delete', NULL, NULL, NULL, NULL);
+('role/update', 2, 'permission:role/update', NULL, NULL, NULL, NULL),
+('customer/index', 2, 'permission:customer/index', NULL, NULL, NULL, NULL),
+('customer/create', 2, 'permission:customer/create', NULL, NULL, NULL, NULL),
+('customer/update', 2, 'permission:customer/update', NULL, NULL, NULL, NULL),
+('customer/view', 2, 'permission:customer/view', NULL, NULL, NULL, NULL),
+('customer/delete', 2, 'permission:customer/delete', NULL, NULL, NULL, NULL),
+('agency/index', 2, 'permission:agency/index', NULL, NULL, NULL, NULL),
+('agency/create', 2, 'permission:agency/create', NULL, NULL, NULL, NULL),
+('agency/update', 2, 'permission:agency/update', NULL, NULL, NULL, NULL),
+('agency/view', 2, 'permission:agency/view', NULL, NULL, NULL, NULL),
+('agency/delete', 2, 'permission:agency/delete', NULL, NULL, NULL, NULL);
 
 
 

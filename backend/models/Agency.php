@@ -42,10 +42,15 @@ class Agency extends GActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'parent_id' => 'Parent ID',
-            'time' => 'Time',
-            'code' => 'Code',
+            'name' => '名称',
+            'parent_id' => '上级ID',
+            'time' => '时间',
+            'code' => '编号',
         ];
+    }
+
+    public function getAdmin()
+    {
+        return $this->hasOne(Admin::className(), ['id' => 'admin_id']);
     }
 }
