@@ -39,15 +39,63 @@ $actionId = Yii::$app->requestedAction->id;
             'code',
             'name',
             'number',
-            'aide_name',
-             'group_id',
-             'level',
-             'type',
-             'company',
-             'create_at:datetime',
-             'update_at:datetime',
-             'admin_id',
-             'update_id',
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '上级单位',
+                'value'  => function ($data)
+                {
+                    return $data['agency']['name'];
+                },
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '级别',
+                'value'  => function ($data)
+                {
+                    return \backend\models\Customer::$levelArr[$data->level];
+                },
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '级别',
+                'value'  => function ($data)
+                {
+                    return \backend\models\Customer::$customerType[$data->type];
+                },
+            ],
+            'company',
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '创建时间',
+                'value'  => function ($data)
+                {
+                    return date('Y-m-d H:i:s',$data->create_at);
+                },
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '最后修改时间',
+                'value'  => function ($data)
+                {
+                    return date('Y-m-d H:i:s',$data->update_at);
+                },
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '创建者',
+                'value'  => function ($data)
+                {
+                    return $data['admin']['account'];
+                },
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '修改者',
+                'value'  => function ($data)
+                {
+                    return $data['update']['account'];
+                },
+            ],
 
             ['class' => 'yii\grid\ActionColumn',
                 'header' => '操作',
