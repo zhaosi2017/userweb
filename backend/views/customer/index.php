@@ -32,7 +32,7 @@ $actionId = Yii::$app->requestedAction->id;
             'nextPageLabel'=>'下一页',
             'lastPageLabel'=>'末页',
             'maxButtonCount' => 9,
-        ],
+        ], 
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
