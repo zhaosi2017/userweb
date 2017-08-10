@@ -148,7 +148,8 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('agency/delete', 2, 'permission:agency/delete', NULL, NULL, NULL, NULL);
 ('agency/trash', 2, 'permission:agency/trash', NULL, NULL, NULL, NULL);
 ('agency/recover', 2, 'permission:agency/recover', NULL, NULL, NULL, NULL);
-('customer/agency-search', 2, 'permission:customer/agency-search', NULL, NULL, NULL, NULL);
+('customer/trash', 2, 'permission:customer/trash', NULL, NULL, NULL, NULL);
+('customer/recover', 2, 'permission:customer/recover', NULL, NULL, NULL, NULL);
 
 
 
@@ -220,8 +221,10 @@ CREATE TABLE `customer` (
   `level` int(11) NOT NULL COMMENT '级别',
   `type` int(11) NOT NULL COMMENT '客户类型',
   `company` char(32) DEFAULT NULL COMMENT '集团机构编号',
-  `time` int(11) NOT NULL COMMENT '录入时间',
-  `admin_id` int(11) NOT NULL COMMENT '录入管理员的id'
+  `status` tinyint(2) NOT NULL  DEFAULT '0' COMMENT '状态：0正常，1失效',
+  `admin_id` int(11) NOT NULL COMMENT '录入管理员的id',
+  `create_at` int(11) NOT NULL COMMENT '录入时间',
+  `update_at` int(11) NOT NULL COMMENT '修改时间',
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

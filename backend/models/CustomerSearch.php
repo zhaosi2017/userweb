@@ -18,7 +18,7 @@ class CustomerSearch extends Customer
     public function rules()
     {
         return [
-            [['id', 'group_id', 'level', 'type', 'time', 'admin_id'], 'integer'],
+            [['id', 'group_id', 'level', 'type', 'admin_id'], 'integer'],
             [['code', 'name', 'number', 'aide_name', 'company'], 'safe'],
         ];
     }
@@ -41,7 +41,9 @@ class CustomerSearch extends Customer
      */
     public function search($params)
     {
-        $query = Customer::find();
+        $query = Customer::find()->where([
+            'customer.status'=>\Yii::$app->requestedAction->id =='index'? Customer::NORMAL_STATUS: Customer::INVALID_STATUS,
+        ]);
 
         // add conditions that should always apply here
 
@@ -63,7 +65,6 @@ class CustomerSearch extends Customer
             'group_id' => $this->group_id,
             'level' => $this->level,
             'type' => $this->type,
-            'time' => $this->time,
             'admin_id' => $this->admin_id,
         ]);
 

@@ -11,11 +11,12 @@ use yii\widgets\ActiveForm;
 <div class="customer-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => [\Yii::$app->requestedAction->id == 'index'?'index':'trash'],
         'method' => 'get',
+        'options' => ['class'=>'form-inline'],
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <?php // $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'code') ?>
 

@@ -41,6 +41,9 @@ $actionId = Yii::$app->requestedAction->id;
             ['label' => '单位名称', 'attribute'=>'name', 'value' => function($model){
                 return $model->name;
             }],
+            ['label' => '单位编号', 'attribute'=>'code', 'value' => function($model){
+                return $model->code;
+            }],
 
 
 

@@ -7,22 +7,13 @@ use yii\widgets\DetailView;
 /* @var $model backend\models\Customer */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '客户', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="customer-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?= Html::a('返回列表', ['index'], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -33,12 +24,31 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'number',
             'aide_name',
-            'group_id',
-            'level',
-            'type',
+            [                      // the owner name of the model
+              'label' => 'group_id',
+             'value' => $model->agency->name,
+            ],
+            [                      // the owner name of the model
+                'label' => 'level',
+                'value' => \backend\models\Customer::$levelArr[$model->level],
+            ],
+            [                      // the owner name of the model
+                'label' => 'type',
+                'value' => \backend\models\Customer::$customerType[$model->type],
+            ],
             'company',
-            'time:datetime',
-            'admin_id',
+            [                      // the owner name of the model
+                'label' => 'admin_id',
+                'value' => $model->admin->account,
+            ],
+            [                      // the owner name of the model
+                'label' => 'create_at',
+                'value' => date('Y-m-d H:i:s',$model->create_at),
+            ],
+            [                      // the owner name of the model
+                'label' => 'update_at',
+                'value' => date('Y-m-d H:i:s',$model->update_at),
+            ],
         ],
     ]) ?>
 

@@ -26,6 +26,8 @@ class Agency extends GActiveRecord
         SELF::INVALID_STATUS => '失效状态',
     ];
 
+    private $codeA = 'A';
+
     /**
      * @inheritdoc
      */
@@ -40,11 +42,11 @@ class Agency extends GActiveRecord
     public function rules()
     {
         return [
-            [['parent_id', 'time','status','update_id'], 'integer'],
-            [['time'], 'required'],
-            [['name', 'code'], 'string', 'max' => 32],
+            [['parent_id','status','update_id'], 'integer'],
+            [['name'], 'string', 'max' => 32],
             ['name','checkName','on'=>['create']],
             ['name','validateName','on'=>['update']],
+            [['code'],'unique','on'=>['insert_update_code']],
         ];
     }
 
@@ -52,8 +54,9 @@ class Agency extends GActiveRecord
     {
         $scenarios = parent::scenarios();
         $self = [
-            'create'=>['parent_id','time','name','code','status'],
-            'udpate'=>['parent_id','time','name','code','status','udpate_id'],
+            'create'=>['parent_id','name','status'],
+            'udpate'=>['parent_id','name','code','status','udpate_id'],
+            'insert_update_code'=>['code'],
         ];
         return array_merge($scenarios,$self);
     }
@@ -67,9 +70,11 @@ class Agency extends GActiveRecord
             'id' => 'ID',
             'name' => '名称',
             'parent_id' => '上级ID',
-            'time' => '时间',
+            'create_at' => '创建时间',
+            'udpate_at' => '更新时间',
             'code' => '编号',
-            'status'=>'状态'
+            'status'=>'状态',
+            'update_id'=>'更新者ID',
         ];
     }
 
@@ -101,17 +106,23 @@ class Agency extends GActiveRecord
     {
 
         $this->setScenario('create');
-        $this->update_at = $this->time  = $this->create_at=time();
         $this->admin_id = Yii::$app->user->id? Yii::$app->user->id:0;
-        $this->code = 'A'.$this->makeCode();
-        return $this->save();
+        if($this->save()){
+            $this->setScenario('insert_update_code');
+            $this->code = $this->makeCode();
+            $this->update();
+            return true;
+        }
+        return false;
+
     }
 
     public function beforeSave($insert)
     {
         if($this->isNewRecord)
         {
-            $this->admin_id = Yii::$app->user->id? Yii::$app->user->id:0;
+            $this->admin_id  =  $this->update_id  = Yii::$app->user->id? Yii::$app->user->id:0;
+            $this->update_at =  $this->create_at = time();
         }else{
             $this->update_id = Yii::$app->user->id? Yii::$app->user->id:0;
             $this->update_at = time();
@@ -119,11 +130,10 @@ class Agency extends GActiveRecord
         return true;
     }
 
+    //机构编号生成函数
     private function makeCode()
     {
-        $model = new  Agency();
-        $count = $model->find()->count();
-        return date('YmdHis').rand(1000,9999).$count;
+       return $this->codeA.(10000 + $this->id);
     }
     public function getAdmin()
     {

@@ -56,7 +56,7 @@ $module = $this->context->module->id;
                     <a href="#"><span class="nav-label">客户管理</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li class="<?php if(Yii::$app->controller->id == 'customer'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/customer/index']) ?>">客服管理</a>
-                        <li class="<?php if(Yii::$app->controller->id == 'agency'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/agency/index']) ?>">机构管理</a>
+                        <li class="<?php if(Yii::$app->controller->id == 'agency'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/agency/index']) ?>">单位管理</a>
                         </li>
                     </ul>
                 </li>

@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
         <div class="col-sm-6">
             <div class="text-right no-padding">
                 <?= $form->field($model, 'search_type')->dropDownList([
-                    1 => '产品名称&编号'
+                    1 => '单位名称&编号'
                 ])->label(false) ?>
                 <?= $form->field($model, 'search_keywords')->textInput()->label(false) ?>
                 <div class="form-group">

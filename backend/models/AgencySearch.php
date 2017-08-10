@@ -50,9 +50,13 @@ class AgencySearch extends Agency
      */
     public function search($params)
     {
+
+        $status = \Yii::$app->requestedAction->id == 'index' ? 0 : 1;
+        $status = isset($params['status']) && $params['status'] === 0 ? 0: $status;
+
         $query = Agency::find()
             ->where([
-            'agency.status'=>\Yii::$app->requestedAction->id == 'index' ? 0 : 1,
+            'agency.status'=>$status,
         ]);
 
         $query->joinWith('admin');
@@ -96,14 +100,29 @@ class AgencySearch extends Agency
         $query->andFilterWhere([
             'id' => $this->id,
             'parent_id' => $this->parent_id,
-            'time' => $this->time,
+
 
         ]);
 
+
         $this->search_type ==1 && strlen($this->search_keywords)>0 && $query->andFilterWhere(['in', 'agency.id', $this->searchIds($this->search_keywords)]);
         $this->search_type ==2 && strlen($this->search_keywords)>0 && $query->andFilterWhere(['in', 'agency.parent_id', $this->searchParents($this->search_keywords)]);
-
+        isset($params['status']) && $params['status'] === 0 && $query->orFilterWhere(['in','agency.id',$this->seachIDS($this->search_keywords)]);
         return $dataProvider;
+    }
+
+    public function seachIDS($searchWords)
+    {
+        $ids = [0];
+        $query = $this::find()->select(['code','id'])->all();
+        foreach ($query as $row)
+        {
+            $pos = strpos($row['code'],$searchWords);
+            if(is_int($pos)){
+                $ids[] = $row['id'];
+            }
+        }
+        return $ids;
     }
 
     public function searchIds($searchWords)
