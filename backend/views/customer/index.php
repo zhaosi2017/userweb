@@ -13,7 +13,6 @@ $actionId = Yii::$app->requestedAction->id;
 ?>
 <div class="customer-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -32,7 +31,7 @@ $actionId = Yii::$app->requestedAction->id;
             'nextPageLabel'=>'下一页',
             'lastPageLabel'=>'末页',
             'maxButtonCount' => 9,
-        ], 
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',

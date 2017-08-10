@@ -44,15 +44,15 @@ $module = $this->context->module->id;
 
 
 
-                <li class="<?php if(Yii::$app->controller->id == 'role' || Yii::$app->controller->id =='manager' || Yii::$app->controller->id == 'login-logs' ){ echo 'active';}?>">
+                <li class="<?php if(Yii::$app->controller->id == 'role' || Yii::$app->controller->id =='admin' || Yii::$app->controller->id == 'login-logs' ){ echo 'active';}else{ echo '';}?>">
                     <a href="#"><span class="nav-label">后台用户管理</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li class="<?php if(Yii::$app->controller->id == 'role'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/role/index']) ?>">管理员角色</a>
-                        <li class="<?php if(Yii::$app->controller->id == 'manager'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/admin/index']) ?>">管理员列表</a>
+                        <li class="<?php if(Yii::$app->controller->id == 'admin'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/admin/index']) ?>">管理员列表</a>
                         <li class="<?php if(Yii::$app->controller->id == 'login-logs'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/admin/login-logs']) ?>">登录日志</a>
                     </ul>
                 </li>
-                <li class="<?php if(Yii::$app->controller->id == 'customer'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}?>">
+                <li class="<?php if(Yii::$app->controller->id == 'customer'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}else{ echo '';}?>">
                     <a href="#"><span class="nav-label">客户管理</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li class="<?php if(Yii::$app->controller->id == 'customer'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/customer/index']) ?>">客服管理</a>

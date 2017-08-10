@@ -13,7 +13,6 @@ $actionId = Yii::$app->requestedAction->id;
 ?>
 <div class="customer-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
     <p>
         <?= Html::a('单位列表', ['index'], ['class' => $actionId=='trash' ? 'btn btn-outline btn-default' : 'btn btn-primary']) ?>
