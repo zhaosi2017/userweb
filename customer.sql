@@ -63,7 +63,12 @@ CREATE TABLE `agency` (
   `name` char(32) NOT NULL DEFAULT '' COMMENT '单位名称',
   `parent_id` int(11) NOT NULL DEFAULT '0' COMMENT '上级机构的id',
   `time` int(11) NOT NULL COMMENT '创建时间',
-  `code` char(32) NOT NULL DEFAULT '' COMMENT '编号'
+  `code` char(32) NOT NULL DEFAULT '' COMMENT '编号',
+  `admin_id` int(11) NOT NULL COMMENT '创建者Id',
+  `update_id` int(11) NOT NULL COMMENT '修改者Id',
+  `status` tinyint(1) NULL NULL DEFAULT '0' COMMENT '状态：0 正常，1 失效',
+  `create_at` int(11) NOT NULL COMMENT '创建时间',
+   `update_at` int(11) NOT NULL COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -130,13 +135,21 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('role/index', 2, 'permission:role/index', NULL, NULL, NULL, NULL),
 ('role/recover', 2, 'permission:role/recover', NULL, NULL, NULL, NULL),
 ('role/trash', 2, 'permission:role/trash', NULL, NULL, NULL, NULL),
-('role/update', 2, 'permission:role/update', NULL, NULL, NULL, NULL);
-('customer/index', 2, 'permission:customer/index', NULL, NULL, NULL, NULL);
-('customer/create', 2, 'permission:customer/create', NULL, NULL, NULL, NULL);
-('customer/update', 2, 'permission:customer/update', NULL, NULL, NULL, NULL);
-('customer/view', 2, 'permission:customer/view', NULL, NULL, NULL, NULL);
-('customer/delete', 2, 'permission:customer/delete', NULL, NULL, NULL, NULL);
-
+('role/update', 2, 'permission:role/update', NULL, NULL, NULL, NULL),
+('customer/index', 2, 'permission:customer/index', NULL, NULL, NULL, NULL),
+('customer/create', 2, 'permission:customer/create', NULL, NULL, NULL, NULL),
+('customer/update', 2, 'permission:customer/update', NULL, NULL, NULL, NULL),
+('customer/view', 2, 'permission:customer/view', NULL, NULL, NULL, NULL),
+('customer/delete', 2, 'permission:customer/delete', NULL, NULL, NULL, NULL),
+('agency/index', 2, 'permission:agency/index', NULL, NULL, NULL, NULL),
+('agency/create', 2, 'permission:agency/create', NULL, NULL, NULL, NULL),
+('agency/update', 2, 'permission:agency/update', NULL, NULL, NULL, NULL),
+('agency/view', 2, 'permission:agency/view', NULL, NULL, NULL, NULL),
+('agency/delete', 2, 'permission:agency/delete', NULL, NULL, NULL, NULL);
+('agency/trash', 2, 'permission:agency/trash', NULL, NULL, NULL, NULL);
+('agency/recover', 2, 'permission:agency/recover', NULL, NULL, NULL, NULL);
+('customer/trash', 2, 'permission:customer/trash', NULL, NULL, NULL, NULL);
+('customer/recover', 2, 'permission:customer/recover', NULL, NULL, NULL, NULL);
 
 
 
@@ -208,8 +221,10 @@ CREATE TABLE `customer` (
   `level` int(11) NOT NULL COMMENT '级别',
   `type` int(11) NOT NULL COMMENT '客户类型',
   `company` char(32) DEFAULT NULL COMMENT '集团机构编号',
-  `time` int(11) NOT NULL COMMENT '录入时间',
-  `admin_id` int(11) NOT NULL COMMENT '录入管理员的id'
+  `status` tinyint(2) NOT NULL  DEFAULT '0' COMMENT '状态：0正常，1失效',
+  `admin_id` int(11) NOT NULL COMMENT '录入管理员的id',
+  `create_at` int(11) NOT NULL COMMENT '录入时间',
+  `update_at` int(11) NOT NULL COMMENT '修改时间',
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

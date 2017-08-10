@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\Agency;
 use Yii;
 use backend\models\Customer;
 use backend\models\CustomerSearch;
@@ -9,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\controllers\PController;
+use backend\models\AgencySearch;
 /**
  * CustomerController implements the CRUD actions for Customer model.
  */
@@ -65,8 +67,17 @@ class CustomerController extends PController
     {
         $model = new Customer();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) ) {
+
+            if( $model->create()){
+                $model->sendSuccess();
+                return $this->redirect(['index']);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -101,9 +112,20 @@ class CustomerController extends PController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->setScenario('delete');
+        $model->status = Customer::INVALID_STATUS;
+        $model->save();
         return $this->redirect(['index']);
+    }
+
+    public function actionRecover($id)
+    {
+        $model = $this->findModel($id);
+        $model->setScenario('delete');
+        $model->status = Customer::NORMAL_STATUS;
+        $model->save();
+        return $this->redirect(['trash']);
     }
 
     /**
@@ -120,5 +142,32 @@ class CustomerController extends PController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+
+    public function actionAgencySearch()
+    {
+        $this->layout = '@app/views/layouts/list';
+        $searchModel = new AgencySearch();
+        $_GET['status']=0;
+//        = Agency::NORMAL_STATUS;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('agency_search', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    public function actionTrash()
+    {
+        $searchModel = new CustomerSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('trash', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }
