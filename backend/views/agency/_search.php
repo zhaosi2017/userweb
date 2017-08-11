@@ -23,6 +23,7 @@ use yii\widgets\ActiveForm;
                     0 => '全部',
                     1 => '单位名称',
                     2 => '上级单位',
+                    3 => '单位编号',
                 ])->label(false) ?>
                 <?= $form->field($model, 'search_keywords')->textInput()->label(false) ?>
                 <div class="form-group">

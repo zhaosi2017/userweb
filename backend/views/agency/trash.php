@@ -42,7 +42,9 @@ $actionId = Yii::$app->requestedAction->id;
                 return $model->name;
             }],
 
-
+            ['label' => '单位编号', 'attribute'=>'code', 'value' => function($model){
+                return $model->code;
+            }],
 
             [
                 'class' => 'yii\grid\DataColumn',

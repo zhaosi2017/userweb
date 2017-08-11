@@ -149,8 +149,8 @@ class CustomerController extends PController
     {
         $this->layout = '@app/views/layouts/list';
         $searchModel = new AgencySearch();
-        $_GET['status']=0;
-//        = Agency::NORMAL_STATUS;
+        $_GET['status']= Agency::NORMAL_STATUS;
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('agency_search', [

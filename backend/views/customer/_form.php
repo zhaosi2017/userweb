@@ -36,13 +36,17 @@ use yii\redactor\widgets\Redactor;
 
     <?= $form->field($model, 'aide_name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'group_id')->hiddenInput()->label(false) ?>
+
     <div class="form-group field-task-product-btn">
-        <label class="col-sm-2 " for="task-product-btn">上级单位</label>
+        <label class="col-sm-2 " for="task-product-btn">客户上级单位</label>
         <div class="col-sm-4"><input type="button" id="task-product-btn" class="btn btn-block btn-outline btn-primary" value="选择">
-            <span class="help-block m-b-none" id="product-name-number">单位名称(编号)</span>
+            <span class="help-block m-b-none" id="product-name-number"><?php if($model->isNewRecord){ echo  '单位名称(编号)';}else{echo $model->agency->name.'('.$model->agency->code.')';}?></span>
         </div>
     </div>
+        <?= $form->field($model, 'group_id',[
+                'template' => "{label}\n<div class=\"col-sm-12\">{input}\n<div class=\"col-sm-12\"></div><span class=\"col-sm-2\"></span><span class=\" col-sm-4 help-block m-b-none\" style=\"padding-left: 2px;\">{error}</span></div>",
+
+        ])->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'level')->dropDownList(\backend\models\Customer::$levelArr) ?>
 
@@ -52,7 +56,7 @@ use yii\redactor\widgets\Redactor;
 
     <div class="col-sm-12"></div>
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? '添加' : '修改', ['class' => 'btn btn-primary']) ?>
         <?= Html::a('返回', ['index'], ['class' => 'btn btn-primary']) ?>
 
     </div>
