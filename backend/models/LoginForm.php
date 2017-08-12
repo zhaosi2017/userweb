@@ -88,6 +88,7 @@ class LoginForm extends Model
 //            $this->recordIp();
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 *30 : 0);
         } else {
+
             return false;
         }
     }

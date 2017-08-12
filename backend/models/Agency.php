@@ -26,6 +26,7 @@ class Agency extends GActiveRecord
         SELF::INVALID_STATUS => '失效状态',
     ];
 
+    private $initCode = 9999;
     private $codeA = 'A';
 
     /**
@@ -133,7 +134,7 @@ class Agency extends GActiveRecord
     //机构编号生成函数
     private function makeCode()
     {
-       return $this->codeA.(10000 + $this->id);
+       return $this->codeA.($this->initCode + $this->id);
     }
     public function getAdmin()
     {

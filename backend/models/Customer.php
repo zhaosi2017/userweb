@@ -41,6 +41,7 @@ class Customer extends GActiveRecord
     const INVALID_STATUS = 1;
 
     //客户编号的默认首字符
+    private $initCode = 9999;
     private $codeC = 'C';
 
     public static $customerType = [
@@ -128,7 +129,7 @@ class Customer extends GActiveRecord
 
         if($this->save())
         {
-            $this->code = $this->codeC.(10000 + $this->id) ;
+            $this->code = $this->codeC.($this->initCode + $this->id) ;
             $this->setScenario('insert_update_code');
             $this->update();
             return true;
@@ -142,7 +143,6 @@ class Customer extends GActiveRecord
     {
        if($this->isNewRecord)
        {
-
            $this->update_at = $this->create_at = time();
            $this->admin_id = Yii::$app->user->id ? Yii::$app->user->id: 0;
            $this->update_id = Yii::$app->user->id ? Yii::$app->user->id: 0;

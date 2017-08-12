@@ -53,7 +53,7 @@ class AgencySearch extends Agency
 
         $status = \Yii::$app->requestedAction->id == 'index' ? 0 : 1;
         $status = isset($params['status']) && $params['status'] === 0 ? 0: $status;
-        
+
         $query = Agency::find()
             ->where([
             'agency.status'=>$status,
