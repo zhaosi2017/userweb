@@ -95,4 +95,16 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+    /**
+     * 测试.
+     */
+    public function actionTest()
+    {
+        $data = \PHPClient\Text::instance('testService')->setClass('Test_Read')->getUsersByCond(array('id >' => 0));
+        echo '<pre>';
+        var_dump($data);
+        die();
+    }
+
 }
