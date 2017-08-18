@@ -242,6 +242,53 @@ Returns current WebDriver session for saving
  * `return` RemoteWebDriver
 
 
+### _capabilities
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Change capabilities of WebDriver. Should be executed before starting a new browser session.
+This method expects a function to be passed which returns array or [WebDriver Desired Capabilities](https://github.com/facebook/php-webdriver/blob/community/lib/Remote/DesiredCapabilities.php) object.
+Additional [Chrome options](https://github.com/facebook/php-webdriver/wiki/ChromeOptions) (like adding extensions) can be passed as well.
+
+```php
+<?php // in helper
+public function _before(TestInterface $test)
+{
+    $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) {
+        // or new \Facebook\WebDriver\Remote\DesiredCapabilities();
+        return \Facebook\WebDriver\Remote\DesiredCapabilities::firefox();
+    });
+}
+```
+
+to make this work load `\Helper\Acceptance` before `WebDriver` in `acceptance.suite.yml`:
+
+```yaml
+modules:
+    enabled:
+        - \Helper\Acceptance
+        - WebDriver
+```
+
+For instance, [**BrowserStack** cloud service](https://www.browserstack.com/automate/capabilities) may require a test name to be set in capabilities.
+This is how it can be done via `_capabilities` method from `Helper\Acceptance`:
+
+```php
+<?php // inside Helper\Acceptance
+public function _before(TestInterface $test)
+{
+     $name = $test->getMetadata()->getName();
+     $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) use ($name) {
+         $currentCapabilities['name'] = $name;
+         return $currentCapabilities;
+     });
+}
+```
+In this case, please ensure that `\Helper\Acceptance` is loaded before WebDriver so new capabilities could be applied.
+
+ * `param \Closure` $capabilityFunction
+
+
 ### _closeSession
 
 *hidden API method, expected to be used from Helper classes*
@@ -461,16 +508,6 @@ $I->appendField('#myTextField', 'appended');
  * `param string` $field
  * `param string` $value
 @throws \Codeception\Exception\ElementNotFound
-
-
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
 
 
 ### attachFile
@@ -1903,7 +1940,7 @@ Unselect an option in the given select box.
  
 Wait for $timeout seconds.
 
- * `param int` $timeout secs
+ * `param int|float` $timeout secs
 @throws \Codeception\Exception\TestRuntimeException
 
 

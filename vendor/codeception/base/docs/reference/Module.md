@@ -245,7 +245,7 @@ public function _beforeSuite($settings = []) {
 
 #### assertArraySubset()
 
- *public* assertArraySubset($subset, $array, $strict = null, $message = null) 
+ *protected* assertArraySubset($subset, $array, $strict = null, $message = null) 
 
 Checks that array contains subset.
 
