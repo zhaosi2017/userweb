@@ -2,7 +2,7 @@
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 
-define ('APP_ROOT', dirname(__FILE__) .DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'vendor' );
+define ('APP_ROOT', dirname(dirname(__FILE__)) .DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'vendor' );
 require_once(APP_ROOT . '/Bootstrap/Autoloader.php');
 \Bootstrap\Autoloader::instance()->init();
 
