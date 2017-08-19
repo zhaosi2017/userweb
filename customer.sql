@@ -46,8 +46,7 @@ CREATE TABLE `admin` (
 
 --
 -- 转存表中的数据 `admin`
---
-
+--test1234, 11111111a,  test12345, 11111111a
 INSERT INTO `admin` (`id`, `auth_key`, `password`, `account`, `nickname`, `role_id`, `status`, `remark`, `login_ip`, `create_id`, `update_id`, `create_at`, `update_at`) VALUES
 (1, '7xRfIO2V7q2HT9KWQhGz_PwBM8hw5Nlf', '$2y$13$v3XDsSgnyzeo5xAU2fd4k.eixOVhf/jWBRHPNus3.8OSu.mITSMXu', 'Vt67B9CTlxyRq51s5y0N5TRhYjljYTNhZmMzOTU2NTk5NTIzNGYxOWU2ZjgwZTQ2MDQ4ZDY0NmYyOTYyNTEwMTdkNThkNzRhNzgxMDRjZTCEmHmH4RMkRT0Xk5Y0Rbv0KzaMaoJxRyL69JVLpskLTQ==', 'test1234', 1, 0, NULL, '', 5, 5, 1502097331, 1502097331),
 (2, 'rDsmVpokHMaM8GIKvvPThQGAMnZs3SOa', '$2y$13$v3XDsSgnyzeo5xAU2fd4k.eixOVhf/jWBRHPNus3.8OSu.mITSMXu', 'pyruYL33F6x52+LUYdYGnDMzODc3YjU3MjMyOGNiNmQ1N2EwOThlYTE0NjkzNDIyMGFiZWI3M2ZkOWZhZDI2MmIyYTU2ZTQ2OTVmNGExZjWktOubGDcw3/W1NZKnKnpYX3H6DVS7bER3/xdpGgxsKQ==', 'sdf', 2, 0, '<p>sdf</p>', '127.0.0.1', 0, 5, 1502096312, 1502101469);
