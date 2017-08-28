@@ -15,8 +15,11 @@ return [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
+        'response'=>[
+            'format'=>yii\web\Response::FORMAT_JSON
+        ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'frontend\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
@@ -24,6 +27,8 @@ return [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
         ],
+        'db' => require(__DIR__ . '/db.php'),
+        'redis' => require(__DIR__ . '/redis.php'),
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

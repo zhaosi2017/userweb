@@ -10,5 +10,8 @@ use yii\web\Controller;
  */
 class AuthController extends Controller
 {
-
+    public function jsonResponse($data,$message,$status = 0)
+    {
+        return ['data'=>$data,'message'=>$message,'status'=>$status];
+    }
 }

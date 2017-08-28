@@ -2,6 +2,12 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\db\Exception;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\helpers\Url;
+use frontend\models\User;
+
 class UserController extends AuthController
 {
 
@@ -19,7 +25,7 @@ class UserController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['registerUser'],
+                        'actions' => ['register-user','login','register'],
                         'roles' => ['?'],
                     ],
                     [
@@ -38,6 +44,9 @@ class UserController extends AuthController
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['post'],
+                    'register-user'=>['post'],
+                    'login'=>['post'],
+                    'register'=>['post'],
                 ],
             ],
         ];
@@ -48,14 +57,64 @@ class UserController extends AuthController
      */
     public function actionRegisterUser()
     {
-        $postData = Yii::$app->request->post();
-        try{
-            $result = \PHPClient\Text::instance('userCenter')->setClass('UserCenter_Userweb_Write_User')->resgisterUser($postData);
-            if ($result) {
+        $postData = file_get_contents('php://input');
+        $postData = json_decode($postData, true);
 
-            }
-        } catch (\Exception $e) {
-            return '网络异常, 请稍后再试!';
+        try {
+            $model = new User();
+            $model->country_code = isset($postData['country_code']) ? $postData['country_code'] : '';
+            $model->phone_number = isset($postData['phone_number']) ? $postData['phone_number'] : '';
+            $model->password = isset($postData['password']) ? $postData['password'] : '';
+            $veryCode = isset($postData['code']) ? $postData['code']:'';
+            return  $model->registerUser($veryCode);
+
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1);
+        }
+    }
+
+    public function actionRegister()
+    {
+        $postData = file_get_contents('php://input');
+        $postData = json_decode($postData,true);
+
+        try{
+            $model = new User();
+            $model->country_code = isset($postData['country_code'])?$postData['country_code']:'';
+            $model->phone_number = isset($postData['phone_number'])?$postData['phone_number']:'';
+            $model->password = isset($postData['password'])?$postData['password']:'';
+            return $model->Register();
+
+        }catch (Exception $e){
+            return $this->jsonResponse('',$e->getMessage(),1);
+        }
+        catch (\Exception $e) {
+             return $this->jsonResponse('',$e->getMessage(),1);
+        }
+    }
+
+    public function actionLogin()
+    {
+        $postData = file_get_contents('php://input');
+        $postData = json_decode($postData,true);
+
+        try {
+
+            $model = new User();
+            $model->country_code = isset($postData['country_code'])?$postData['country_code']:'';
+            $model->phone_number = isset($postData['phone_number'])?$postData['phone_number']:'';
+            $model->password = isset($postData['password'])?$postData['password']:'';
+            return $model->login($postData);
+
+
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1);
+        }
+        catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1);
         }
     }
 

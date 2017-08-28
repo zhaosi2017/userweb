@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "kartik-v/yii2-widget-select2": "*",
         "yiidoc/yii2-redactor": "*",
-        "xiaogouxo/yii2-ip2region": "dev-master"
+        "xiaogouxo/yii2-ip2region": "dev-master",
+        "yiisoft/yii2-redis": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
