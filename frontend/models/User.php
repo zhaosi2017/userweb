@@ -31,8 +31,7 @@ class User extends FActiveRecord implements IdentityInterface
     {
         return '{{user}}';
     }
-
-
+    
 
     /**
      * @inheritdoc
