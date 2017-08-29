@@ -24,7 +24,7 @@ class User extends FActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
-    const INIT_YOUCODE = '0000';
+    const INIT_YOUCODE = '999999';
     /**
      * @inheritdoc
      */
@@ -52,6 +52,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['country_code','integer'],
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'{attribute}必须为4到11位纯数字'],
             ['phone_number','validatePhone','on'=>'register'],
+            ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'密码至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号']
 
         ];
     }
@@ -96,7 +97,7 @@ class User extends FActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['token' => $token]);
     }
 
     /**
@@ -128,17 +129,10 @@ class User extends FActiveRecord implements IdentityInterface
         ]);
     }
 
-    public function makeYouCode()
+    private function makeYouCode()
     {
-        $res = self::find()->select('id')->orderBy('id desc')->one();
-        if(empty($res))
-        {
-            $_tmp = 0;
-        }else{
-            $_tmp = $res['id'];
-        }
-        $code =  rand(1,9).rand(0,9).rand(0,9).self::INIT_YOUCODE;
-        $code = $code + $_tmp;
+        $code =  self::INIT_YOUCODE;
+        $code = $code + $this->id;
         return $code;
     }
 
@@ -265,9 +259,7 @@ class User extends FActiveRecord implements IdentityInterface
 
     private function sendMessage()
     {
-
         $number = $this->country_code.$this->phone_number;
-
         if($number){
 
             $redis = Yii::$app->redis;
@@ -288,22 +280,16 @@ class User extends FActiveRecord implements IdentityInterface
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
-            file_put_contents('/tmp/userweb.log',$response.PHP_EOL,8);
             $response = json_decode($response, true);
-
-
             if(isset($response['messages'][0]['status'] ) && $response['messages'][0]['status'] ==0)
             {
                 return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
             }else{
                 return $this->jsonResponse([],'号码错误/网络错误',1,ErrCode::NETWORK_OR_PHONE_ERROR);
             }
-
         }else{
             return $this->jsonResponse([],'国码,号码不能为空',1,ErrCode::COUNTRY_CODE_OR_PHONE_EMPTY);
         }
-
-
     }
 
     public static function makeVerifyCode()
@@ -320,11 +306,10 @@ class User extends FActiveRecord implements IdentityInterface
         {
             if(!$this->checkVeryCode($number,$veryCode))
             {
-                return $this->jsonResponse($this,'国码,号码不能为空',1,ErrCode::CODE_ERROR);
+                return $this->jsonResponse($this,'验证码错误',1,ErrCode::CODE_ERROR);
             }
 
             $this->auth_key = Yii::$app->security->generateRandomString();
-            $this->account = $this->makeYouCode();
             $this->password && $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
             $this->reg_time = time();
             $this->token = $this->makeToken();
@@ -334,11 +319,19 @@ class User extends FActiveRecord implements IdentityInterface
 
             if($this->save())
             {
+                $tmp = $this->updateYouCode();
+                if($tmp !== true)
+                {
+                    $transaction->rollBack();
+                    return $tmp;
+                }
                 if($res = $this->addUserPhone($this->id) === true)
                 {
                     $transaction->commit();
-                    $data = ['id'=>$this->id,'country_code'=>$this->country_code,'phone_number'=>$this->phone_number,'token'=>$this->token,'account'=>$this->account];
+
+
                     return $this->jsonResponse($data,'注册成功',0,ErrCode::SUCCESS);
+
                 }else{
                     $transaction->rollBack();
                     return $res;
@@ -364,6 +357,32 @@ class User extends FActiveRecord implements IdentityInterface
             return true;
         }else{
             return false;
+        }
+
+    }
+
+    private function updateYouCode()
+    {
+        try{
+
+            $model = User::findOne($this->id);
+            Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
+            $transaction = Yii::$app->db->getTransaction();
+
+            $model->account = $this->makeYouCode();
+            if($model->save())
+            {
+                $transaction->commit();
+                $this->account = $model->account;
+                return true;
+            }else{
+                $transaction->rollBack();
+                return $this->jsonResponse([],$model->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
+            }
+        }catch (Exception $e)
+        {
+            $transaction->rollBack();
+            return $this->jsonResponse([],$e->getMessage(),1,ErrCode::UNKNOWN_ERROR);
         }
 
     }
@@ -415,6 +434,28 @@ class User extends FActiveRecord implements IdentityInterface
             return $this->jsonResponse([],$e->getErrors(),1,ErrCode::UNKNOWN_ERROR);
 
         }
+    }
+
+
+    public function updateNickname()
+    {
+
+        if($this->validate('nickname'))
+        {
+            if(empty($this->nickname))
+            {
+                return $this->jsonResponse([],'昵称不能为空',1,ErrCode::NICKNAME_EMPTY);
+            }
+            if($this->save())
+            {
+                return $this->jsonResponse([],'修改昵称成功',0,ErrCode::SUCCESS);
+            }else{
+                return $this->jsonResponse([],'修改昵称失败',1,ErrCode::DATA_SAVE_ERROR);
+            }
+        }else{
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
+        }
+
     }
 
 
