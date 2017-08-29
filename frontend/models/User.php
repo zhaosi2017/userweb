@@ -145,7 +145,9 @@ class User extends FActiveRecord implements IdentityInterface
             $identity = $this->getUserIdentity();
             if(Yii::$app->user->login($identity))
             {
-               return $this->jsonResponse(['token'=>$identity->token],'登录成功',0,ErrCode::SUCCESS);
+                if(isset($identity->password)){unset($identity->password);}
+                if(isset($identity->authKey)){unset($identity->authKey);}
+               return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
             }
 
         }else{
