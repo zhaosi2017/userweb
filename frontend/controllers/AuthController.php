@@ -43,7 +43,9 @@ class AuthController extends Controller
 
     public function beforeAction($action)
     {
-       file_put_contents('/tmp/userweb.log',var_export($this->getRequestContent(),true).PHP_EOL,8);
+
+       file_put_contents('/tmp/userweb.log','111',8);
+       return true;
     }
 
     public function getRequestContent()
