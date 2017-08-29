@@ -19,7 +19,7 @@ class UserController extends AuthController
     public function behaviors()
     {
 
-        return [
+        $self = [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -30,15 +30,10 @@ class UserController extends AuthController
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['nickname'],
                         'roles' => ['@'],
                     ],
                 ],
-                /*
-                'denyCallback' => function($rule, $action) {
-                    echo 'You are not allowed to access this page!';
-                }
-                */
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -47,9 +42,12 @@ class UserController extends AuthController
                     'register-user'=>['post'],
                     'login'=>['post'],
                     'register'=>['post'],
+                    'nickname'=>['post']
                 ],
             ],
         ];
+        $behaviors = parent::behaviors();
+        return array_merge($behaviors,$self);
     }
 
     /**
@@ -73,7 +71,9 @@ class UserController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1,ErrCode::UNKNOWN_ERROR);
         }
     }
-
+    /**
+     * 注册用户的入口.
+     */
     public function actionRegister()
     {
         $postData = file_get_contents('php://input');
@@ -116,6 +116,27 @@ class UserController extends AuthController
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
         }
+    }
+
+    public function actionNickname()
+    {
+        $postData =$this->getRequestContent();
+        $nickname = isset($postData['nickname']) ? $postData['nickname'] :'';
+        $userId = Yii::$app->user->id;
+        try{
+            $model = User::findOne($userId);
+            $model->nickname = $nickname;
+            return $model->updateNickname();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+
+        }
+
+
     }
 
 }
