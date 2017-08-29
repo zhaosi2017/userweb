@@ -20,11 +20,10 @@ class FActiveRecord extends ActiveRecord
         return $this::getDb()->createCommand()->update($this::tableName(), $params, $condition)->execute();
     }
 
-    public function jsonResponse($response = ['code'=>0, 'msg'=>'操作成功', 'data'=>[]])
+    public function jsonResponse($data,$message,$status = 0,$code)
     {
-        return $response;
+        return ['data'=>$data, 'message'=>$message, 'status'=>$status, 'code'=>$code];
     }
-
 
 
 
