@@ -7,7 +7,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use frontend\models\User;
-
+use frontend\models\ErrCode;
 class UserController extends AuthController
 {
 
@@ -70,7 +70,7 @@ class UserController extends AuthController
 
         }catch (\Exception $e)
         {
-            return $this->jsonResponse('',$e->getMessage(),1);
+            return $this->jsonResponse('',$e->getMessage(),1,ErrCode::UNKNOWN_ERROR);
         }
     }
 
@@ -87,10 +87,10 @@ class UserController extends AuthController
             return $model->Register();
 
         }catch (Exception $e){
-            return $this->jsonResponse('',$e->getMessage(),1);
+            return $this->jsonResponse('',$e->getMessage(),1,ErrCode::DATA_SAVE_ERROR);
         }
         catch (\Exception $e) {
-             return $this->jsonResponse('',$e->getMessage(),1);
+             return $this->jsonResponse('',$e->getMessage(),1,ErrCode::UNKNOWN_ERROR);
         }
     }
 
@@ -110,11 +110,11 @@ class UserController extends AuthController
 
         }catch (Exception $e)
         {
-            return $this->jsonResponse('',$e->getMessage(),1);
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::DATA_SAVE_ERROR);
         }
         catch (\Exception $e)
         {
-            return $this->jsonResponse('',$e->getMessage(),1);
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
         }
     }
 

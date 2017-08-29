@@ -10,6 +10,7 @@ use yii\web\IdentityInterface;
 use frontend\models\FActiveRecord;
 use frontend\models\UserPhone;
 use yii\db\Transaction;
+use frontend\models\ErrCode;
 
 
 
@@ -31,7 +32,7 @@ class User extends FActiveRecord implements IdentityInterface
     {
         return '{{user}}';
     }
-    
+
 
     /**
      * @inheritdoc
@@ -150,11 +151,11 @@ class User extends FActiveRecord implements IdentityInterface
             $identity = $this->getUserIdentity();
             if(Yii::$app->user->login($identity))
             {
-                return ['status'=>0,'message'=>'登录成功','data'=>['token'=>$identity->token]];
+               return $this->jsonResponse(['token'=>$identity->token],'登录成功',0,ErrCode::SUCCESS);
             }
 
         }else{
-            return ['status'=>1,'message'=>$this->getErrors(),1];
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
 
     }
@@ -257,7 +258,7 @@ class User extends FActiveRecord implements IdentityInterface
         {
             return $this->sendMessage();
         }else{
-            return ['status'=>1,'message'=>$this->getErrors(),'data'=>[]];
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
 
     }
@@ -293,14 +294,13 @@ class User extends FActiveRecord implements IdentityInterface
 
             if(isset($response['messages'][0]['status'] ) && $response['messages'][0]['status'] ==0)
             {
-                $response['code'] = $verifyCode;
-                return ['status'=>1,'message'=>$this->getErrors(),'data'=>$response];
+                return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
             }else{
-                return ['status'=>1,'message'=>'号码错误/网络错误','data'=>[]];
+                return $this->jsonResponse([],'号码错误/网络错误',1,ErrCode::NETWORK_OR_PHONE_ERROR);
             }
 
         }else{
-            return ['status'=>1,'message'=>'国码,号码不能为空','data'=>[]];
+            return $this->jsonResponse([],'国码,号码不能为空',1,ErrCode::COUNTRY_CODE_OR_PHONE_EMPTY);
         }
 
 
@@ -318,11 +318,9 @@ class User extends FActiveRecord implements IdentityInterface
         $this->setScenario('register');
         if($this->validate())
         {
-
-
             if(!$this->checkVeryCode($number,$veryCode))
             {
-                return  $this->jsonResponse(['status'=>1,'message'=>'验证码错误','data'=>$this]);
+                return $this->jsonResponse($this,'国码,号码不能为空',1,ErrCode::CODE_ERROR);
             }
 
             $this->auth_key = Yii::$app->security->generateRandomString();
@@ -339,7 +337,8 @@ class User extends FActiveRecord implements IdentityInterface
                 if($res = $this->addUserPhone($this->id) === true)
                 {
                     $transaction->commit();
-                    return ['status'=>0,'message'=>'注册成功','data'=>$this];
+                    $data = ['id'=>$this->id,'country_code'=>$this->country_code,'phone_number'=>$this->phone_number,'token'=>$this->token,'account'=>$this->account];
+                    return $this->jsonResponse($data,'注册成功',0,ErrCode::SUCCESS);
                 }else{
                     $transaction->rollBack();
                     return $res;
@@ -347,10 +346,10 @@ class User extends FActiveRecord implements IdentityInterface
 
             }else{
                 $transaction->rollBack();
-                return ['status'=>1,'message'=>$this->getErrors(),'data'=>[]];
+                return $this->jsonResponse([],$this->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
             }
         }else{
-            return ['status'=>1,'message'=>$this->getErrors(),'data'=>[]];
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
 
     }
@@ -408,12 +407,13 @@ class User extends FActiveRecord implements IdentityInterface
                 return true;
             } else {
                 $transaction->rollBack();
-                return ['status'=>1,'message'=>$userPhone->getErrors(),'data'=>[]];
+                return $this->jsonResponse([],$userPhone->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
             }
         }catch (Exception $e)
         {
             $transaction->rollBack();
-            return ['status'=>1,'message'=> $e->getMessage(),'data'=>[]];
+            return $this->jsonResponse([],$e->getErrors(),1,ErrCode::UNKNOWN_ERROR);
+
         }
     }
 
