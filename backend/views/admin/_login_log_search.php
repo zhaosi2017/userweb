@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="manager-login-logs-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['login-logs'],
         'method' => 'get',
         'options' => ['class'=>'form-inline'],
     ]); ?>

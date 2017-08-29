@@ -34,7 +34,6 @@ CREATE TABLE `admin` (
   `password` varchar(64) NOT NULL DEFAULT '',
   `account` text,
   `nickname` text,
-  `role_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `status` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `remark` text,
   `login_ip` varchar(64) NOT NULL DEFAULT '',
@@ -47,9 +46,9 @@ CREATE TABLE `admin` (
 --
 -- 转存表中的数据 `admin`
 --test1234, 11111111a,  test12345, 11111111a
-INSERT INTO `admin` (`id`, `auth_key`, `password`, `account`, `nickname`, `role_id`, `status`, `remark`, `login_ip`, `create_id`, `update_id`, `create_at`, `update_at`) VALUES
-(1, '7xRfIO2V7q2HT9KWQhGz_PwBM8hw5Nlf', '$2y$13$v3XDsSgnyzeo5xAU2fd4k.eixOVhf/jWBRHPNus3.8OSu.mITSMXu', 'Vt67B9CTlxyRq51s5y0N5TRhYjljYTNhZmMzOTU2NTk5NTIzNGYxOWU2ZjgwZTQ2MDQ4ZDY0NmYyOTYyNTEwMTdkNThkNzRhNzgxMDRjZTCEmHmH4RMkRT0Xk5Y0Rbv0KzaMaoJxRyL69JVLpskLTQ==', 'test1234', 1, 0, NULL, '', 5, 5, 1502097331, 1502097331),
-(2, 'rDsmVpokHMaM8GIKvvPThQGAMnZs3SOa', '$2y$13$v3XDsSgnyzeo5xAU2fd4k.eixOVhf/jWBRHPNus3.8OSu.mITSMXu', 'pyruYL33F6x52+LUYdYGnDMzODc3YjU3MjMyOGNiNmQ1N2EwOThlYTE0NjkzNDIyMGFiZWI3M2ZkOWZhZDI2MmIyYTU2ZTQ2OTVmNGExZjWktOubGDcw3/W1NZKnKnpYX3H6DVS7bER3/xdpGgxsKQ==', 'sdf', 2, 0, '<p>sdf</p>', '127.0.0.1', 0, 5, 1502096312, 1502101469);
+INSERT INTO `admin` (`id`, `auth_key`, `password`, `account`, `nickname`, `status`, `remark`, `login_ip`, `create_id`, `update_id`, `create_at`, `update_at`) VALUES
+(1, '7xRfIO2V7q2HT9KWQhGz_PwBM8hw5Nlf', '$2y$13$v3XDsSgnyzeo5xAU2fd4k.eixOVhf/jWBRHPNus3.8OSu.mITSMXu', 'Vt67B9CTlxyRq51s5y0N5TRhYjljYTNhZmMzOTU2NTk5NTIzNGYxOWU2ZjgwZTQ2MDQ4ZDY0NmYyOTYyNTEwMTdkNThkNzRhNzgxMDRjZTCEmHmH4RMkRT0Xk5Y0Rbv0KzaMaoJxRyL69JVLpskLTQ==', 'test1234',  0, NULL, '', 5, 5, 1502097331, 1502097331),
+(2, 'rDsmVpokHMaM8GIKvvPThQGAMnZs3SOa', '$2y$13$v3XDsSgnyzeo5xAU2fd4k.eixOVhf/jWBRHPNus3.8OSu.mITSMXu', 'pyruYL33F6x52+LUYdYGnDMzODc3YjU3MjMyOGNiNmQ1N2EwOThlYTE0NjkzNDIyMGFiZWI3M2ZkOWZhZDI2MmIyYTU2ZTQ2OTVmNGExZjWktOubGDcw3/W1NZKnKnpYX3H6DVS7bER3/xdpGgxsKQ==', 'sdf', 0, '<p>sdf</p>', '127.0.0.1', 0, 5, 1502096312, 1502101469);
 
 -- --------------------------------------------------------
 
@@ -267,29 +266,6 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 ('m140506_102106_rbac_init', 1502079355);
 
 -- --------------------------------------------------------
-
---
--- 表的结构 `role`
---
-
-CREATE TABLE `role` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` text,
-  `remark` text,
-  `create_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `update_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `create_at` int(11) DEFAULT '0',
-  `update_at` int(11) DEFAULT '0',
-  `status` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `role`
---
-
-INSERT INTO `role` (`id`, `name`, `remark`, `create_id`, `update_id`, `create_at`, `update_at`, `status`) VALUES
-(1, 'admin', '管理员1', 0, 5, 1502089385, 1502098962, 0),
-(2, '测试', '测试', 5, 5, 1502100641, 1502101964, 0);
 
 --
 -- Indexes for dumped tables
