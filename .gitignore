@@ -3,5 +3,4 @@ yii_test
 .DS_Store
 .idea
 init.bat
-webhook.php
-usercenter.php
+vendor/*

@@ -19,8 +19,9 @@ CREATE TABLE `user` (
   `language` VARCHAR(40) NOT NULL DEFAULT 'zh-CN',
   `status` int(10) unsigned NOT NULL DEFAULT '0',
   `step` TINYINT(1) NOT NULL DEFAULT '0',
+  `token` VARCHAR(255)  DEFAULT NULL ,
   PRIMARY KEY (`id`)
-)ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `user_phone`;
 CREATE TABLE `user_phone` (
