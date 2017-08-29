@@ -15,14 +15,16 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": "~2.0.6",
-        "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0",
+        "yidas/yii2-composer-bower-skip": "~2.0.0",
+        "yiisoft/yii2": "2.0.6",
+        "yiisoft/yii2-bootstrap": "2.0.0",
+        "yiisoft/yii2-swiftmailer": "2.0.0",
         "kartik-v/yii2-widget-select2": "*",
         "yiidoc/yii2-redactor": "*",
         "guzzlehttp/guzzle":"6.3.0",
         "xiaogouxo/yii2-ip2region": "dev-master",
-        "yiisoft/yii2-redis": "^2.0"
+        "yiisoft/yii2-redis": "^2.0",
+        "nexmo/client":"1.0.0-beta3"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

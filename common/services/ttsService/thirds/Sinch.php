@@ -104,6 +104,8 @@ class Sinch extends  AbstruactThird{
      */
     public  function Event(Array $Event_data){
 
+        parent::Event($Event_data);
+
         if($Event_data['event'] != 'dice'){
             $this->DiscardEvent('OK');
         }
