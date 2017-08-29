@@ -3,20 +3,20 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\admin\models\RoleSearch */
+/* @var $searchModel common\models\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '管理员角色';
+$this->title = '权限列表';
 $this->params['breadcrumbs'][] = $this->title;
 $actionId = Yii::$app->requestedAction->id;
+
 ?>
-<div class="role-index">
-    <p class="btn-group hidden-xs">
-        <?= Html::a('角色列表', ['index'], ['class' => $actionId=='trash' ? 'btn btn-outline btn-default' : 'btn btn-primary']) ?>
-        <?= Html::a('垃圾筒', ['trash'], ['class' => $actionId=='index' ? 'btn btn-outline btn-default' : 'btn btn-primary']) ?>
-    </p>
-    <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
+
+<div class="auth-item-index">
+
+    <?php  echo $this->render('_privilegesearch', ['model' => $searchModel]); ?>
 
     <?php Pjax::begin(); ?>
     <?= GridView::widget([
@@ -25,40 +25,47 @@ $actionId = Yii::$app->requestedAction->id;
         'layout' => "{items}\n  <div><ul class='pagination'><li style='display:inline;'><span>共".$dataProvider->getTotalCount(). "条数据 <span></li></ul>{pager}  </div>",
         'columns' => [
             ['class' => 'yii\grid\SerialColumn','header' => '序号'],
-            'name:ntext',
-            'remark:ntext',
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '权限名称',
+                'attribute'=>'name',
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => '描述',
+                'attribute'=>'description',
+            ],
+            // 'remark:ntext',
             [
                 'class' => 'yii\grid\DataColumn', //由于是默认类型，可以省略
-                'header' => '最后修改人／时间',
+                'header' => '修改时间',
                 'format' => 'raw',
                 'value' => function ($data) {
-                    $account = $data['updater']['account'] ? $data['updater']['account'] : '系统';
-                    return $account .'<br>'. date('Y-m-d H:i:s',$data->update_at);
+                    return date('Y-m-d H:i:s',$data->updated_at);
                 },
             ],
             [
                 'class' => 'yii\grid\DataColumn', //由于是默认类型，可以省略
-                'header' => '创建人／时间',
+                'header' => '创建时间',
                 'format' => 'raw',
                 'value' => function ($data) {
-                    $account = $data['creator']['account'] ? $data['creator']['account'] : '系统';
-                    return $account.'<br>'.date('Y-m-d H:i:s',$data->create_at);
+                    return date('Y-m-d H:i:s',$data->created_at);
                 },
             ],
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '操作',
-                'template' => '{update} {auth} {delete}',
+                // 'template' => '{update} {auth} {delete}'
+                'template' => '{update}',
                 'buttons' => [
-                    'update' => function($url){
-                        return Html::a('编辑',$url);
+                    'update' => function($url, $model){
+                        return Html::a('编辑',['/authitem/permission-create', 'id'=>$model->name]);
                     },
                     'auth' => function($url){
                         return Html::a('权限配置',$url);
                     },
                     'delete' => function($url){
-                        if(Yii::$app->user->can('admin/delete')){
+                        if(Yii::$app->user->can('authitem/delete')){
                             return Html::a('删除',$url,[
                                 'style' => 'color:red',
                                 'data-method' => 'post',
@@ -77,9 +84,9 @@ $actionId = Yii::$app->requestedAction->id;
                 ],
             ],
         ],
-    ]); ?>
+    ]);?>
     <?php Pjax::end(); ?>
     <p class="text-right">
-        <?= Html::a('新增角色', ['create'], ['class' => 'btn btn-sm btn-primary']) ?>
+        <?= Html::a('新增权限', ['permission-create'], ['class' => 'btn btn-sm btn-primary']) ?>
     </p>
 </div>

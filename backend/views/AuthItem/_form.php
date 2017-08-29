@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\Role */
+/* @var $model common\models\AuthItem */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="role-form">
+<div class="auth-item-form">
 
     <?php $form = ActiveForm::begin([
         'options'=>['class'=>'form-horizontal m-t'],
@@ -18,14 +18,17 @@ use yii\widgets\ActiveForm;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'name')->textInput() ?>
-
-    <?= $form->field($model, 'remark')->textInput() ?>
+    <?= $form->field($model, 'type')->hiddenInput()->label(false)?>
+    <?php
+    if ($model->isNewRecord) {
+        echo $form->field($model, 'name')->textInput();
+    }
+    ?>
+    <?= $form->field($model, 'description')->textInput() ?>
 
     <div class="form-group">
         <div class="col-sm-6 col-sm-offset-1">
             <?= Html::submitButton($model->isNewRecord ? '创建角色' : '保存修改', ['class'=>'btn btn-primary']) ?>
-
 
         </div>
     </div>

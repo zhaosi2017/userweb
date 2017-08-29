@@ -44,8 +44,8 @@ class PController extends Controller
             return true;
         }
         if( !Yii::$app->user->can(Yii::$app->requestedRoute)  ) {
-            return  $this->redirect(Url::to(['/default/deny']))->send();
-            return false;
+            //return  $this->redirect(Url::to(['/default/deny']))->send();
+            //return false;
         }
         return parent::beforeAction($event);
     }
