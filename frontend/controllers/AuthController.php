@@ -41,6 +41,11 @@ class AuthController extends Controller
         return ['data'=>$data, 'message'=>$message, 'status'=>$status, 'code'=>$code];
     }
 
+    public function beforeAction($action)
+    {
+       file_put_contents('/tmp/userweb.log',var_export($this->getRequestContent(),true).PHP_EOL,8);
+    }
+
     public function getRequestContent()
     {
         $postData = file_get_contents('php://input');
