@@ -44,7 +44,8 @@ class AuthController extends Controller
     public function beforeAction($action)
     {
 
-       file_put_contents('/tmp/userweb.log',var_export($this->getRequestContent(),true).PHP_EOL,8);
+       file_put_contents('/tmp/userweb.log',var_export(\Yii::$app->request->getHeaders(),true).PHP_EOL,8);
+        file_put_contents('/tmp/userweb.log',var_export(\Yii::$app->request->getRawBody(),true).PHP_EOL,8);
        return true;
     }
 
