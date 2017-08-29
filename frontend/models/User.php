@@ -329,7 +329,9 @@ class User extends FActiveRecord implements IdentityInterface
                 {
                     $transaction->commit();
 
-
+                    if(isset($this->password)){ unset($this->password);}
+                    if(isset($this->authKey)){ unset($this->authKey);}
+                    $data = $this;
                     return $this->jsonResponse($data,'注册成功',0,ErrCode::SUCCESS);
 
                 }else{
