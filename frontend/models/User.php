@@ -24,7 +24,33 @@ class User extends FActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+    /*********优码初始值*********/
     const INIT_YOUCODE = '999999';
+
+    /*******渠道*******/
+    const CHANNEL_TELEGRAM = 'Telegram';
+    const CHANNEL_POTATO = 'Potato';
+    const CHANNEL_SKYPE = 'Skype';
+    const CHANNEL_WhatsApp = 'WhatsApp';
+    const CHANNEL_QQ= 'QQ';
+    const CHANNEL_Wechat = 'Wechat';
+    const CHANNEL_FACEBOOK= 'Facebook';
+    const CHANNEL_GMAIL = 'Gmail';
+
+    public static $ChannlArr =
+        [
+            self::CHANNEL_TELEGRAM =>'Telegram',
+            self::CHANNEL_POTATO => 'Potato',
+            self::CHANNEL_SKYPE => 'Skype',
+            self::CHANNEL_WhatsApp => 'WhatsApp',
+            self::CHANNEL_QQ=> 'QQ',
+            self::CHANNEL_Wechat => 'Wechat',
+            self::CHANNEL_FACEBOOK=> 'Facebook',
+            self::CHANNEL_GMAIL => 'Gmail',
+        ];
+
+
+
     /**
      * @inheritdoc
      */
@@ -50,10 +76,11 @@ class User extends FActiveRecord implements IdentityInterface
             ['account','match','pattern'=>'/^[0-9]{7}$/','message'=>'{attribute}必须为7位纯数字'],
             ['password', 'match', 'pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,}$/','message'=>'密码至少包含8个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['country_code','integer'],
+            ['country_code','match','pattern'=>'/^[0-9]{2,6}$/','message'=>'{attribute}必须为2到6位纯数字'],
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'{attribute}必须为4到11位纯数字'],
             ['phone_number','validatePhone','on'=>'register'],
-            ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'密码至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号']
-
+            ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'密码至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
+            ['channel','ValidateChannel'],
         ];
     }
 
@@ -83,6 +110,23 @@ class User extends FActiveRecord implements IdentityInterface
             $this->addError('phone_number', '该手机已注册，请更换手机再试');
         }
 
+    }
+
+    public function ValidateChannel()
+    {
+        $tmp = explode(',',$this->channel);
+        if(!empty($tmp))
+        {
+            foreach ($tmp as $c){
+                if(in_array($c,self::$ChannlArr))
+                {
+                    continue;
+                }
+                $this->addError('channel','渠道非法');
+                break;
+            }
+        }
+        return true;
     }
     /**
      * @inheritdoc
@@ -460,6 +504,21 @@ class User extends FActiveRecord implements IdentityInterface
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
 
+    }
+
+
+    public function updateChannel()
+    {
+        if(empty($this->channel))
+        {
+            return $this->jsonResponse([],'渠道不能为空',1,ErrCode::CHANNEL_EMPTY);
+        }
+        if ($this->validate('channel') && $this->save())
+        {
+            return $this->jsonResponse([],'修改渠道成功',0,ErrCode::SUCCESS);
+        }else{
+            return $this->jsonResponse([],$this->getErrors(),0,ErrCode::SUCCESS);
+        }
     }
 
 

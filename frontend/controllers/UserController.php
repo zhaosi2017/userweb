@@ -30,7 +30,7 @@ class UserController extends AuthController
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['nickname'],
+                        'actions' => ['nickname','channel-list','update-channel'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -42,7 +42,9 @@ class UserController extends AuthController
                     'register-user'=>['post'],
                     'login'=>['post'],
                     'register'=>['post'],
-                    'nickname'=>['post']
+                    'nickname'=>['post'],
+                    'channel-list'=>['get'],
+                    'update-channel'=>['post'],
                 ],
             ],
         ];
@@ -118,6 +120,7 @@ class UserController extends AuthController
         }
     }
 
+
     public function actionNickname()
     {
         $postData =$this->getRequestContent();
@@ -135,8 +138,46 @@ class UserController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
 
         }
+    }
+
+    public function actionChannelList()
+    {
+        return $this->jsonResponse(User::$ChannlArr,'操作成功',0,ErrCode::SUCCESS);
+    }
+
+    public function actionUpdateChannel()
+    {
+        try{
+            $data = $this->getRequestContent();
+            $channel = isset($data['channel']) ? $data['channel']: '';
+            $model = $this->findModel();
+            if($model === false)
+            {
+                return $this->jsonResponse([],'用户不存在',1, ErrCode::USER_NOT_EXIST);
+            }
+            $model->channel = $channel;
+            return $model->updateChannel();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
 
 
     }
+
+    private function findModel()
+    {
+        $userId = Yii::$app->user->id;
+        $model = User::findOne($userId);
+        if(empty($model))
+        {
+            return false;
+        }
+        return $model;
+    }
+
 
 }

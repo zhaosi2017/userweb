@@ -13,6 +13,8 @@ class ErrCode
     CONST DATA_SAVE_ERROR = '3000';//数据保存错误
     const UNKNOWN_ERROR = '4000';//未知错误
     const NICKNAME_EMPTY = '2002';//昵称为空
+    const USER_NOT_EXIST = '2003';//用户不存在
+    const CHANNEL_EMPTY = '2004';//渠道为空
 
 
 
