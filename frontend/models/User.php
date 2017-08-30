@@ -84,6 +84,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['phone_number','validatePhone','on'=>'register'],
             ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'密码至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['channel','ValidateChannel'],
+
         ];
     }
 
@@ -193,7 +194,7 @@ class User extends FActiveRecord implements IdentityInterface
             $identity = $this->getUserIdentity();
             if(empty($identity))
             {
-                return $this->jsonResponse([],$this->getErrors(),1,ErrCode::USER_NOT_EXIST);
+                return $this->jsonResponse([],'用户不存在/密码错误',1,ErrCode::USER_NOT_EXIST);
             }
             if(Yii::$app->user->login($identity))
             {
@@ -210,9 +211,25 @@ class User extends FActiveRecord implements IdentityInterface
 
     }
 
+
     private function getUserIdentity()
     {
-       return User::find()->where(['country_code'=>$this->country_code,'phone_number'=>$this->phone_number])->one();
+
+
+       $user =  User::find()->where([
+           'country_code'=>$this->country_code,
+           'phone_number'=>$this->phone_number,
+       ])->one();
+       if(empty($user))
+       {
+           return false;
+       }else{
+            if( Yii::$app->getSecurity()->validatePassword($this->password, $user->password))
+           {
+               return $user;
+           }
+           return false;
+       }
     }
     /**
      * Finds out if password reset token is valid
