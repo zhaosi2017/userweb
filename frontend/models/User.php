@@ -108,11 +108,17 @@ class User extends FActiveRecord implements IdentityInterface
         {
             $this->addError('phone_number', '该手机号不能为空');
         }
-//        $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
-//
-//        if(!empty($rows)){
-//            $this->addError('phone_number', '该手机已注册，请更换手机再试');
-//        }
+
+        // 测试的时候不检查手机号重复
+        if(defined('YII_ENV') && YII_ENV == 'dev') {
+
+        }else{
+            $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+
+            if(!empty($rows)){
+                $this->addError('phone_number', '该手机已注册，请更换手机再试');
+            }
+        }
 
     }
 
