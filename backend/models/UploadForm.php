@@ -7,6 +7,7 @@
  */
 namespace backend\models;
 
+use yii;
 use yii\base\Model;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
@@ -22,34 +23,26 @@ class UploadForm extends Model
     {
         return [
             // 数据验证.
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
+            // [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
-
+    /**
+     * 上传图片.
+     *
+     * @return bool|string
+     */
     public function upload()
     {
 
-        if($this->validate()){
-            $path = \Yii::getAlias('@upload') . '/' . date("Ymd");
+        if ($this->validate()) {
+            $path = Yii::getAlias('@upload') . '/' . date("Ymd");
             if(!is_dir($path) || !is_writable($path)){
-                FileHelper::createDirectory($path,0777,true);
+                FileHelper::createDirectory($path, 0777, true);
             }
-            $filePath = $path .'/' . \Yii::$app->request->post('model','') . '_' .md5(uniqid() . mt_rand(10000,99999999)) . '.' . $this->imageFile->extension;
-
-            if( $this->imageFile->saveAs($filePath)){
-
+            $filePath = $path .'/' . Yii::$app->request->post('model','') . '_' .md5(uniqid() . mt_rand(10000,99999999)) . '.' . $this->imageFile->extension;
+            if ($this->imageFile->saveAs($filePath)) {
                 return $this->parseImageUrl($filePath);
-//                //这里将上传成功后的图片信息保存到数据库
-//                $imageUrl = $this->parseImageUrl($filePath);
-//                $imageModel = new Images();
-//                $imageModel->url = $imageUrl;
-//                $imageModel->addtime = time();
-//                $imageModel->status = 0;
-//                $imageModel->module = \Yii::$app->request->post('model','');
-                $imageModel->save(false);
-
-                return $imageUrl;
             }
         }
 
@@ -65,8 +58,8 @@ class UploadForm extends Model
      */
     private function parseImageUrl($filePath)
     {
-        if(strpos($filePath,\Yii::getAlias('@upload')) !== false){
-            return \Yii::$app->params['assetDomain'] . str_replace(\Yii::getAlias('@upload'),'',$filePath);
+        if(strpos($filePath, Yii::getAlias('@upload')) !== false){
+            return str_replace(Yii::getAlias('@upload'),'',$filePath);
         }else{
             return $filePath;
         }

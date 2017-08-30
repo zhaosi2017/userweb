@@ -16,14 +16,32 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         // 'filterModel' => $searchModel,
+        'layout' => "{items}\n  <div><ul class='pagination'><li style='display:inline;'><span>共".$dataProvider->getTotalCount(). "条数据 <span></li></ul>{pager}  </div>",
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
             'id',
             'name',
-            'img_url:url',
-            'create_at',
-            'update_at',
-
+            [
+                "format" => [
+                    "image",
+                    [
+                        "width"=>"100",
+                        "height"=>"100"
+                    ]
+                ],
+                'attribute' => 'img_url',
+                'value' => function($data) {
+                    return  Yii::$app->params['fileBaseDomain'].$data->img_url;
+                }
+            ],
+            [
+                'attribute' => 'create_at',
+                'format'=>['date', 'php:Y-m-d H:i:s'],
+            ],
+            [
+                'attribute' => 'update_at',
+                'format'=>['date', 'php:Y-m-d H:i:s'],
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
