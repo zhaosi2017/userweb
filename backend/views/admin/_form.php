@@ -12,6 +12,7 @@ use yii\redactor\widgets\Redactor;
 <div class="manager-form">
 
     <?php $form = ActiveForm::begin([
+        // 'action' =>  Yii::$app->requestedAction->id == 'index' ?['index']:['trash'],
         'options'=>['class'=>'form-horizontal m-t'],
         'fieldConfig' => [
             'template' => "{label}\n<div class=\"col-sm-4\">{input}\n<span class=\"help-block m-b-none\">{error}</span></div>",
@@ -48,46 +49,49 @@ use yii\redactor\widgets\Redactor;
 </span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
     ])->textInput(['placeholder'=>'请输入管理员昵称']) ?>
 
-    <?= $form->field($model, 'role_id',[
-        'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
+    <?= $form->field(
+            $model, 'roleName',
+            [
+            'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
 
 </span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
-    ])->dropDownList($model['roles'],['prompt'=>'请选择']) ?>
+            ]
+    )->checkboxList($model['roles']) ?>
 
     <?php if(!$model->isNewRecord){ ?>
-        <?= $form->field($model, 'status',[
-            'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
+                    <?= $form->field($model, 'status',[
+                        'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
+            
+            </span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
+                    ])->radioList([0 => '正常', 2 => '冻结']) ?>
 
-</span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
-        ])->radioList([0 => '正常', 2 => '冻结']) ?>
+                    <?= $form->field($model, 'remark',[
+                        'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
+            
+            </span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
+                    ])->widget(Redactor::className(),[
+                        'clientOptions' => [
+                            'lang' => 'zh_cn',
+                            'imageUpload' => false,
+                            'fileUpload' => false,
+                            'plugins' => [
+                                'clips',
+                                'fontcolor'
+                            ],
+                            'placeholder'=> '请填写原因',
+                            'maxlength'=>500,
 
-        <?= $form->field($model, 'remark',[
-            'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
+                        ],
+                        'options'=>[
+                            'value'=>'',
+                        ],
+                    ])->label('原因') ?>
 
-</span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
-        ])->widget(Redactor::className(),[
-            'clientOptions' => [
-                'lang' => 'zh_cn',
-                'imageUpload' => false,
-                'fileUpload' => false,
-                'plugins' => [
-                    'clips',
-                    'fontcolor'
-                ],
-                'placeholder'=> '请填写原因',
-                'maxlength'=>500,
-
-            ],
-            'options'=>[
-                'value'=>'',
-            ],
-        ])->label('原因') ?>
-
-        <?= $form->field($model, 'login_ip',[
-            'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
-
-</span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
-        ])->textInput(['value'=>Yii::$app->request->userIP,'readonly'=>true]) ?>
+                    <?= $form->field($model, 'login_ip',[
+                        'template' => "<div><div style=\"display:inline-block;width:70px;\">{label}</div>\n<div  style=\"display:inline-block;\">{input}</div><div style=\"display:inline-block;\"><span style=\"margin-left:10px;\">
+            
+            </span></div>\n<span class=\"help-block m-b-none\" style=\"margin-left:70px;\">{error}</span></div>",
+                    ])->textInput(['value'=>Yii::$app->request->userIP,'readonly'=>true]) ?>
 
     <?php } ?>
 

@@ -3,6 +3,7 @@ namespace backend\models;
 
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 use backend\models\GActiveRecord;
 
@@ -118,6 +119,7 @@ class Admin extends GActiveRecord implements IdentityInterface
             'password' => '密码',
             'nickname' => '管理员昵称',
             'role_id' => '管理员角色',
+            'roleName' => '角色',
             'status' => '管理员状态',
             'remark' => '备注',
             'login_ip' => '本次登录IP',
@@ -209,7 +211,9 @@ class Admin extends GActiveRecord implements IdentityInterface
 
     public function getRoles()
     {
-        return Role::find()->select(['name','id'])->where(['status'=>0])->indexBy('id')->column();
+        $roles = Yii::$app->authManager->getRoles();
+        return ArrayHelper::map($roles, 'name', 'description');
+        // return Role::find()->select(['name','id'])->where(['status'=>0])->indexBy('id')->column();
     }
 
     /**
@@ -250,6 +254,29 @@ class Admin extends GActiveRecord implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         return $this->getAuthKey() === $authKey;
+    }
+
+    /**
+     * 获取描述.
+     */
+    public function getDescription()
+    {
+        $data =  Yii::$app->authManager->getRolesByUser($this->id);
+        $tmp = [];
+        foreach ($data as $obj) {
+            $tmp[] = $obj->description;
+        }
+
+        return implode(',', $tmp);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthAssignment()
+    {
+        $data =  Yii::$app->authManager->getRolesByUser($this->id);
+        return implode(',', array_keys($data));
     }
 
 }

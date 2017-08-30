@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\models\AdminForm;
+use backend\models\AuthAssignment;
 use backend\models\PasswordForm;
 use Yii;
 use backend\models\Admin;
@@ -77,18 +79,27 @@ class AdminController extends PController
      */
     public function actionCreate()
     {
-        $model = new Admin();
+        $model = new AdminForm();
         $model->scenario = 'addadmin';
-        if ($model->load(Yii::$app->request->post()) && $model->create()) {
-            //权限逻辑
+        if ($model->load(Yii::$app->request->post())) {
+            $post  = Yii::$app->request->post('AdminForm');
+            $model->role_name = $post['roleName'];
             $auth = Yii::$app->authManager;
-            //获取角色
-            $role = $auth->getRole($model->role_id);
-            //给用户分配角色
-            $auth->assign($role, $model->id);
+            if ($model->create()) {
+                foreach ($model->role_name as $roleName) {
+                    //获取角色
+                    $role = $auth->getRole($roleName);
+                    //给用户分配角色
+                    $auth->assign($role, $model->id);
+                }
+                $model->sendSuccess();
+                return $this->redirect(['index']);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
 
-            $model->sendSuccess();
-            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -104,15 +115,22 @@ class AdminController extends PController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        // $model = $this->findModel($id);
+        $model = AdminForm::findOne($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->scenario = 'updateadmin';
-//            $model->deleteLoginNum();
-            if($model->save()) {
+            $post  = Yii::$app->request->post('AdminForm');
+            $model->role_name = $post['roleName'];
+            if($model->validate() && $model->create()) {
+                AuthAssignment::deleteAll('user_id=:id', [':id' => $id]);
                 $auth = Yii::$app->authManager;
-                $myDbmanger = new MyDbManager();
-                $myDbmanger->updateAssignment($model->role_id,$model->id);
+                foreach ($model->role_name as $roleName) {
+                    //获取角色
+                    $role = $auth->getRole($roleName);
+                    //给用户分配角色
+                    $auth->assign($role, $model->id);
+                }
+
                 $model->sendSuccess();
                 return $this->redirect(['index']);
             } else{
