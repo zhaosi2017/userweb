@@ -84,14 +84,22 @@ class AuthController extends Controller
 
     private  function checkRequest()
     {
-        $data = $this->getRequestContent();
-        $time = isset($data['time'])? $data['time'] : '';
-        $token = isset($data['token'])? $data['token'] : '';
-        $privateKey = \Yii::$app->params['private_token_key'];
-        if(md5($privateKey.$time) === $token)
-        {
-            return true;
+        $authHeader = \Yii::$app->request->getHeaders();
+        $matches = [];
+
+        if ($authHeader->get('Authorization') !== null && preg_match('/^Bearer\s+(.*?)$/', $authHeader->get('Authorization'), $matches)) {
+
+            $token = $matches[1];;
+            $time = $authHeader->get('time') !== null ? $authHeader->get('time') : '';
+            $privateKey = \Yii::$app->params['private_token_key'];
+            if(md5($privateKey.$time) === $token)
+            {
+                return true;
+            }
+            return false;
+        }else{
+            return false;
         }
-        return false;
+
     }
 }
