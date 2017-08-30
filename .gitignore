@@ -4,3 +4,4 @@ yii_test
 .idea
 init.bat
 vendor/*
+composer.lock
