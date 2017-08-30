@@ -44,7 +44,7 @@ $module = $this->context->module->id;
 
                 <li class="<?php if(Yii::$app->controller->id == 'authitem' || Yii::$app->controller->id =='admin'){ echo 'active';}else{ echo '';}?>">
                     <a href="#">
-                        <i class="fa fa-user"></i>
+                        <i class="fa fa-gear"></i>
                         <span class="nav-label">后台用户管理</span>
                         <span class="fa arrow"></span>
                     </a>
@@ -73,6 +73,18 @@ $module = $this->context->module->id;
                     <ul class="nav nav-second-level">
                         <li class="<?php if(Yii::$app->controller->id == 'customer'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/customer/index']) ?>">客服管理</a>
                         <li class="<?php if(Yii::$app->controller->id == 'agency'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/agency/index']) ?>">单位管理</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="<?php if(Yii::$app->controller->id == 'channel'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-tasks"></i>
+                        <span class="nav-label">callu管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'index'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/channel/index']) ?>">渠道管理</a>
                         </li>
                     </ul>
                 </li>
