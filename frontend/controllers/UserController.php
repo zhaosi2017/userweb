@@ -114,13 +114,14 @@ class UserController extends AuthController
         $postData = file_get_contents('php://input');
         $postData = json_decode($postData,true);
 
+
         try {
 
             $model = new User();
             $model->country_code = isset($postData['country_code'])?$postData['country_code']:'';
             $model->phone_number = isset($postData['phone_number'])?$postData['phone_number']:'';
             $model->password = isset($postData['password'])?$postData['password']:'';
-            return $model->login($postData);
+            return $model->login();
 
 
         }catch (Exception $e)

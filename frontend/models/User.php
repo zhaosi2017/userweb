@@ -84,6 +84,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['phone_number','validatePhone','on'=>'register'],
             ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'密码至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['channel','ValidateChannel'],
+
         ];
     }
 
@@ -107,11 +108,11 @@ class User extends FActiveRecord implements IdentityInterface
         {
             $this->addError('phone_number', '该手机号不能为空');
         }
-        $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
-
-        if(!empty($rows)){
-            $this->addError('phone_number', '该手机已注册，请更换手机再试');
-        }
+//        $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+//
+//        if(!empty($rows)){
+//            $this->addError('phone_number', '该手机已注册，请更换手机再试');
+//        }
 
     }
 
@@ -186,16 +187,22 @@ class User extends FActiveRecord implements IdentityInterface
 
 
 
-    public function login($data)
+    public function login()
     {
         if($this->validate())
         {
             $identity = $this->getUserIdentity();
+            if(empty($identity))
+            {
+                return $this->jsonResponse([],'用户不存在/密码错误',1,ErrCode::USER_NOT_EXIST);
+            }
             if(Yii::$app->user->login($identity))
             {
                 if(isset($identity->password)){unset($identity->password);}
                 if(isset($identity->auth_key)){unset($identity->auth_key);}
-               return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
+                return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
+            }else{
+                return $this->jsonResponse([],'登录失败',1,ErrCode::FAILURE);
             }
 
         }else{
@@ -204,9 +211,22 @@ class User extends FActiveRecord implements IdentityInterface
 
     }
 
+
     private function getUserIdentity()
     {
-       return User::find()->where(['country_code'=>$this->country_code,'phone_number'=>$this->phone_number])->one();
+
+
+       $user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+       if(empty($user))
+       {
+           return false;
+       }else{
+            if( Yii::$app->getSecurity()->validatePassword($this->password, $user->password))
+           {
+               return $user;
+           }
+           return false;
+       }
     }
     /**
      * Finds out if password reset token is valid
