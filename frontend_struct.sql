@@ -19,7 +19,7 @@ CREATE TABLE `user` (
   `language` VARCHAR(40) NOT NULL DEFAULT 'zh-CN',
   `status` int(10) unsigned NOT NULL DEFAULT '0',
   `step` TINYINT(1) NOT NULL DEFAULT '0',
-  `token` VARCHAR(255)  DEFAULT NULL ,
+  `token` VARCHAR(255)  DEFAULT NULL  COMMENT '令牌',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -82,6 +82,19 @@ CREATE TABLE `role` (
   `status` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE IF EXISTS `channel`;
+CREATE TABLE `channel` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL COMMENT '渠道名称',
+  `img_url` VARCHAR(255) NOT NULL COMMENT '渠道对应图片的URL地址',
+  `create_at` int(11) NOT NULL DEFAULT '0',
+  `update_at` int(11) NOT NULL DEFAULT '0',
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 /*!user表添加渠道 */;
 ALTER TABLE `user` ADD `channel` VARCHAR(255) NULL DEFAULT NULL COMMENT '渠道' AFTER `token`;

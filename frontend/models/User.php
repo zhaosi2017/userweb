@@ -11,6 +11,7 @@ use frontend\models\FActiveRecord;
 use frontend\models\UserPhone;
 use yii\db\Transaction;
 use frontend\models\ErrCode;
+use frontend\models\Channel;
 
 
 
@@ -37,6 +38,7 @@ class User extends FActiveRecord implements IdentityInterface
     const CHANNEL_FACEBOOK= 'Facebook';
     const CHANNEL_GMAIL = 'Gmail';
 
+    /*******渠道数组*******/
     public static $ChannlArr =
         [
             self::CHANNEL_TELEGRAM =>'Telegram',
@@ -51,12 +53,13 @@ class User extends FActiveRecord implements IdentityInterface
 
 
 
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{user}}';
+        return 'user';
     }
 
 
@@ -115,10 +118,11 @@ class User extends FActiveRecord implements IdentityInterface
     public function ValidateChannel()
     {
         $tmp = explode(',',$this->channel);
+        $channelArr = Channel::find()->select('id')->indexBy('id')->all();
         if(!empty($tmp))
         {
             foreach ($tmp as $c){
-                if(in_array($c,self::$ChannlArr))
+                if(array_key_exists($c,$channelArr))
                 {
                     continue;
                 }
