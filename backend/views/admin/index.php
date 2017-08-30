@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
@@ -38,13 +37,13 @@ $actionId = Yii::$app->requestedAction->id;
             [
                 'header' =>'角色',
                 'value' => function($data){
-                    return $data['role']['name'];
+                    return $data['authAssignment'];
                 },
             ],
             [
                 'header' =>'角色备注',
                 'value' => function($data){
-                    return $data['role']['remark'];
+                    return $data['description'];
                 },
             ],
             [
@@ -88,7 +87,7 @@ $actionId = Yii::$app->requestedAction->id;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '操作',
-                'template' => '{update} {delete}',
+                'template' => '{update} {delete} {privilege}',
                 'buttons' => [
                     'update' => function($url){
                         return Html::a('编辑',$url);
@@ -110,9 +109,11 @@ $actionId = Yii::$app->requestedAction->id;
                             ]);
 
                         }
-
-
                     },
+                    'privilege' => function($url, $model) {
+                        //return Html::a('角色分配', $url);
+                        return Html::a('角色分配', ['/authitem/user-role', 'id'=>$model->id]);
+                    }
                 ],
             ],
         ],

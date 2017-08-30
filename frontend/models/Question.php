@@ -15,15 +15,18 @@ use frontend\models\FActiveRecord;
  * @property integer $id
  * @property string $account
  */
-class UserPhone extends FActiveRecord
+class Question extends FActiveRecord
 {
+    const GROUP_ONE = 1;
+    const GROUP_TWO = 2;
+    const GROUP_THREE = 3;
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'user_phone';
+        return 'question';
     }
 
 }

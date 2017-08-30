@@ -15,7 +15,7 @@ use frontend\models\FActiveRecord;
  * @property integer $id
  * @property string $account
  */
-class UserPhone extends FActiveRecord
+class Channel extends FActiveRecord
 {
 
     /**
@@ -23,7 +23,7 @@ class UserPhone extends FActiveRecord
      */
     public static function tableName()
     {
-        return 'user_phone';
+        return 'channel';
     }
 
 }

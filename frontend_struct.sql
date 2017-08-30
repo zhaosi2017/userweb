@@ -19,7 +19,7 @@ CREATE TABLE `user` (
   `language` VARCHAR(40) NOT NULL DEFAULT 'zh-CN',
   `status` int(10) unsigned NOT NULL DEFAULT '0',
   `step` TINYINT(1) NOT NULL DEFAULT '0',
-  `token` VARCHAR(255)  DEFAULT NULL ,
+  `token` VARCHAR(255)  DEFAULT NULL  COMMENT '令牌',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -68,17 +68,47 @@ CREATE TABLE `black_list` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` text,
-  `remark` text,
-  `create_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `update_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `create_at` int(11) DEFAULT '0',
-  `update_at` int(11) DEFAULT '0',
-  `status` int(10) unsigned NOT NULL DEFAULT '0',
+
+
+
+DROP TABLE IF EXISTS `channel`;
+CREATE TABLE `channel` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL COMMENT '渠道名称',
+  `img_url` VARCHAR(255) NOT NULL COMMENT '渠道对应图片的URL地址',
+  `create_at` int(11) NOT NULL DEFAULT '0',
+  `update_at` int(11) NOT NULL DEFAULT '0',
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `question`;
+CREATE TABLE `question` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL COMMENT '题目',
+  `create_at` int(11) NOT NULL,
+  `update_at` int(11) NOT NULL,
+  `type` smallint(3) NOT NULL COMMENT '题组：1:1组，2：2组，3:3组',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE IF EXISTS `security_question`;
+CREATE TABLE `security_question` (
+  `id` mediumint(8) unsigned  NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL COMMENT '用户id',
+  `q_one` smallint(5) NOT NULL COMMENT '第一个密保问题id(对应question表对应的id)',
+  `a_one` varchar(255) NOT NULL COMMENT '第一个密保的答案',
+  `q_two` smallint(5) NOT NULL COMMENT '第二个密保问题id',
+  `a_two` varchar(255) NOT NULL COMMENT '第二个密保的答案',
+  `q_three` smallint(5) NOT NULL COMMENT '第三个密保问题id',
+  `a_three` varchar(255) NOT NULL COMMENT '第三个密保的答案',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+/*!user表添加渠道 */;
+ALTER TABLE `user` ADD `channel` VARCHAR(255) NULL DEFAULT NULL COMMENT '渠道' AFTER `token`;
+
+ALTER TABLE `user` ADD `balance` DECIMAL(14,4) NOT NULL DEFAULT '0.0000'  COMMENT '余额' AFTER `channel`;

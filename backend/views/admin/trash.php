@@ -30,13 +30,13 @@ $actionId = Yii::$app->requestedAction->id;
             [
                 'header' =>'角色',
                 'value' => function($data){
-                    return $data['role']['name'];
+                    return $data['authAssignment'];
                 },
             ],
             [
                 'header' =>'角色备注',
                 'value' => function($data){
-                    return $data['role']['remark'];
+                    return $data['description'];
                 },
             ],
 
