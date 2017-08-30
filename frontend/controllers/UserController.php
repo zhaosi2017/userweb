@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use frontend\models\Channel;
+use frontend\models\Question;
 use frontend\models\SecurityQuestion;
 use Yii;
 use yii\db\Exception;
@@ -191,7 +192,10 @@ class UserController extends AuthController
 
     public function actionQuestionList()
     {
-        return $this->jsonResponse(SecurityQuestion::getQuestions() ,'操作成功',0,ErrCode::SUCCESS);
+        $data = Question::find()->select(['id','title','type'])->all();
+        return $this->jsonResponse($data ,'操作成功',0,ErrCode::SUCCESS);
+
+//        return $this->jsonResponse(SecurityQuestion::getQuestions() ,'操作成功',0,ErrCode::SUCCESS);
     }
 
     /** 密保问题修改

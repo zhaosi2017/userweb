@@ -18,29 +18,7 @@ use frontend\models\FActiveRecord;
  */
 class SecurityQuestion extends FActiveRecord
 {
-
-    /*******题库常量*******/
-    const QUESTION_ONE   = 1;
-    const QUESTION_TWO   = 2;
-    const QUESTION_THREE = 3;
-    const QUESTION_FOUR  = 4;
-    const QUESTION_FIVE  = 5;
-    const QUESTION_SIX   = 6;
-    const QUESTION_SEVEN = 7;
-
-    /*******获取题库函数*******/
-    public static function getQuestions()
-    {
-        return [
-            self::QUESTION_ONE    => '您上一间公司叫什么?',
-            self::QUESTION_TWO    => '您最亲的人手机号后4位是什么？',
-            self::QUESTION_THREE  => '您的小学全名叫什么？',
-            self::QUESTION_FOUR   => '圣经里您记得最清晰的一句话是什么？',
-            self::QUESTION_FIVE   => '手机里您最不会删除的程序是什么？',
-            self::QUESTION_SIX    => '您网购买过最贵的商品是什么？',
-            self::QUESTION_SEVEN  => '您的电脑硬盘多少G?',
-        ];
-    }
+    
 
     /**
      * @inheritdoc
@@ -76,15 +54,8 @@ class SecurityQuestion extends FActiveRecord
 
     public function validateOne()
     {
-        if($this->q_one == $this->q_two)
-        {
-            $this->addError('q_one','题库1 Id 不能与题库2 Id 一样');
-        }
-        if($this->q_one == $this->q_three)
-        {
-            $this->addError('q_one','题库1 Id 不能与题库3 Id 一样');
-        }
-        if(!array_key_exists($this->q_one,self::getQuestions()))
+        $model = Question::find()->where(['id'=>$this->q_one,'type'=>Question::GROUP_ONE])->one();
+        if(empty($model))
         {
             $this->addError('q_one','题库1非法');
         }
@@ -92,21 +63,19 @@ class SecurityQuestion extends FActiveRecord
 
     public function validateTwo()
     {
-        if($this->q_two == $this->q_three)
+        $model = Question::find()->where(['id'=>$this->q_two,'type'=>Question::GROUP_TWO])->one();
+        if(empty($model))
         {
-            $this->addError('q_two','题库2 Id 不能与题库3 Id 一样');
-        }
-        if(!array_key_exists($this->q_two,self::getQuestions()))
-        {
-            $this->addError('q_two','题库2非法');
+            $this->addError('q_one','题库2非法');
         }
     }
 
     public function validateThree()
     {
-        if(!array_key_exists($this->q_three,self::getQuestions()))
+        $model = Question::find()->where(['id'=>$this->q_three,'type'=>Question::GROUP_THREE])->one();
+        if(empty($model))
         {
-            $this->addError('q_three','题库3非法');
+            $this->addError('q_one','题库3非法');
         }
     }
 
