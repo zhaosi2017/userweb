@@ -3222,7 +3222,7 @@
                 "region",
                 "yii"
             ],
-            "time": "2016-08-11 05:15:49"
+            "time": "2016-08-11T05:15:49+00:00"
         },
         {
             "name": "yidas/yii2-composer-bower-skip",
