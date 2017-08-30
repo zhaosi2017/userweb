@@ -15,6 +15,8 @@ class ErrCode
     const NICKNAME_EMPTY = '2002';//昵称为空
     const USER_NOT_EXIST = '2003';//用户不存在
     const CHANNEL_EMPTY = '2004';//渠道为空
+    const ILLEGAL_OPERATION = '4001';//非法操作
+
 
 
 

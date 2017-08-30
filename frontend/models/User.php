@@ -186,16 +186,22 @@ class User extends FActiveRecord implements IdentityInterface
 
 
 
-    public function login($data)
+    public function login()
     {
         if($this->validate())
         {
             $identity = $this->getUserIdentity();
+            if(empty($identity))
+            {
+                return $this->jsonResponse([],$this->getErrors(),1,ErrCode::USER_NOT_EXIST);
+            }
             if(Yii::$app->user->login($identity))
             {
                 if(isset($identity->password)){unset($identity->password);}
                 if(isset($identity->auth_key)){unset($identity->auth_key);}
-               return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
+                return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
+            }else{
+                return $this->jsonResponse([],'登录失败',1,ErrCode::FAILURE);
             }
 
         }else{

@@ -18,7 +18,7 @@ use frontend\models\FActiveRecord;
  */
 class SecurityQuestion extends FActiveRecord
 {
-    
+
 
     /**
      * @inheritdoc

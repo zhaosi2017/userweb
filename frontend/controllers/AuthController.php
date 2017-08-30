@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\ErrCode;
 use yii\web\Controller;
 use yii\helpers\ArrayHelper;
 use yii\filters\auth\HttpBearerAuth;
@@ -13,6 +14,7 @@ use yii\filters\AccessControl;
  */
 class AuthController extends Controller
 {
+
     public function behaviors()
     {
 
@@ -43,6 +45,19 @@ class AuthController extends Controller
 
     public function beforeAction($action)
     {
+//        $arr = ['login',
+//            'register',
+//            'register-user'];
+//        $_action = \Yii::$app->controller->action->id;
+//        if(in_array($_action,$arr))
+//        {
+//
+//             if($this->checkRequest() !== true)
+//             {
+////                 return $this->jsonResponse([],'非法操作',1,ErrCode::ILLEGAL_OPERATION);
+////                 return false;
+//             }
+//        }
 
         if(defined('YII_ENV') && YII_ENV == 'dev') {
             file_put_contents('/tmp/userweb.log', 'request---------'.PHP_EOL.var_export(\Yii::$app->request->getHeaders(), true) . PHP_EOL, 8);
@@ -65,5 +80,18 @@ class AuthController extends Controller
         $postData = file_get_contents('php://input');
         $postData = json_decode($postData,true);
         return $postData;
+    }
+
+    private  function checkRequest()
+    {
+        $data = $this->getRequestContent();
+        $time = isset($data['time'])? $data['time'] : '';
+        $token = isset($data['token'])? $data['token'] : '';
+        $privateKey = \Yii::$app->params['private_token_key'];
+        if(md5($privateKey.$time) === $token)
+        {
+            return true;
+        }
+        return false;
     }
 }
