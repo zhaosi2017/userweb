@@ -19,9 +19,6 @@ use yii\widgets\ActiveForm;
     ]); ?>
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?php echo $form->labelEx($model,'image'); ?>
-    <?php echo CHtml::activeFileField($model,'image'); ?>
-    <?php echo $form->error($model,'image'); ?>
     <?= $form->field($model, 'img_url')->textInput(['maxlength' => true]) ?>
     <div class="form-group">
         <div class="col-sm-6 col-sm-offset-1">

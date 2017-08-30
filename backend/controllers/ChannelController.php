@@ -8,6 +8,7 @@ use backend\models\ChannelSearch;
 use backend\controllers\PController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ChannelController implements the CRUD actions for Channel model.
@@ -121,4 +122,28 @@ class ChannelController extends PController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    /**
+     * 上传图片.
+     */
+    public function actionUpload()
+    {
+        $uploadForm = new UploadForm();
+        if(Yii::$app->request->isPost){
+            $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+            if($imageUrl = $uploadForm->upload()){
+                echo Json::encode([
+                    'imageUrl'    => $imageUrl,
+                    // 上传的error字段，如果没有错误就返回空字符串，否则返回错误信息，客户端会自动判定该字段来认定是否有错.
+                    'error'   => '',
+                ]);
+            }else{
+                echo Json::encode([
+                    'imageUrl'    => '',
+                    'error'   => '文件上传失败'
+                ]);
+            }
+        }
+    }
+
 }

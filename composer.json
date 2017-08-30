@@ -21,7 +21,8 @@
         "kartik-v/yii2-widget-select2": "*",
         "yiidoc/yii2-redactor": "*",
         "xiaogouxo/yii2-ip2region": "dev-master",
-        "yiisoft/yii2-redis": "^2.0"
+        "yiisoft/yii2-redis": "^2.0",
+        "kartik-v/yii2-widget-fileinput":"v1.0.6"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
