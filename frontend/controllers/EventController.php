@@ -7,40 +7,86 @@
  */
 namespace frontend\controllers;
 
+use common\services\appService\apps\callu;
+use frontend\models\CallRecord\CallRecord;
 use Yii;
-use yii\base\InvalidParamException;
-use yii\web\BadRequestHttpException;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
+use common\services\ttsService\CallService;
+use frontend\models\User;
+use common\services\ttsService\thirds\Sinch;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 
-class EventController extends  Controller{
+class EventController extends  AuthController {
 
     public $enableCsrfValidation = false;
 
-    /**
-     * @inheritdoc
-     */
+
     public function behaviors()
     {
-        return [
+        $self = [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
                         'allow' => true,
+                        'actions' => ['test'],
                         'roles' => ['?'],
                     ],
                 ],
             ],
         ];
+        $behaviors = parent::behaviors();
+        return array_merge($behaviors,$self);
+
+        return $behaviors;
     }
+
+
+    public function actionEventSinch(){
+
+        $postData = @file_get_contents('php://input');
+        $callback_data = json_decode($postData ,true);
+        $service = TTSservice::init(Sinch::class);
+        $rest = $service->event($callback_data);
+        echo $rest;
+    }
+
+
+    public function actionEventNexmo(){
+
+        $postData = @file_get_contents('php://input');
+        $postData = json_decode($postData, true);
+        $service = TTSservice::init(Nexmo::class);
+        $result =  $service->event($postData);
+        echo $result;
+    }
+
+    public function actionAnwserNexmo(){
+
+        $cachKey = Yii::$app->request->get('key');
+        header("content-type:application/json;charset=utf-8");
+        $data = Yii::$app->redis->get($cachKey);
+        if(empty($data)){
+            $data   = '[]';
+        }
+        exit($data);
+    }
+
+
+    public function actionTest(){
+
+
+        $app =  new callu();
+
+        $service =new  CallService(Sinch::class);
+        $service->from_user = User::findOne(1);
+        $service->to_user   = User::findOne(2);
+        $service->text      ="双流老妈秃头呼叫你上线";
+        $service->app       = $app;
+        $service->call_type = CallRecord::CALLRECORD_TYPE_UNURGENT;
+
+        $service->start_call();
+    }
+
+
 
 }

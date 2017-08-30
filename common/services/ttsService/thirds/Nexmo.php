@@ -5,9 +5,10 @@
  * Date: 2017/8/29
  * Time: 上午11:27
  */
-namespace common\services\ttsService\third;
+namespace common\services\ttsService\thirds;
 
 use common\services\ttsService\AbstruactThird;
+use frontend\models\CallRecord\CallRecord;
 use \Nexmo\Client\Credentials\Basic;
 use \Nexmo\Client\Credentials\Keypair;
 use \Nexmo\Client;
@@ -85,17 +86,17 @@ class Nexmo extends  AbstruactThird{
         parent::Event($event_data);
         $this->messageId = $event_data['uuid'];
         if($event_data['status'] == 'busy' || $event_data['status'] == 'rejected'){
-            $this->Event_Status = $event_data['result'] = CallRecord::Record_Status_Fail;
+            $this->Event_Status = $event_data['result'] = CallRecord::CALLRECORD_STATUS_BUSY;
         }elseif($event_data['status'] == 'answered'){
-            $this->Event_Status = $event_data['result'] = CallRecord::Record_Status_Success;
+            $this->Event_Status = $event_data['result'] = CallRecord::CALLRECORD_STATUS_SUCCESS;
         }elseif($event_data['status'] == 'failed'){
-            $this->Event_Status = $event_data['result'] = CallRecord::Record_Status_Fail;
+            $this->Event_Status = $event_data['result'] = CallRecord::CALLRECORD_STATUS_Filed;
         }elseif($event_data['status'] == 'unanwsered'){
-            $this->Event_Status = $event_data['result'] = CallRecord::Record_Status_Fail;
+            $this->Event_Status = $event_data['result'] = CallRecord::CALLRECORD_STATUS_NOANWSER;
         }elseif($event_data['status'] == 'timeout'){
-            $this->Event_Status = $event_data['result'] = CallRecord::Record_Status_Fail;
+            $this->Event_Status = $event_data['result'] = CallRecord::CALLRECORD_STATUS_NOANWSER;
         }else{
-            $this->DiscardEvent();                      //其他的回调直接丢弃不处理
+            $this->DiscardEvent();                                      //其他的回调直接丢弃不处理
         }
         return true;
     }

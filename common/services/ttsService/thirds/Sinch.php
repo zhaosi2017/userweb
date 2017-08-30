@@ -6,8 +6,9 @@
  * Time: 上午10:57
  */
 
-namespace  common\services\ttsService\third;
+namespace  common\services\ttsService\thirds;
 use common\services\ttsService\AbstruactThird;
+use frontend\models\CallRecord\CallRecord;
 use GuzzleHttp\Psr7\Request;
 
 class Sinch extends  AbstruactThird{
@@ -34,16 +35,12 @@ class Sinch extends  AbstruactThird{
         'BUSY',     //用户忙
     ];
 
-
-
-
-
     /**
      * @return bool 呼叫开始
      */
     public function CallStart(){
         if(strpos($this->To , '+') !== false){
-            $this->to = '+'.trim($this->To ,'+');
+            $this->To = '+'.trim($this->To ,'+');
         }
         $text = '';
         for($i=1; $i <= $this->Loop ; $i++){
@@ -113,19 +110,19 @@ class Sinch extends  AbstruactThird{
         $this->callId = $Event_data['callid'];           //通话id
         switch ($Event_data['result']){
             case 'ANSWERED':
-                $this->Event_Status =  CallRecord::Record_Status_Success;
+                $this->Event_Status =  CallRecord::CALLRECORD_STATUS_SUCCESS;
                 break;
             case 'FAILED':
-                $this->Event_Status =  CallRecord::Record_Status_Fail;
+                $this->Event_Status =  CallRecord::CALLRECORD_STATUS_FILED;
                 break;
             case 'NOANSWER':
-                $this->Event_Status =  CallRecord::Record_Status_NoAnwser;
+                $this->Event_Status =  CallRecord::CALLRECORD_STATUS_NOANWSER;
                 break;
             case 'BUSY':
-                $this->Event_Status =  CallRecord::Record_Status_Busy;
+                $this->Event_Status =  CallRecord::CALLRECORD_STATUS_BUSY;
                 break;
             default:
-                $this->Event_Status =  CallRecord::Record_Status_Fail;
+                $this->Event_Status =  CallRecord::CALLRECORD_STATUS_Filed;
                 break;
         }
         return 'OK';

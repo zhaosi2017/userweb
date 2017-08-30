@@ -27,6 +27,7 @@ class AuthController extends Controller
                         'login',
                         'register',
                         'register-user',
+                        'test'
                     ],
                 ]
             ]
