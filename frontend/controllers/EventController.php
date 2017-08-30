@@ -28,7 +28,7 @@ class EventController extends  AuthController {
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['test'],
+                        'actions' => ['test' , 'event-sinch'],
                         'roles' => ['?'],
                     ],
                 ],
@@ -45,8 +45,8 @@ class EventController extends  AuthController {
 
         $postData = @file_get_contents('php://input');
         $callback_data = json_decode($postData ,true);
-        $service = TTSservice::init(Sinch::class);
-        $rest = $service->event($callback_data);
+        $service = new CallService(Sinch::class);
+        $rest = $service->Event($callback_data);
         echo $rest;
     }
 
@@ -55,8 +55,8 @@ class EventController extends  AuthController {
 
         $postData = @file_get_contents('php://input');
         $postData = json_decode($postData, true);
-        $service = TTSservice::init(Nexmo::class);
-        $result =  $service->event($postData);
+        $service = new CallService(Nexmo::class);
+        $result =  $service->Event($postData);
         echo $result;
     }
 

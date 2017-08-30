@@ -102,9 +102,10 @@ class CallService {
      */
     public function Event(Array $event_data){
 
-        $result = $this->third->Event();
+        $result = $this->third->Event($event_data);
         $catch_key =  get_class($this->third).$this->third->callId;
         $catch = $this->_redisGetVByK($catch_key);
+        $this->app = unserialize($catch['apps']);
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！");
         }
@@ -160,10 +161,9 @@ class CallService {
 
         $this->to_user      = $catch['to_user'];
         $this->from_user    = $catch['from_user'];
-        $this->app          = unserialize($catch['apps']);
         $this->call_type    = $catch['call_type'];
         $this->third        = unserialize($catch['third']);
-        $numbers             = $catch['numbers'];
+        $numbers             = json_decode($catch['numbers']);
 
         $number = array_shift($numbers);
         $this->third->To   =  $number;
@@ -188,12 +188,12 @@ class CallService {
 
         Yii::$app->redis->hset($call_key , 'time', time());  //呼叫开始时间
         Yii::$app->redis->hset($call_key , 'numbers' , json_encode($numbers , true));
-        Yii::$app->redis->hset($call_key , 'to_user' , json_encode($this->to_user , true));
-        Yii::$app->redis->hset($call_key , 'from_user' , json_encode($this->from_user , true));
+        Yii::$app->redis->hset($call_key , 'to_user' , serialize($this->to_user ));
+        Yii::$app->redis->hset($call_key , 'from_user' , serialize($this->from_user));
         Yii::$app->redis->hset($call_key , 'third' , serialize($this->third));
         Yii::$app->redis->hset($call_key , 'apps' ,serialize($this->app) );
         Yii::$app->redis->hset($call_key , 'call_type' , $this->call_type);
-        Yii::$app->redis->expire($call_key , 5*60 );
+        Yii::$app->redis->expire($call_key , 60*60 );
 
     }
     /**

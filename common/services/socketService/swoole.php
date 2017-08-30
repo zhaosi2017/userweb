@@ -13,6 +13,7 @@ use common\models\User;
 use common\services\appService\apps\callu;
 use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
+use frontend\models\Channel;
 
 class swoole{
 
@@ -48,34 +49,11 @@ class swoole{
             $this->server->push($frame->fd , '数据错误');
         }
 
-        $user = \frontend\models\User::findOne(['token'=>$data->token]);   //身份校验
-        if(empty($user)){
-            $this->server->push($frame->fd , 'token错误');
-        }
-
-        $to_user = \frontend\models\User::findOne(['account'=>$data->account]);
-        if(empty($to_user)){
-            $this->server->push($frame->fd , '不存在被叫的用户');
-        }
-        if(key_exists($data->call_type , CallRecord::$type_map)){
-            $this->server->push($frame->fd , '呼叫类型错误');
-        }
-
-
         $app = new callu();
-        $app->user   = $user;
-        $app->friend = $to_user;
         $app->socket_fd = $frame->fd;
         $app->socket_server = $server;
 
-        $service =new  CallService(Sinch::class);
-        $service->from_user = $user;
-        $service->to_user   = $to_user;
-        $service->text      ="双流老妈秃头呼叫你上线";
-        $service->app       = $app;
-        $service->call_type = $data->call_type;
 
-        $service->start_call();
     }
 
 
