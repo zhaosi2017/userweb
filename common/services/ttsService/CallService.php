@@ -54,7 +54,7 @@ class CallService {
     public function __construct($className = null){
 
         if(empty($className))  $className = __NAMESPACE__.'\\'.Yii::$app->params['tts_third'];
-        if(is_subclass_of($className , AbstruactThird::class)){
+        if(is_subclass_of($className , AbstruactThird::class) ){
             $this->third = new $className();
         }
     }

@@ -112,4 +112,20 @@ class SecurityQuestion extends FActiveRecord
 
     }
 
+    public function checkSecurityQuestion($data)
+    {
+        $this->q_one = isset($data['q1']) ? $data['q1']:'';
+        $this->q_two = isset($data['q2']) ? $data['q2']: '';
+        $this->q_three = isset($data['q3']) ? $data['q3']: '';
+        $this->a_one  = isset($data['a1']) ? $data['a1']: '';
+        $this->a_two = isset($data['a2']) ? $data['a2']: '';
+        $this->a_three = isset($data['a3']) ? $data['a3']: '';
+        if($this->validate())
+        {
+            return true;
+        }else{
+            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
+        }
+    }
+
 }

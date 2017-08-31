@@ -31,7 +31,12 @@ class AuthController extends Controller
                         'register',
                         'register-user',
                         'test',
-                        'event-sinch'
+                        'event-sinch',
+                        'reset-password',
+                        'forget-password',
+                        'reset-pass-phone',
+                        'reset-pass-question',
+                        'reset-message',
                     ],
                 ]
             ]
@@ -48,10 +53,11 @@ class AuthController extends Controller
 
     public function beforeAction($action)
     {
-        $arr = ['login', 'register', 'register-user'];
+        $arr = ['login', 'register', 'register-user','reset-message','forget-password','reset-password','reset-pass-phone','reset-pass-question'];
         $_action = \Yii::$app->controller->action->id;
         if(in_array($_action,$arr))
         {
+
              if($this->checkRequest() !== true)
              {
                  throw new UnauthorizedHttpException('Your request was made with invalid credentials.');

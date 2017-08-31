@@ -23,7 +23,7 @@
 
         static public  $status_map = [
             self::CALLRECORD_STATUS_SUCCESS =>'呼叫成功',
-            self::CALLRECORD_STATUS_Filed   =>'呼叫错误',
+            self::CALLRECORD_STATUS_FILED   =>'呼叫错误',
             self::CALLRECORD_STATUS_BUSY    =>'用户忙',
             self::CALLRECORD_STATUS_NOANWSER=>'无人接听'
         ];

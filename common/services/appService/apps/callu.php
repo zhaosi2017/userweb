@@ -9,7 +9,9 @@
  */
 namespace  common\services\appService\apps;
 
-use common\models\User;
+use common\services\ttsService\thirds\Sinch;
+use frontend\models\Channel;
+use frontend\models\User;
 use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
 
@@ -45,8 +47,6 @@ class callu {
     public function sendText($string){
 
         $this->result['message'] = $string;
-        file_put_contents('/tmp/test-call.log' , $string , 8);
-        return ;
         $this->socket_server->push($this->fd , json_encode($this->result , true));
 
     }
@@ -54,19 +54,20 @@ class callu {
 
 
     public function call($data){
-
-        $user = \frontend\models\User::findOne(['token'=>$data->token]);   //身份校验
+       
+        $data = json_decode($data );
+        $user =  User::find()->where(['token'=>$data->token])->one();   //身份校验
         if(empty($user)){
             $this->socket_server->push($this->socket_fd , 'token错误');
             return ;
         }
 
-        $to_user = \frontend\models\User::findOne(['account'=>$data->account]);
+        $to_user = User::findOne(['account'=>$data->account]);
         if(empty($to_user)){
             $this->socket_server->push($this->socket_fd , '不存在被叫的用户');
             return ;
         }
-        if(key_exists($data->call_type , CallRecord::$type_map)){
+        if(!key_exists($data->call_type , CallRecord::$type_map)){
             $this->socket_server->push($this->socket_fd , '呼叫类型错误');
             return ;
         }
@@ -75,9 +76,7 @@ class callu {
             $this->socket_server->push($this->socket_fd, '呼叫类型错误');
             return ;
         }
-
-
-        $this->user = $user;
+        $this->user   = $user;
         $this->friend = $to_user;
 
         $service =new  CallService(Sinch::class);
