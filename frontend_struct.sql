@@ -112,3 +112,21 @@ CREATE TABLE `security_question` (
 ALTER TABLE `user` ADD `channel` VARCHAR(255) NULL DEFAULT NULL COMMENT '渠道' AFTER `token`;
 
 ALTER TABLE `user` ADD `balance` DECIMAL(14,4) NOT NULL DEFAULT '0.0000'  COMMENT '余额' AFTER `channel`;
+
+/********************通话记录表********************/
+CREATE TABLE `call_record` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `from_user_id` int(11) DEFAULT NULL COMMENT '主叫id',
+  `call_id` char(64) DEFAULT NULL COMMENT '呼叫的id',
+  `to_user_id` int(11) DEFAULT NULL COMMENT '被叫id',
+  `time` int(11) DEFAULT NULL COMMENT '记录时间',
+  `text` char(255) DEFAULT '' COMMENT '语音类容',
+  `duration` int(4) DEFAULT NULL COMMENT '通话时间',
+  `amount` decimal(14,4) DEFAULT NULL COMMENT '通话金额',
+  `status` int(11) DEFAULT NULL COMMENT '通话状态',
+  `call_type` int(11) DEFAULT NULL COMMENT '呼叫类型',
+  `from_number` char(32) DEFAULT NULL COMMENT '主叫电话',
+  `to_number` int(11) DEFAULT NULL COMMENT '被叫电话',
+  `third` char(255) DEFAULT NULL COMMENT '呼叫渠道',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
