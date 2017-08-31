@@ -74,9 +74,14 @@ class EventController extends  AuthController {
 
     public function actionTest(){
 
+        $sinch = new Sinch();
+        $sinch->Text = '123456';
+        $sinch->To = '+85586564836';
+        $sinch->SmsStart();
 
-        $app =  new callu();
-        $app->call(1);
+
+//        $app =  new callu();
+//        $app->call(1);
 
     }
 

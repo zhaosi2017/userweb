@@ -106,6 +106,10 @@ class CallService {
         $catch_key =  get_class($this->third).$this->third->callId;
         $catch = $this->_redisGetVByK($catch_key);
         $this->app = unserialize($catch['apps']);
+        $this->to_user      = serialize($catch['to_user']);
+        $this->from_user    = serialize($catch['from_user']);
+        $this->call_type    = $catch['call_type'];
+        $this->third        = unserialize($catch['third']);
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！");
         }
@@ -132,7 +136,7 @@ class CallService {
      * 处理回调 结果
      */
     private function _Event_ActionResult(){
-
+        $this->_saveRecord();                   //保存通话记录
         switch ($this->third->Event_Status){
             case CallRecord::CALLRECORD_STATUS_SUCCESS:
                 $this->app->sendText('呼叫成功！');
@@ -159,11 +163,8 @@ class CallService {
      */
     private function _call(Array $catch){
 
-        $this->to_user      = $catch['to_user'];
-        $this->from_user    = $catch['from_user'];
-        $this->call_type    = $catch['call_type'];
-        $this->third        = unserialize($catch['third']);
-        $numbers             = json_decode($catch['numbers']);
+
+        $numbers = json_decode($catch['numbers']);
 
         $number = array_shift($numbers);
         $this->third->To   =  $number;
@@ -233,6 +234,27 @@ class CallService {
 
 
         return true;
+    }
+
+    /**
+     * 保存通话记录
+     */
+    private function _saveRecord(){
+
+        $model = new CallRecord();
+        $model->from_user_id = $this->from_user->id;
+        $model->call_id      = $this->third->callId;
+        $model->to_user_id   = $this->to_user->id;
+        $model->time         = time();
+        $model->text         = $this->third->Text;
+        $model->duration     = 0;                               //通话时间 暂时为0
+        $model->amount       = 0;                               //通话费用
+        $model->status       = $this->third->Event_Status;
+        $model->call_type    = $this->call_type;
+        $model->from_number  = $this->third->From;
+        $model->to_number    = $this->third->To;
+        $model->third        = get_class($this->third);
+
     }
 
 }

@@ -16,7 +16,6 @@ class Sinch extends  AbstruactThird{
     private $auth_id = '610491fc-2af1-4c16-9a2f-8ab50b7ffc93';
     private $auth_key = 'Y/9Mx71MbUaYrfJMreCthQ==';
 
-
     private $uri = 'https://callingapi.sinch.com/v1/callouts';
 
     private $authorization;
@@ -75,11 +74,33 @@ class Sinch extends  AbstruactThird{
     }
 
     /**
+     * 附属产品发短信
+     */
+    public function SmsStart(){
+
+        $this->uri = 'https://messagingapi.sinch.com/v1/Sms/85586564836';
+        $body = json_encode([
+            'message'=>$this->Text
+        ]);
+        $this->_signature($body , '/v1/Sms/85586564836');
+        $header = ['x-timestamp'=>$this->timestamp , 'Content-type'=>'application/json' ,'Authorization'=>$this->authorization];
+        $request  = new Request('POST' , $this->uri , $header , $body);
+        $response =  $this->HttpSend($request);
+        echo "<pre>";
+        print_r($response);die;
+        if($response->getStatusCode() !== 200){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 数据签名
      */
-    private function _signature($body){
+    private function _signature($body , $path = null){
         $this->timestamp = date("c");
-        $path                  = "/v1/callouts";
+        $path                  = empty($path)?"/v1/callouts":$path;
         $content_type          = "application/json";
         $canonicalized_headers = "x-timestamp:" . $this->timestamp;
 
