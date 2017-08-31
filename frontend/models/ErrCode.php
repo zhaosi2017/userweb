@@ -18,6 +18,8 @@ class ErrCode
     const ILLEGAL_OPERATION = '4001';//非法操作
     const PASSWORD_EMPTY = '2005'; //密码不能为空
     const SECURITY_QUESTION_NOT_SET = '2006';//安全密保问题没有设置
+    const COUNTRY_CODE_EMPTY = '2007';//国码为空
+    const PHONE_EMPTY = '2008';//手机为空
 
 
 

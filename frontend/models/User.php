@@ -175,6 +175,10 @@ class User extends FActiveRecord implements IdentityInterface
 
     public function login()
     {
+        if(empty($this->country_code)){return  $this->jsonResponse([],'国码不能为空',1,ErrCode::COUNTRY_CODE_EMPTY);}
+        if(empty($this->phone_number)){return  $this->jsonResponse([],'手机号不能为空',1,ErrCode::PASSWORD_EMPTY);}
+        if(empty($this->password)){return  $this->jsonResponse([],'密码不能为空',1,ErrCode::PASSWORD_EMPTY);}
+
         if($this->validate())
         {
             $identity = $this->getUserIdentity();
@@ -373,6 +377,7 @@ class User extends FActiveRecord implements IdentityInterface
             $this->reg_time = time();
             $this->token = $this->makeToken();
             $this->status = 0;
+            $this->reg_ip = Yii::$app->request->getUserIP();
             Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
             $transaction = Yii::$app->db->getTransaction();
 
