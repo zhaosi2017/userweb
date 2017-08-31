@@ -2,6 +2,7 @@
 namespace frontend\models;
 
 
+use function PHPSTORM_META\elementType;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -28,29 +29,10 @@ class User extends FActiveRecord implements IdentityInterface
     /*********优码初始值*********/
     const INIT_YOUCODE = '999999';
 
-    /*******渠道*******/
-    const CHANNEL_TELEGRAM = 'Telegram';
-    const CHANNEL_POTATO = 'Potato';
-    const CHANNEL_SKYPE = 'Skype';
-    const CHANNEL_WhatsApp = 'WhatsApp';
-    const CHANNEL_QQ= 'QQ';
-    const CHANNEL_Wechat = 'Wechat';
-    const CHANNEL_FACEBOOK= 'Facebook';
-    const CHANNEL_GMAIL = 'Gmail';
-
-    /*******渠道数组*******/
-    public static $ChannlArr =
-        [
-            self::CHANNEL_TELEGRAM =>'Telegram',
-            self::CHANNEL_POTATO => 'Potato',
-            self::CHANNEL_SKYPE => 'Skype',
-            self::CHANNEL_WhatsApp => 'WhatsApp',
-            self::CHANNEL_QQ=> 'QQ',
-            self::CHANNEL_Wechat => 'Wechat',
-            self::CHANNEL_FACEBOOK=> 'Facebook',
-            self::CHANNEL_GMAIL => 'Gmail',
-        ];
-
+    //token
+   const REDIS_TOKEN = 'token';
+   //sms
+   const REDIS_MESSAGE = 'sms';
 
 
 
@@ -82,7 +64,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['country_code','match','pattern'=>'/^[0-9]{2,6}$/','message'=>'{attribute}必须为2到6位纯数字'],
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'{attribute}必须为4到11位纯数字'],
             ['phone_number','validatePhone','on'=>'register'],
-            ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'密码至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
+            ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['channel','ValidateChannel'],
 
         ];
@@ -333,16 +315,18 @@ class User extends FActiveRecord implements IdentityInterface
 
     }
 
-    private function sendMessage()
+    public function sendMessage()
     {
         $number = $this->country_code.$this->phone_number;
         if($number){
 
             $redis = Yii::$app->redis;
             $verifyCode = self::makeVerifyCode();
-           // $redis->setex($number,60*2,$verifyCode);
-            $redis->set($number,$verifyCode);
-
+            $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
+            $redis->setex($number,$expire,$verifyCode);
+            if(defined('YII_ENV') && YII_ENV =='dev'){
+                return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
+            }
             $url = 'https://rest.nexmo.com/sms/json?' . http_build_query(
                     [
                         'api_key' =>  Yii::$app->params['nexmo_api_key'],
@@ -357,6 +341,7 @@ class User extends FActiveRecord implements IdentityInterface
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
             $response = json_decode($response, true);
+
             if(isset($response['messages'][0]['status'] ) && $response['messages'][0]['status'] ==0)
             {
                 return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
@@ -517,13 +502,13 @@ class User extends FActiveRecord implements IdentityInterface
 
     public function updateNickname()
     {
+        if(empty($this->nickname))
+        {
+            return $this->jsonResponse([],'昵称不能为空',1,ErrCode::NICKNAME_EMPTY);
+        }
 
         if($this->validate('nickname'))
         {
-            if(empty($this->nickname))
-            {
-                return $this->jsonResponse([],'昵称不能为空',1,ErrCode::NICKNAME_EMPTY);
-            }
             if($this->save())
             {
                 return $this->jsonResponse([],'修改昵称成功',0,ErrCode::SUCCESS);
@@ -549,6 +534,142 @@ class User extends FActiveRecord implements IdentityInterface
         }else{
             return $this->jsonResponse([],$this->getErrors(),0,ErrCode::SUCCESS);
         }
+    }
+
+    //重置密码-第一步
+
+    /**shur
+     * @return array|bool
+     */
+
+    public function checkResetPassword()
+    {
+        if($this->validate('country_code','phone_number'))
+        {
+            $res = self::find()->where(['country_code'=>$this->country_code,'phone_number'=>$this->phone_number])->one();
+            if($res)
+            {
+                $question = SecurityQuestion::find()->select(['id'])->where(['userid'=>$res->id])->one();
+                $bool = empty($question) ? false: true;
+                return $this->jsonResponse(['set-question'=> $bool],'操作成功','0',ErrCode::SUCCESS);
+
+            }else{
+                return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+            }
+        }else{
+            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
+        }
+    }
+
+
+
+
+    public function resetPasswordPhone($code)
+    {
+
+        $redis = Yii::$app->redis;
+        $key = $this->country_code.$this->phone_number;
+        $_code = $redis->get($key);
+        
+
+        if(empty($_code) || empty($code) || $_code != $code)
+        {
+            return $this->jsonResponse([],'验证码过期/验证码错误','1',ErrCode::CODE_ERROR);
+        }
+        if($this->validate('country_code','phone_number')) {
+            $res = self::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone_number])->one();
+            if ($res){
+                $_tmp = md5($key.time());
+                $_key = $key.self::REDIS_TOKEN;
+                $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
+                $redis->setex($_key, $expire , $_tmp);
+                return $this->jsonResponse(['token'=>$_tmp],'操作成功','0',ErrCode::SUCCESS);
+            }else{
+                return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+            }
+        }else{
+            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
+        }
+    }
+
+
+
+    public function resetPassword($token)
+    {
+        $redis = Yii::$app->redis;
+        $key = $this->country_code.$this->phone_number.self::REDIS_TOKEN;
+        $_token = $redis->get($key);
+        if(empty($token) || $token != $_token)
+        {
+            return  $this->jsonResponse([],'非法操作','0',ErrCode::ILLEGAL_OPERATION);
+        }
+
+        if(empty($this->password))
+        {
+            return  $this->jsonResponse([],'密码不能为空','0',ErrCode::PASSWORD_EMPTY);
+        }
+        if($this->validate('country_code','phone_number','password')) {
+            $res = self::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone_number])->one();
+            if ($res){
+                $res->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+                if($res->save())
+                {
+                    $redis->del($key);
+                    return  $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
+
+                }else{
+                    return  $this->jsonResponse([],$res->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);
+                }
+
+            }else{
+                return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+            }
+        }else{
+            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
+        }
+    }
+
+
+    public function resetPasswordQuestion($data)
+    {
+        $user = User::find()->where(['country_code'=>$this->country_code,'phone_number'=>$this->phone_number])->one();
+        if(empty($user))
+        {
+            return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+        }
+
+        $q1 = isset($data['q1']) ? $data['q1']:'';
+        $q2 = isset($data['q2']) ? $data['q2']: '';
+        $q3 = isset($data['q3']) ? $data['q3']: '';
+        $a1 = isset($data['a1']) ? $data['a1']: '';
+        $a2 = isset($data['a2']) ? $data['a2']: '';
+        $a3 = isset($data['a3']) ? $data['a3']: '';
+        $securityQuestion = new SecurityQuestion();
+        $res = $securityQuestion->checkSecurityQuestion($data);
+        if($res !== true)
+        {
+            return $res;
+        }
+        $model = SecurityQuestion::find()->where([
+            'userid' => $user->id,
+            'q_one'  => $q1,
+            'q_two'  => $q2,
+            'q_three'=> $q3,
+            'a_one'  => $a1,
+            'a_two'  => $a2,
+            'a_three'=> $a3,
+            ])->one();
+        if(empty($model))
+        {
+            return $this->jsonResponse([],'安全问题不正确／安全问题没有设置','1',ErrCode::SECURITY_QUESTION_NOT_SET);
+        }
+        $redis = Yii::$app->redis;
+        $key = $this->country_code.$this->phone_number.self::REDIS_TOKEN;
+        $_tmp = md5($key.time());
+        $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
+        $redis->setex($key, $expire , $_tmp);
+        return $this->jsonResponse(['token'=>$_tmp],'操作成功','0',ErrCode::SUCCESS);
+
     }
 
 
