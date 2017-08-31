@@ -1,8 +1,6 @@
 <?php
 namespace frontend\models;
 
-
-use function PHPSTORM_META\elementType;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
