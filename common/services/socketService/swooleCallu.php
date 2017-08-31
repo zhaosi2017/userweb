@@ -15,14 +15,14 @@ use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\Channel;
 
-class swoole{
+class swooleCallu{
 
     public $server;
 
     public function __construct(){
-
-        $this->server = new Swoole_websocket_server('127.0.0.1', 9803);
-
+        if( $this->server == null){
+            $this->server = new \swoole_websocket_server('127.0.0.1', 9803);
+        }
         $this->server->set([
             'worker_num' => 2,
             'daemonize' => true,
@@ -30,9 +30,8 @@ class swoole{
             'dispatch_mode' => 2,
             'debug_mode'=> 1,
         ]);
-        $this->server->on('Message', [$this, 'onMessage']);
-        $this->server->on('colse' ,[$this , 'onColse']);
-
+        $this->server->on('message', [$this, 'onMessage']);
+        $this->server->on('close' ,[$this , 'onClose']);
         $this->server->start();
     }
 
@@ -41,23 +40,18 @@ class swoole{
      * @param swoole_websocket_frame $frame
      * 只是呼叫消息处理  如果需要增加其他业务 请将业务层封装
      */
-    public function onMessage(swoole_server $server, swoole_websocket_frame $frame){
-
-        $data = $frame->data;
-        $data = json_decode($data , true);
-        if(empty($data)){
-            $this->server->push($frame->fd , '数据错误');
-        }
+    public function onMessage($server,  $frame){
 
         $app = new callu();
         $app->socket_fd = $frame->fd;
         $app->socket_server = $server;
+        $app->call($frame->data);
 
 
     }
 
 
-    public function onColse( swoole_server $server,  $fd){
+    public function onClose( $server,  $fd){
 
 
 

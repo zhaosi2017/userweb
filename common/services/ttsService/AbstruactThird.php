@@ -111,8 +111,6 @@ abstract  class AbstruactThird{
         $log['object']    = serialize($this);
         $log['time']      = time();
 
-
-
     }
 
     /**

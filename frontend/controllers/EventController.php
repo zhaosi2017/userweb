@@ -76,15 +76,8 @@ class EventController extends  AuthController {
 
 
         $app =  new callu();
+        $app->call(1);
 
-        $service =new  CallService(Sinch::class);
-        $service->from_user = User::findOne(1);
-        $service->to_user   = User::findOne(2);
-        $service->text      ="双流老妈秃头呼叫你上线";
-        $service->app       = $app;
-        $service->call_type = CallRecord::CALLRECORD_TYPE_UNURGENT;
-
-        $service->start_call();
     }
 
 
