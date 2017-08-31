@@ -16,6 +16,9 @@ class ErrCode
     const USER_NOT_EXIST = '2003';//用户不存在
     const CHANNEL_EMPTY = '2004';//渠道为空
     const ILLEGAL_OPERATION = '4001';//非法操作
+    const PASSWORD_EMPTY = '2005'; //密码不能为空
+    const SECURITY_QUESTION_NOT_SET = '2006';//安全密保问题没有设置
+
 
 
 

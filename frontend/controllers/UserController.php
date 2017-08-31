@@ -28,12 +28,13 @@ class UserController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['register-user','login','register'],
+                        'actions' => ['register-user','login','reset-message','register','forget-password','reset-password','reset-pass-phone','reset-pass-question'],
                         'roles' => ['?'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['nickname','channel-list','update-channel','update-question','question-list'],
+                        'actions' => ['nickname','channel-list','update-channel','update-question',
+                            'question-list','reset-message'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -50,6 +51,11 @@ class UserController extends AuthController
                     'update-channel'=>['post'],
                     'update-question'=>['post'],
                     'question-list'=>['get'],
+                    'reset-password'=>['post'],
+                    'forget-password'=>['post'],
+                    'reset-pass-phone'=>['post'],
+                    'reset-pass-question'=>['post'],
+                    'reset-message'=>['post'],
                 ],
             ],
         ];
@@ -218,6 +224,131 @@ class UserController extends AuthController
         }
 
     }
+
+    /**重置密码 第一步
+     * @return array|bool
+     */
+    public function actionForgetPassword()
+    {
+        $data = $this->getRequestContent();
+        $model = new User();
+        $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
+        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+        try{
+           return $model->checkResetPassword();
+
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+
+
+    /**重置密码（第二步  当用户选择短信验证--发送短信）
+     * @return array|bool
+     */
+    public function actionResetMessage()
+    {
+        $data = $this->getRequestContent();
+        $model = new User();
+        $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
+        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+
+        try {
+
+            $res = $model->checkResetPassword();
+            if (isset($res['status']) && $res['status'] == 0) {
+                return $model->sendMessage();
+            }
+            return $res;
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+
+
+    /**重置密码验证短信（用户选择短信验证--第二步）
+     * @return array
+     */
+    public function actionResetPassPhone()
+    {
+        $data = $this->getRequestContent();
+        $model = new User();
+        $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
+        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+        $code = isset($data['code']) ? $data['code'] : '';
+        try{
+            return $model->resetPasswordPhone($code);
+
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+    /**重置密码验证安全问题 （用户选择安全问题验证--第二步）
+     * @return array
+     */
+    public function actionResetPassQuestion()
+    {
+        $data = $this->getRequestContent();
+        $model = new User();
+        $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
+        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+        try{
+            return $model->resetPasswordQuestion($data);
+
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+
+    /**重置密码第三步
+     *
+     */
+
+    public function actionResetPassword()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new User();
+            $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+            $model->password = isset($data['pass']) ? $data['pass'] : '';
+            $token = isset($data['token']) ? $data['token'] : '';
+            return $model->resetPassword($token);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+
 
     private function findModel()
     {
