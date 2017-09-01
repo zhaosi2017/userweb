@@ -112,4 +112,29 @@ class UserPhone extends FActiveRecord
 
     }
 
+    public function deleteUserPhone()
+    {
+        if(empty($this->phone_country_code)){return $this->jsonResponse([],'国码不能为空','1',ErrCode::COUNTRY_CODE_EMPTY);}
+        if(empty($this->user_phone_number)){return $this->jsonResponse([],'手机号不能为空','1',ErrCode::PHONE_EMPTY);}
+        if(!$this->validate('phone_country_code','user_phone_number'))
+        {
+            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
+        }
+        $userId = Yii::$app->user->id;
+        $user = UserPhone ::find()->where(['user_id'=>$userId , 'phone_country_code'=>$this->phone_country_code,'user_phone_number'=>$this->user_phone_number])->one();
+
+        if(empty($user))
+        {
+            return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+        }else{
+            if( $user->delete())
+            {
+                return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
+            }else{
+                return $this->jsonResponse([],$user->getErrors(),'1',ErrCode::DELETE_FAILURE);
+            }
+        }
+
+    }
+
 }

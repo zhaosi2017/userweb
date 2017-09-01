@@ -35,7 +35,8 @@ class UserController extends AuthController
                     [
                         'allow' => true,
                         'actions' => ['nickname','channel-list','update-channel','update-question',
-                            'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list'],
+                            'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
+                            'delete-user-phone'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -61,6 +62,7 @@ class UserController extends AuthController
                     'set-user-phone'=>['post'],
                     'check-user-phone'=>['post'],
                     'user-phone-list'=>['get'],
+                    'delete-user-phone'=>['post'],
                 ],
             ],
         ];
@@ -421,7 +423,28 @@ class UserController extends AuthController
     {
         try {
             $data = UserPhone::find()->where(['user_id' => Yii::$app->user->id])->all();
-            return $this->jsonResponse($data, '操作成功', 1, ErrCode::SUCCESS);
+            return $this->jsonResponse($data, '操作成功', 0, ErrCode::SUCCESS);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+    /**
+     * 删除用户的手机号
+     */
+    public function actionDeleteUserPhone()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UserPhone();
+            $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            return $model->deleteUserPhone();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
