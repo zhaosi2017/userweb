@@ -692,7 +692,18 @@ class User extends FActiveRecord implements IdentityInterface
         if(empty($model)){
             return $this->jsonResponse([],'用户没有设置密保问题','1',ErrCode::SECURITY_QUESTION_NOT_SET);
         }
-        $data = ['q1'=>$model->q_one,'q2'=>$model->q_two,'q3'=>$model->q_three,'a1'=>$model->a_one,'a2'=>$model->a_two,'a3'=>$model->a_three];
+        $question = Question::find()->select(['id','title','type'])->indexBy('id')->all();
+        if(empty($question))
+        {
+            return $this->jsonResponse([],'问题表数据为空','1',ErrCode::QUESTIONS_EMPTY);
+        }
+
+        $data = [
+            'q1'=>isset($question[$model->q_one])? $question[$model->q_one]:'',
+            'q2'=>isset($question[$model->q_two])? $question[$model->q_two] :'' ,
+            'q3'=>isset($question[$model->q_three])?  $question[$model->q_three] :'',
+        ];
+
         return  $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
 
     }

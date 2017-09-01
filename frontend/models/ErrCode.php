@@ -20,6 +20,7 @@ class ErrCode
     const SECURITY_QUESTION_NOT_SET = '2006';//安全密保问题没有设置
     const COUNTRY_CODE_EMPTY = '2007';//国码为空
     const PHONE_EMPTY = '2008';//手机为空
+    const QUESTIONS_EMPTY = '2009';//问题表为空
 
 
 
