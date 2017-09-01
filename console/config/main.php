@@ -31,11 +31,12 @@ return [
         ],
         'db'=>[
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=customer',
+            'dsn' => 'mysql:host=localhost;dbname=userWeb',
             'username' => 'root',
-            'password' => '123456',
+            'password' => '',
             'charset' => 'utf8',
         ],
+        'redis'=>require(__DIR__."/../../frontend/config/redis.php"),
     ],
     'params' => $params,
 ];

@@ -47,7 +47,7 @@ class callu {
     public function sendText($string){
 
         $this->result['message'] = $string;
-        $this->socket_server->push($this->fd , json_encode($this->result , true));
+        $this->socket_server->push($this->socket_fd , json_encode($this->result , true));
 
     }
 

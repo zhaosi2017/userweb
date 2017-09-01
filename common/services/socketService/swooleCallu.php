@@ -8,6 +8,8 @@
 
 namespace common\services\socketService;
 
+error_reporting(E_ALL);
+ini_set("display_errors" , "on");
 
 use common\models\User;
 use common\services\appService\apps\callu;
