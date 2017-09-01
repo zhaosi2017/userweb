@@ -90,16 +90,13 @@ class User extends FActiveRecord implements IdentityInterface
             $this->addError('phone_number', '该手机号不能为空');
         }
 
-        // 测试的时候不检查手机号重复
-        if(defined('YII_ENV') && YII_ENV == 'dev') {
 
-        }else{
-            $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+        $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
 
-            if(!empty($rows)){
-                $this->addError('phone_number', '该手机已注册，请更换手机再试');
-            }
+        if(!empty($rows)){
+            $this->addError('phone_number', '该手机已注册，请更换手机再试');
         }
+
 
     }
 
@@ -225,7 +222,6 @@ class User extends FActiveRecord implements IdentityInterface
        {
            return false;
        }else{
-           file_put_contents('/tmp/r.log',var_export($user,true).PHP_EOL,8);
             if( Yii::$app->getSecurity()->validatePassword($this->password, $user->password))
            {
                return $user;
