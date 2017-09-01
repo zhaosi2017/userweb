@@ -38,7 +38,7 @@ class callu {
 
     private $result = [
         "data"=> [],
-        "message"=>"修改昵称成功",
+        "message"=>"",
         "status"=> 0,
         "code"=>"0000"
 

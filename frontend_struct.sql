@@ -130,3 +130,14 @@ CREATE TABLE `call_record` (
   `third` char(255) DEFAULT NULL COMMENT '呼叫渠道',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/********************好友列表***************************/
+CREATE TABLE `friends` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `friend_id` int(11) NOT NULL COMMENT '好友id',
+  `create_at` int(11) NOT NULL COMMENT '创建时间',
+  `remark` char(64) DEFAULT '' COMMENT '备注',
+  `extsion` text COMMENT '扩展信息json',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
