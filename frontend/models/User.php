@@ -64,6 +64,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['phone_number','validatePhone','on'=>'register'],
             ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['channel','ValidateChannel'],
+            ['nickname','ValidateNickname'],
 
         ];
     }
@@ -118,6 +119,19 @@ class User extends FActiveRecord implements IdentityInterface
             }
         }
         return true;
+    }
+
+    public function ValidateNickname()
+    {
+        if(empty($this->nickname)){ $this->addError('nickname', '昵称不能为空'); }
+
+        $res = self::find()->where(['nickname'=>$this->nickname])->one();
+        if(!empty($res) && $res->id != Yii::$app->user->id){
+             $this->addError('nickname', '该昵称已被占用！');
+        }else{
+            return true;
+        }
+
     }
     /**
      * @inheritdoc
@@ -211,6 +225,7 @@ class User extends FActiveRecord implements IdentityInterface
        {
            return false;
        }else{
+           file_put_contents('/tmp/r.log',var_export($user,true).PHP_EOL,8);
             if( Yii::$app->getSecurity()->validatePassword($this->password, $user->password))
            {
                return $user;
@@ -707,6 +722,8 @@ class User extends FActiveRecord implements IdentityInterface
         return  $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
 
     }
+
+
 
 
 }

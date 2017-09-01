@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use frontend\models\Channel;
 use frontend\models\Question;
 use frontend\models\SecurityQuestion;
+use frontend\models\UserPhone;
 use Yii;
 use yii\db\Exception;
 use yii\filters\AccessControl;
@@ -34,7 +35,7 @@ class UserController extends AuthController
                     [
                         'allow' => true,
                         'actions' => ['nickname','channel-list','update-channel','update-question',
-                            'question-list','reset-message'],
+                            'question-list','reset-message','set-user-phone','check-user-phone'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -57,6 +58,8 @@ class UserController extends AuthController
                     'reset-pass-question'=>['post'],
                     'reset-message'=>['post'],
                     'user-question'=>['post'],
+                    'set-user-phone'=>['post'],
+                    'check-user-phone'=>['post'],
                 ],
             ],
         ];
@@ -370,6 +373,45 @@ class UserController extends AuthController
 
     }
 
+    /**
+     * 设置手机号，检验手机，并发送短信
+     */
+    public function actionCheckUserPhone()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UserPhone();
+            $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            return $model->checkUserPhone();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionSetUserPhone()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UserPhone();
+            $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            $code = isset($data['code']) ? $data['code'] : '';
+            return $model->setUserPhone($code);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
 
 
     private function findModel()
@@ -382,6 +424,9 @@ class UserController extends AuthController
         }
         return $model;
     }
+
+
+
 
 
 

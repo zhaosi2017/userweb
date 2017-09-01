@@ -22,6 +22,7 @@ class ErrCode
     const PHONE_EMPTY = '2008';//手机为空
     const QUESTIONS_EMPTY = '2009';//问题表为空
     const CHANNEL_ILLEGAL ='2010';//渠道非法
+    const COUNTRY_CODE_PHONE_EXIST = '2011';//国码手机号已存在
 
 
 

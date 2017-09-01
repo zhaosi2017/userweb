@@ -141,3 +141,15 @@ CREATE TABLE `friends` (
   `extsion` text COMMENT '扩展信息json',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+/********************好友请求表***************************/
+CREATE TABLE `friends_request` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `from_id` int(11) NOT NULL COMMENT '发送请求者',
+  `to_id` int(11) NOT NULL COMMENT '被请求者',
+  `note` varchar(255) NOT NULL COMMENT '请求备注',
+  `status` tinyint(1) NOT NULL COMMENT '状态：0:发送请求，1:同意，2:拒绝',
+  `create_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
