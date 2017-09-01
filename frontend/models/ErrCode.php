@@ -21,6 +21,7 @@ class ErrCode
     const COUNTRY_CODE_EMPTY = '2007';//国码为空
     const PHONE_EMPTY = '2008';//手机为空
     const QUESTIONS_EMPTY = '2009';//问题表为空
+    const CHANNEL_ILLEGAL ='2010';//渠道非法
 
 
 

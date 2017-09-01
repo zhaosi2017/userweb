@@ -535,7 +535,7 @@ class User extends FActiveRecord implements IdentityInterface
         {
             return $this->jsonResponse([],'修改渠道成功',0,ErrCode::SUCCESS);
         }else{
-            return $this->jsonResponse([],$this->getErrors(),0,ErrCode::SUCCESS);
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::SUCCESS);
         }
     }
 
