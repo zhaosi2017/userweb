@@ -18,6 +18,7 @@ use frontend\services\SmsService;
 class UserPhone extends FActiveRecord
 {
 
+    const USER_PHONE_LIMIT_NUM = 10;
     /**
      * @inheritdoc
      */
@@ -51,6 +52,11 @@ class UserPhone extends FActiveRecord
             return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::FAILURE);
 
         }
+        $count = UserPhone::find()->where(['user_id'=>$userId])->count();
+        if($count >= SELF::USER_PHONE_LIMIT_NUM)
+        {
+            return $this->jsonResponse([],'手机号添加不能超过10个','1',ErrCode::PHONE_TOTAL_NOT_OVER_TEN);
+        }
         $user = UserPhone ::find()->where(['user_id'=>$userId , 'phone_country_code'=>$this->phone_country_code,'user_phone_number'=>$this->user_phone_number])->one();
         if(!empty($user))
         {
@@ -76,7 +82,13 @@ class UserPhone extends FActiveRecord
         if($_code && $_code == $code)
         {
             $userId = Yii::$app->user->id;
+            $count = UserPhone::find()->where(['user_id'=>$userId])->count();
+            if($count >= self::USER_PHONE_LIMIT_NUM)
+            {
+                return $this->jsonResponse([],'手机号添加不能超过10个','1',ErrCode::PHONE_TOTAL_NOT_OVER_TEN);
+            }
             $user = UserPhone ::find()->where(['user_id'=>$userId , 'phone_country_code'=>$this->phone_country_code,'user_phone_number'=>$this->user_phone_number])->one();
+
             if(!empty($user))
             {
                 return $this->jsonResponse([],'该手机号已被添加，不能重复添加','1',ErrCode::COUNTRY_CODE_PHONE_EXIST);

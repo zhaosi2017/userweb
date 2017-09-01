@@ -35,7 +35,7 @@ class UserController extends AuthController
                     [
                         'allow' => true,
                         'actions' => ['nickname','channel-list','update-channel','update-question',
-                            'question-list','reset-message','set-user-phone','check-user-phone'],
+                            'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -60,6 +60,7 @@ class UserController extends AuthController
                     'user-question'=>['post'],
                     'set-user-phone'=>['post'],
                     'check-user-phone'=>['post'],
+                    'user-phone-list'=>['get'],
                 ],
             ],
         ];
@@ -392,7 +393,9 @@ class UserController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
     }
-
+    /**
+     * 设置手机号，检验验证码，添加手机
+     */
     public function actionSetUserPhone()
     {
         $data = $this->getRequestContent();
@@ -409,6 +412,24 @@ class UserController extends AuthController
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
+    }
+
+    /**获取用户自己的手机列表
+     * @return array
+     */
+    public function actionUserPhoneList()
+    {
+        try {
+            $data = UserPhone::find()->where(['user_id' => Yii::$app->user->id])->all();
+            return $this->jsonResponse($data, '操作成功', 1, ErrCode::SUCCESS);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
     }
 
 
