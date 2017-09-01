@@ -37,6 +37,7 @@ class AuthController extends Controller
                         'reset-pass-phone',
                         'reset-pass-question',
                         'reset-message',
+                        'user-question'
                     ],
                 ]
             ]
@@ -53,7 +54,7 @@ class AuthController extends Controller
 
     public function beforeAction($action)
     {
-        $arr = ['login', 'register', 'register-user','reset-message','forget-password','reset-password','reset-pass-phone','reset-pass-question'];
+        $arr = ['login', 'register', 'register-user','user-question','reset-message','forget-password','reset-password','reset-pass-phone','reset-pass-question'];
         $_action = \Yii::$app->controller->action->id;
         if(in_array($_action,$arr))
         {

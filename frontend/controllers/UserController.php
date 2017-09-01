@@ -28,7 +28,7 @@ class UserController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['register-user','login','reset-message','register','forget-password','reset-password','reset-pass-phone','reset-pass-question'],
+                        'actions' => ['register-user','user-question','login','reset-message','register','forget-password','reset-password','reset-pass-phone','reset-pass-question'],
                         'roles' => ['?'],
                     ],
                     [
@@ -56,6 +56,7 @@ class UserController extends AuthController
                     'reset-pass-phone'=>['post'],
                     'reset-pass-question'=>['post'],
                     'reset-message'=>['post'],
+                    'user-question'=>['post'],
                 ],
             ],
         ];
@@ -266,6 +267,27 @@ class UserController extends AuthController
                 return $model->sendMessage();
             }
             return $res;
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    /**重置密码（第二步  当用户选择安全问题验证--返回该用户设置的安全问题）
+     *
+     */
+    public function actionUserQuestion()
+    {
+        $data = $this->getRequestContent();
+        $model = new User();
+        $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
+        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+
+        try {
+            return $model->getUserQuestion();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

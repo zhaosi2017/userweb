@@ -675,5 +675,27 @@ class User extends FActiveRecord implements IdentityInterface
 
     }
 
+    /**获取用户的安全问题
+     * @return array
+     */
+    public function getUserQuestion()
+    {
+        if(empty($this->country_code)){return $this->jsonResponse([],'国码不能为空','1',ErrCode::COUNTRY_CODE_EMPTY);}
+        if(empty($this->phone_number)){return $this->jsonResponse([],'手机号不能为空','1',ErrCode::PHONE_EMPTY);}
+
+        $user = User::find()->where(['country_code'=>$this->country_code,'phone_number'=>$this->phone_number])->one();
+        if(empty($user))
+        {
+            return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+        }
+        $model = SecurityQuestion::find()->where(['userid'=>$user->id])->one();
+        if(empty($model)){
+            return $this->jsonResponse([],'用户没有设置密保问题','1',ErrCode::SECURITY_QUESTION_NOT_SET);
+        }
+        $data = ['q1'=>$model->q_one,'q2'=>$model->q_two,'q3'=>$model->q_three,'a1'=>$model->a_one,'a2'=>$model->a_two,'a3'=>$model->a_three];
+        return  $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
+
+    }
+
 
 }
