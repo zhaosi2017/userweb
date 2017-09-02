@@ -48,15 +48,17 @@ class callu {
     public function sendText($string){
 
         $this->result['message'] = $string;
-        $this->socket_server->push($this->socket_fd , json_encode($this->result , true));
+        $this->socket_server->push($this->socket_fd , json_encode($this->result , JSON_UNESCAPED_UNICODE));
 
     }
 
 
 
     public function call($data){
-       
-        $data = json_decode($data );
+        $data = json_decode($data);
+        if(empty($data) ){
+            $this->sendText('json格式错误');
+        }
         $user =  User::find()->where(['token'=>$data->token])->one();   //身份校验
         if(empty($user)){
             $this->sendText('token错误');
