@@ -13,6 +13,8 @@ namespace  common\services\ttsService;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
+use yii\db\Exception;
 
 /**
  * Class AbstruactThird
@@ -96,7 +98,11 @@ abstract  class AbstruactThird{
         ];
         $this->_send_data_log($log);
         $client =  new Client();
-        $response = $client->send($request , ['timeout' => 30]);
+        try{
+            $response = $client->send($request , ['timeout' => 30]);
+        }catch ( Exception $e){
+            $response = new Response();
+        }
         $this->_send_data_log(array($response->getBody()->getContents()));
         return $response;
 

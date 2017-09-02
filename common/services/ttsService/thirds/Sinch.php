@@ -65,7 +65,7 @@ class Sinch extends  AbstruactThird{
             return false;
         }
         $data = json_decode($response->getBody()->getContents());
-
+        file_put_contents('/tmp/log_tts.send.log' , var_export($data , true).PHP_EOL,8);
         if( isset($data->callId) && !empty($data->callId)){
             $this->callId = $data->callId;
             return true;
