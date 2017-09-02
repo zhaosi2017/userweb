@@ -106,8 +106,8 @@ class CallService {
         $catch_key =  get_class($this->third).$this->third->callId;
         $catch = $this->_redisGetVByK($catch_key);
         $this->app = unserialize($catch['apps']);
-        $this->to_user      = serialize($catch['to_user']);
-        $this->from_user    = serialize($catch['from_user']);
+        $this->to_user      = unserialize($catch['to_user']);
+        $this->from_user    = unserialize($catch['from_user']);
         $this->call_type    = $catch['call_type'];
         $this->third        = unserialize($catch['third']);
         if(empty($catch)){
@@ -254,6 +254,7 @@ class CallService {
         $model->from_number  = $this->third->From;
         $model->to_number    = $this->third->To;
         $model->third        = get_class($this->third);
+        $model->save();
 
     }
 

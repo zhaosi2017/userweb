@@ -126,7 +126,7 @@ CREATE TABLE `call_record` (
   `status` int(11) DEFAULT NULL COMMENT '通话状态',
   `call_type` int(11) DEFAULT NULL COMMENT '呼叫类型',
   `from_number` char(32) DEFAULT NULL COMMENT '主叫电话',
-  `to_number` int(11) DEFAULT NULL COMMENT '被叫电话',
+  `to_number` char(32) DEFAULT NULL COMMENT '被叫电话',
   `third` char(255) DEFAULT NULL COMMENT '呼叫渠道',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
