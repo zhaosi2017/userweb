@@ -55,10 +55,12 @@ class callu {
 
 
     public function call($data){
+        $this->sendText($data);
         $data = json_decode($data);
         if(empty($data) ){
             $this->sendText('json格式错误');
         }
+        $this->sendText($data);
         $user =  User::find()->where(['token'=>$data->token])->one();   //身份校验
         if(empty($user)){
             $this->sendText('token错误');
