@@ -99,11 +99,11 @@ abstract  class AbstruactThird{
         $this->_send_data_log($log);
         $client =  new Client();
         try{
-            $copy =  $response = $client->send($request , ['timeout' => 30]);
+              $response = $client->send($request , ['timeout' => 30]);
         }catch ( Exception $e){
-            $copy =  $response = new Response();
+              $response = new Response();
         }
-        $this->_send_data_log(array($copy->getBody()->getContents()));
+       //$this->_send_data_log(array($copy->getBody()->getContents()));
         return $response;
 
     }
