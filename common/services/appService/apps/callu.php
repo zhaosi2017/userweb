@@ -59,6 +59,7 @@ class callu {
         $data = json_decode($data);
         if(empty($data) ){
             $this->sendText('json格式错误');
+            return;
         }
         $this->sendText($data);
         $user =  User::findOne(['token'=>$data->token]);   //身份校验
@@ -89,7 +90,7 @@ class callu {
         $service->to_user   = $to_user;
 
         $friend = Friends::findOne(['user_id'=>$this->to_user->id , 'friend_id'=>$this->from_user->id]); //这里取的是主叫在被叫好友列表中的名字
-        $name = empty($friend->remark)?$this->user->nickname:$friend->remark;
+        $name = empty($friend->remark)?$this->from_user->nickname:$friend->remark;
         if($data->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT){
             $service->text  = $name.' 呼叫您上线 '.$channel->name;
         }else{
