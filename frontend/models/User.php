@@ -71,6 +71,21 @@ class User extends FActiveRecord implements IdentityInterface
 
 
 
+    public function attributeLabels()
+    {
+        return [
+            'status'=>'状态',
+            'country_code'=>'国码',
+            'phone_number'=>'手机号',
+            'account'=>'优码',
+            'nickname'=>'昵称',
+            'channel'=>'渠道',
+        ];
+    }
+
+
+
+
 
     public function scenarios()
     {

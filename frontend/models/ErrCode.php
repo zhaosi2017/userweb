@@ -25,6 +25,7 @@ class ErrCode
     const COUNTRY_CODE_PHONE_EXIST = '2011';//国码手机号已存在
     const PHONE_TOTAL_NOT_OVER_TEN ='2012';//用户手机号不能超过十个
     const DELETE_FAILURE = '2013';//删除失败
+    const URGENT_CONTACT_EXIST = '2014';//紧急联系人已经添加过拉
 
 
 
