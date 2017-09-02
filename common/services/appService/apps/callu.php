@@ -79,7 +79,7 @@ class callu {
         }
         $channel = Channel::findOne($data->channel_id);
         if(empty($channel)){
-            $this->sendText('呼叫类型错误');
+            $this->sendText('呼叫渠道错误');
             return ;
         }
         $this->from_user   = $user;

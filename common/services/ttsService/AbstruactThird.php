@@ -93,7 +93,6 @@ abstract  class AbstruactThird{
         $log = [
             'url'=>$request->getUri(),                   //交互的地址
             'data'=>$request->getBody()->getContents(),  //请求的内容
-
         ];
         $this->_send_data_log($log);
         $client =  new Client();
@@ -110,6 +109,7 @@ abstract  class AbstruactThird{
         $log['interface'] = get_class($this);
         $log['object']    = serialize($this);
         $log['time']      = time();
+        file_put_contents('/tmp/log_tts.send.log' , var_export($log , true).PHP_EOL,8);
 
     }
 
@@ -121,6 +121,7 @@ abstract  class AbstruactThird{
         $log['interface'] = get_class($this);
         $log['object']    = serialize($this);
         $log['time']      = time();
+        file_put_contents('/tmp/log_tts.event.log' , var_export($log , true).PHP_EOL,8);
     }
 
 }
