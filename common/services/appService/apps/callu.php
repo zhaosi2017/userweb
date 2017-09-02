@@ -61,7 +61,7 @@ class callu {
             $this->sendText('json格式错误');
         }
         $this->sendText($data);
-        $user =  User::find()->where(['token'=>$data->token])->one();   //身份校验
+        $user =  User::findOne(['token'=>$data->token]);   //身份校验
         if(empty($user)){
             $this->sendText('token错误');
             return ;
