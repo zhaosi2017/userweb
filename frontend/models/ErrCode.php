@@ -27,7 +27,10 @@ class ErrCode
     const DELETE_FAILURE = '2013';//删除失败
     const URGENT_CONTACT_EXIST = '2014';//紧急联系人已经添加过拉
     const WHITE_SWITCH_STATUS_EMPTY = '2015';//白名单开关状态为空
-
+    const SEARCH_WORDS_EMPTY = '2016';//搜索的关键字为空
+    const ACCOUNT_EMPTY ='2017';//优码不能为空
+    const USER_NO_ADD_SELF = '2018';//用户不能添加自己为好友
+    const USER_ADD_FRIEND_REQUEST_EXIST = '2019';//用户已经向某优客发送拉请求，不能重复发送
 
 
 
