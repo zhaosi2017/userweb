@@ -97,7 +97,7 @@ abstract  class AbstruactThird{
         $this->_send_data_log($log);
         $client =  new Client();
         $response = $client->send($request , ['timeout' => 30]);
-        $this->_send_data_log($response->getBody()->getContents());
+        $this->_send_data_log(array($response->getBody()->getContents()));
         return $response;
 
     }
