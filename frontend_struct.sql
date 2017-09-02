@@ -139,5 +139,14 @@ CREATE TABLE `friends` (
   `create_at` int(11) NOT NULL COMMENT '创建时间',
   `remark` char(64) DEFAULT '' COMMENT '备注',
   `extsion` text COMMENT '扩展信息json',
+  `group_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户组id 0表示为分组',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `friends_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `group_name` char(128) NOT NULL DEFAULT '' COMMENT '组名',
+  `create_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
