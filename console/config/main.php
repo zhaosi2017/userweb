@@ -29,13 +29,7 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
-        'db'=>[
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=userWeb',
-            'username' => 'root',
-            'password' => '',
-            'charset' => 'utf8',
-        ],
+        'db'=>require(__DIR__."/../../frontend/config/db.php.php"),
         'redis'=>require(__DIR__."/../../frontend/config/redis.php"),
     ],
     'params' => $params,
