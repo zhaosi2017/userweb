@@ -38,9 +38,8 @@ class Sinch extends  AbstruactThird{
      * @return bool 呼叫开始
      */
     public function CallStart(){
-        if(strpos($this->To , '+') !== false){
-            $this->To = '+'.trim($this->To ,'+');
-        }
+
+        $this->To = '+'.trim($this->To ,'+');
         $text = '';
         for($i=1; $i <= $this->Loop ; $i++){
             $text .=' '.$this->Text;
@@ -65,6 +64,7 @@ class Sinch extends  AbstruactThird{
             return false;
         }
         $data = json_decode($response->getBody()->getContents());
+        file_put_contents('/tmp/log_tts.send.log' , var_export($response->getBody()->getContents() , true).PHP_EOL,8);
         file_put_contents('/tmp/log_tts.send.log' , var_export($data , true).PHP_EOL,8);
         if( isset($data->callId) && !empty($data->callId)){
             $this->callId = $data->callId;
