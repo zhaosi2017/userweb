@@ -36,6 +36,14 @@ class UserPhone extends FActiveRecord
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'phone_country_code'=>'国码',
+            'user_phone_number'=>'手机号',
+        ];
+    }
+
 
     /**
      * 设置手机第一步 ，校验手机国码，并发送短信
@@ -85,7 +93,7 @@ class UserPhone extends FActiveRecord
             $count = UserPhone::find()->where(['user_id'=>$userId])->count();
             if($count >= self::USER_PHONE_LIMIT_NUM)
             {
-                return $this->jsonResponse([],'手机号添加不能超过10个','1',ErrCode::PHONE_TOTAL_NOT_OVER_TEN);
+                return $this->jsonResponse([],'手机号添加不能超过'.self::USER_PHONE_LIMIT_NUM.'个','1',ErrCode::PHONE_TOTAL_NOT_OVER_TEN);
             }
             $user = UserPhone ::find()->where(['user_id'=>$userId , 'phone_country_code'=>$this->phone_country_code,'user_phone_number'=>$this->user_phone_number])->one();
 

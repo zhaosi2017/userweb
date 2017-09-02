@@ -12,6 +12,8 @@ use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use frontend\models\User;
 use frontend\models\ErrCode;
+use frontend\models\UrgentContact;
+
 class UserController extends AuthController
 {
 
@@ -36,7 +38,7 @@ class UserController extends AuthController
                         'allow' => true,
                         'actions' => ['nickname','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
-                            'delete-user-phone'],
+                            'delete-user-phone','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -63,6 +65,9 @@ class UserController extends AuthController
                     'check-user-phone'=>['post'],
                     'user-phone-list'=>['get'],
                     'delete-user-phone'=>['post'],
+                    'urgent-contact-list'=>['get'],
+                    'delete-urgent-contact'=>['post'],
+                    'set-urgent-contact'=>['post'],
                 ],
             ],
         ];
@@ -453,6 +458,65 @@ class UserController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
 
+    }
+
+
+
+    /**获取用户自己添加的紧急联系人的列表
+     * @return array
+     */
+    public function actionUrgentContactList()
+    {
+        try {
+            $data = UrgentContact::find()->where(['user_id' => Yii::$app->user->id])->all();
+            return $this->jsonResponse($data, '操作成功', 0, ErrCode::SUCCESS);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+    /**获取用户自己添加的紧急联系人的列表
+     * @return array
+     */
+    public function actionDeleteUrgentContact()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UrgentContact();
+            $model->contact_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->contact_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            return $model->deleteUrgentContact();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+    public function actionSetUrgentContact()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UrgentContact();
+            $model->contact_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->contact_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            $model->contact_nickname = isset($data['nickname']) ? $data['nickname'] : '';
+            return $model->setUrgentContact();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
     }
 
 
