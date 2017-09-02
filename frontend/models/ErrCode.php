@@ -21,7 +21,10 @@ class ErrCode
     const COUNTRY_CODE_EMPTY = '2007';//国码为空
     const PHONE_EMPTY = '2008';//手机为空
     const QUESTIONS_EMPTY = '2009';//问题表为空
-
+    const CHANNEL_ILLEGAL ='2010';//渠道非法
+    const COUNTRY_CODE_PHONE_EXIST = '2011';//国码手机号已存在
+    const PHONE_TOTAL_NOT_OVER_TEN ='2012';//用户手机号不能超过十个
+    const DELETE_FAILURE = '2013';//删除失败
 
 
 

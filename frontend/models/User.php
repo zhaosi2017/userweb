@@ -64,6 +64,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['phone_number','validatePhone','on'=>'register'],
             ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['channel','ValidateChannel'],
+            ['nickname','ValidateNickname'],
 
         ];
     }
@@ -89,16 +90,13 @@ class User extends FActiveRecord implements IdentityInterface
             $this->addError('phone_number', '该手机号不能为空');
         }
 
-        // 测试的时候不检查手机号重复
-        if(defined('YII_ENV') && YII_ENV == 'dev') {
 
-        }else{
-            $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+        $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
 
-            if(!empty($rows)){
-                $this->addError('phone_number', '该手机已注册，请更换手机再试');
-            }
+        if(!empty($rows)){
+            $this->addError('phone_number', '该手机已注册，请更换手机再试');
         }
+
 
     }
 
@@ -118,6 +116,19 @@ class User extends FActiveRecord implements IdentityInterface
             }
         }
         return true;
+    }
+
+    public function ValidateNickname()
+    {
+        if(empty($this->nickname)){ $this->addError('nickname', '昵称不能为空'); }
+
+        $res = self::find()->where(['nickname'=>$this->nickname])->one();
+        if(!empty($res) && $res->id != Yii::$app->user->id){
+             $this->addError('nickname', '该昵称已被占用！');
+        }else{
+            return true;
+        }
+
     }
     /**
      * @inheritdoc
@@ -535,7 +546,7 @@ class User extends FActiveRecord implements IdentityInterface
         {
             return $this->jsonResponse([],'修改渠道成功',0,ErrCode::SUCCESS);
         }else{
-            return $this->jsonResponse([],$this->getErrors(),0,ErrCode::SUCCESS);
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::SUCCESS);
         }
     }
 
@@ -707,6 +718,8 @@ class User extends FActiveRecord implements IdentityInterface
         return  $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
 
     }
+
+
 
 
 }

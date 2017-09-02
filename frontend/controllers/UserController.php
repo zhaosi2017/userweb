@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use frontend\models\Channel;
 use frontend\models\Question;
 use frontend\models\SecurityQuestion;
+use frontend\models\UserPhone;
 use Yii;
 use yii\db\Exception;
 use yii\filters\AccessControl;
@@ -34,7 +35,8 @@ class UserController extends AuthController
                     [
                         'allow' => true,
                         'actions' => ['nickname','channel-list','update-channel','update-question',
-                            'question-list','reset-message'],
+                            'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
+                            'delete-user-phone'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -57,6 +59,10 @@ class UserController extends AuthController
                     'reset-pass-question'=>['post'],
                     'reset-message'=>['post'],
                     'user-question'=>['post'],
+                    'set-user-phone'=>['post'],
+                    'check-user-phone'=>['post'],
+                    'user-phone-list'=>['get'],
+                    'delete-user-phone'=>['post'],
                 ],
             ],
         ];
@@ -370,6 +376,86 @@ class UserController extends AuthController
 
     }
 
+    /**
+     * 设置手机号，检验手机，并发送短信
+     */
+    public function actionCheckUserPhone()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UserPhone();
+            $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            return $model->checkUserPhone();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+    /**
+     * 设置手机号，检验验证码，添加手机
+     */
+    public function actionSetUserPhone()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UserPhone();
+            $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            $code = isset($data['code']) ? $data['code'] : '';
+            return $model->setUserPhone($code);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    /**获取用户自己的手机列表
+     * @return array
+     */
+    public function actionUserPhoneList()
+    {
+        try {
+            $data = UserPhone::find()->where(['user_id' => Yii::$app->user->id])->all();
+            return $this->jsonResponse($data, '操作成功', 0, ErrCode::SUCCESS);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+    /**
+     * 删除用户的手机号
+     */
+    public function actionDeleteUserPhone()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UserPhone();
+            $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
+            $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
+            return $model->deleteUserPhone();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+
 
 
     private function findModel()
@@ -382,6 +468,9 @@ class UserController extends AuthController
         }
         return $model;
     }
+
+
+
 
 
 
