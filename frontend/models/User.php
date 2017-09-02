@@ -22,15 +22,20 @@ use frontend\models\Channel;
  */
 class User extends FActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_DELETED = 10;
+    const STATUS_ACTIVE = 0;
     /*********优码初始值*********/
     const INIT_YOUCODE = '999999';
 
     //token
-   const REDIS_TOKEN = 'token';
-   //sms
-   const REDIS_MESSAGE = 'sms';
+    const REDIS_TOKEN = 'token';
+    //sms
+    const REDIS_MESSAGE = 'sms';
+
+    const WHITE_SWITCH_ON = 0;
+
+    const WHITE_SWITCH_OFF = 1;
+
 
 
 
@@ -65,6 +70,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['channel','ValidateChannel'],
             ['nickname','ValidateNickname'],
+            ['whitelist_switch','ValidateWhite'],
 
         ];
     }
@@ -113,6 +119,14 @@ class User extends FActiveRecord implements IdentityInterface
         }
 
 
+    }
+
+    public function ValidateWhite()
+    {
+
+        if(!in_array($this->whitelist_switch, [self::WHITE_SWITCH_OFF,self::WHITE_SWITCH_ON])){
+            $this->addError('whitelist_switch', '参数非法');
+        }
     }
 
     public function ValidateChannel()
@@ -731,6 +745,22 @@ class User extends FActiveRecord implements IdentityInterface
         ];
 
         return  $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
+
+    }
+
+
+    public function Switch()
+    {
+       if($this->validate('whitelist_switch'))
+       {
+           if($this->save())
+           {
+               return  $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
+           }else{
+               return  $this->jsonResponse([],$this->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);
+           }
+       }
+        return  $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
 
     }
 

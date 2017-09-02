@@ -26,6 +26,7 @@ class ErrCode
     const PHONE_TOTAL_NOT_OVER_TEN ='2012';//用户手机号不能超过十个
     const DELETE_FAILURE = '2013';//删除失败
     const URGENT_CONTACT_EXIST = '2014';//紧急联系人已经添加过拉
+    const WHITE_SWITCH_STATUS_EMPTY = '2015';//白名单开关状态为空
 
 
 
