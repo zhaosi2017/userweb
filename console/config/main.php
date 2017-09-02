@@ -29,7 +29,7 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
-        'db'=>require(__DIR__."/../../frontend/config/db.php.php"),
+        'db'=>require(__DIR__."/../../frontend/config/db.php"),
         'redis'=>require(__DIR__."/../../frontend/config/redis.php"),
     ],
     'params' => $params,
