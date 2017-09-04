@@ -31,14 +31,15 @@ class UserController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['register-user','user-question','login','reset-message','register','forget-password','reset-password','reset-pass-phone','reset-pass-question'],
+                        'actions' => ['register-user','user-question','login','reset-message','register',
+                            'forget-password','reset-password','reset-pass-phone','reset-pass-question'],
                         'roles' => ['?'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['nickname','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
-                            'delete-user-phone','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
+                            'delete-user-phone','logout','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -68,6 +69,7 @@ class UserController extends AuthController
                     'urgent-contact-list'=>['get'],
                     'delete-urgent-contact'=>['post'],
                     'set-urgent-contact'=>['post'],
+                    'logout'=>['post'],
                 ],
             ],
         ];
@@ -510,6 +512,21 @@ class UserController extends AuthController
             $model->contact_phone_number = isset($data['phone']) ? $data['phone'] : '';
             $model->contact_nickname = isset($data['nickname']) ? $data['nickname'] : '';
             return $model->setUrgentContact();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionLogout()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new User();
+            return $model->logout();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

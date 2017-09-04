@@ -68,9 +68,8 @@ class User extends FActiveRecord implements IdentityInterface
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'{attribute}必须为4到11位纯数字'],
             ['phone_number','validatePhone','on'=>'register'],
             ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
-            ['channel','ValidateChannel'],
-            ['nickname','ValidateNickname'],
-            ['whitelist_switch','ValidateWhite'],
+            ['nickname','ValidateNickname','on'=>'update_nickname'],
+            ['channel','ValidateChannel','on'=>'update_channel'],
 
         ];
     }
@@ -98,6 +97,9 @@ class User extends FActiveRecord implements IdentityInterface
         $scenarios = parent::scenarios();
         $res = [
             'register' => [ 'password','country_code', 'phone_number'],
+            'update_nickname'=>['nickname'],
+            'update_channel'=>['channel']
+
         ];
         return array_merge($scenarios,$res);
     }
@@ -152,7 +154,8 @@ class User extends FActiveRecord implements IdentityInterface
         if(empty($this->nickname)){ $this->addError('nickname', '昵称不能为空'); }
 
         $res = self::find()->where(['nickname'=>$this->nickname])->one();
-        if(!empty($res) && $res->id != Yii::$app->user->id){
+
+        if(!empty($res) &&  $res->id != Yii::$app->user->id){
              $this->addError('nickname', '该昵称已被占用！');
         }else{
             return true;
@@ -239,6 +242,13 @@ class User extends FActiveRecord implements IdentityInterface
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
 
+    }
+
+    public function logout()
+    {
+
+        Yii::$app->user->logout();
+        return  $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
     }
 
 
@@ -549,7 +559,7 @@ class User extends FActiveRecord implements IdentityInterface
         {
             return $this->jsonResponse([],'昵称不能为空',1,ErrCode::NICKNAME_EMPTY);
         }
-
+        $this->setScenario('update_nickname');
         if($this->validate('nickname'))
         {
             if($this->save())
@@ -571,6 +581,7 @@ class User extends FActiveRecord implements IdentityInterface
         {
             return $this->jsonResponse([],'渠道不能为空',1,ErrCode::CHANNEL_EMPTY);
         }
+        $this->setScenario('update_channel');
         if ($this->validate('channel') && $this->save())
         {
             return $this->jsonResponse([],'修改渠道成功',0,ErrCode::SUCCESS);
@@ -651,11 +662,11 @@ class User extends FActiveRecord implements IdentityInterface
         {
             return  $this->jsonResponse([],'密码不能为空','0',ErrCode::PASSWORD_EMPTY);
         }
-        if($this->validate('country_code','phone_number','password')) {
+        if($this->validate(['country_code','phone_number','password']) ){
             $res = self::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone_number])->one();
             if ($res){
                 $res->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
-                if($res->save())
+                if($res->validate(['country_code','phone_number','password']) && $res->save())
                 {
                     $redis->del($key);
                     return  $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
@@ -749,7 +760,7 @@ class User extends FActiveRecord implements IdentityInterface
     }
 
 
-    public function Switch()
+    public function Switchs()
     {
        if($this->validate('whitelist_switch'))
        {

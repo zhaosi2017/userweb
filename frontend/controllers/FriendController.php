@@ -32,7 +32,7 @@ class FriendController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['search','friend-detail','add-friend-request'],
+                        'actions' => ['search','friend-detail','add-friend-request','get-friend-request','refuse-friend-request'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -43,6 +43,8 @@ class FriendController extends AuthController
                     'search' => ['post'],
                     'friend-detail'=>['post'],
                     'add-friend-request'=>['post'],
+                    'get-friend-request'=>['post'],
+                    'refuse-friend-request'=>['post']
 
                 ],
             ],
@@ -105,6 +107,51 @@ class FriendController extends AuthController
          }catch (\Exception $e) {
              return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
          }
+    }
+
+    /**
+     * 手动获取新好友添加申请
+     */
+    public function actionGetFriendRequest()
+    {
+        try{
+            $data = $this->getRequestContent();
+            $friendsSearch = new FriendsRequest();
+            return $friendsSearch->getFriendsRequest($data);
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    /**
+     * 同意 好友请求
+     */
+    public function actionAgreeFriendRequest()
+    {
+        try{
+            $data = $this->getRequestContent();
+            $friendsSearch = new FriendsRequest();
+            return $friendsSearch->agreeFriendsRequest($data);
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionRefuseFriendRequest()
+    {
+        try{
+            $data = $this->getRequestContent();
+            $friendsSearch = new FriendsRequest();
+            return $friendsSearch->refuseFriendsRequest($data);
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
     }
 
 

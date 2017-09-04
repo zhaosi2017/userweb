@@ -62,7 +62,7 @@ class WhiteListController extends AuthController
             $userModel = User::findOne(['id' => $userId]);
             $userModel->whitelist_switch = isset($data['status']) ? (int)$data['status'] : 0;
 
-            return $userModel->Switch();
+            return $userModel->Switchs();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
