@@ -138,7 +138,7 @@ class Sinch extends  AbstruactThird{
                 $this->Event_Status =  CallRecord::CALLRECORD_STATUS_BUSY;
                 break;
             default:
-                $this->Event_Status =  CallRecord::CALLRECORD_STATUS_Filed;
+                $this->Event_Status =  CallRecord::CALLRECORD_STATUS_FILED;
                 break;
         }
         return 'OK';

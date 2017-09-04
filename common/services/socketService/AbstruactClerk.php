@@ -9,11 +9,9 @@
 
 namespace  common\services\socketService;
 
-class AbstruactClerk{
+abstract  class AbstruactClerk{
 
-
-
-
+  abstract public function stratClerk($server,  $frame , $data);
 
 
 }
