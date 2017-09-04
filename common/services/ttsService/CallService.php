@@ -113,12 +113,12 @@ class CallService {
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！");
         }
+
         if(!$this->_Event_ActionResult()){
             if(!$this->_call($catch)){
                 $this->app->sendtext("呼叫异常，请稍后再试！");
             }
         }
-
         return $result;
     }
 
@@ -128,7 +128,7 @@ class CallService {
 
         $cache_keys = Yii::$app->redis->hkeys($cacheKey);
         $catch_vals = Yii::$app->redis->hvals($cacheKey);
-        Yii::$app->redis->del($cacheKey);
+        //Yii::$app->redis->del($cacheKey);
         return array_combine($cache_keys , $catch_vals);
 
     }

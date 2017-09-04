@@ -9,7 +9,7 @@
 
 namespace console\controllers;
 
-use common\services\socketService\swooleCallu;
+use common\services\socketService\swooleServer;
 use yii\console\Controller;
 use yii\db\Exception;
 
@@ -18,9 +18,9 @@ class SwooleController extends Controller{
 
     public function actionStart(){
         try{
-            $server = new swooleCallu();
+            $server = new swooleServer();
         } catch (Exception $e){
-          echo   $e->getMessage();
+
         }
 
 

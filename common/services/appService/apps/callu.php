@@ -55,7 +55,6 @@ class callu {
 
 
     public function call($data){
-        $this->sendText($data);
         $data = json_decode($data);
         if(empty($data) ){
             $this->sendText('json格式错误');

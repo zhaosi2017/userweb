@@ -17,7 +17,7 @@ use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\Channel;
 
-class swooleCallu{
+class swooleServer{
 
     public $server;
 
