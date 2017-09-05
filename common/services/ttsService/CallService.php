@@ -167,6 +167,7 @@ class CallService {
         $numbers = json_decode($catch['numbers']);
         if(empty($numbers)){
             $this->app->sendtext("呼叫完成！");
+            return;
         }
         $this->third = unserialize($catch['third']);   //恢复为原始的呼叫状态
         $number = array_shift($numbers);

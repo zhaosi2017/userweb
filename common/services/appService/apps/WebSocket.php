@@ -26,7 +26,6 @@ class WebSocket
         if (feof($this->_socket))
         {
             fclose($this->_socket);
-            echo "server close \n";
             return false;
         }
         //$buffer = ' ';
@@ -37,16 +36,14 @@ class WebSocket
         // 注意如果服务端没有发送数据过来，会一直堵塞到超时
         // 比如下面链接的时候设置了2秒超时
         // socket_set_timeout($this->_socket, 2, 10000);
-        $data ='';
         $this->_recv_buffer = fread($this->_socket, self::READ_BUFFER_SIZE);
+        $data = $this->_recv_buffer;
         if ($this->_recv_buffer === "" || $this->_recv_buffer === false)
         {
-            echo "length 0\n";
             fclose($this->_socket);
             return $data;
         }
 
-        echo "get buffer\n";
         $payloadLength = '';
         $mask = '';
         $unmaskedPayload = '';
@@ -131,12 +128,10 @@ class WebSocket
         else
         {
             $payloadOffset = $payloadOffset - 4;
-            $decodedData['payload'] = substr($data, $payloadOffset);
+            $decodedData['payload'] = substr($data, $payloadOffset-2);
         }
 
-        return $decodedData;
-        //$buffer = $this->_hybi10_decode($buffer, $type, $masked);
-        return $buffer;
+        return $decodedData['payload'];
     }
 
     public function send_data($data, $type = 'text', $masked = true)

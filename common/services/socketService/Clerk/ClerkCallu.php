@@ -35,13 +35,9 @@ class ClerkCallu extends  AbstruactClerk{
             $this->_call($server,  $frame);
 
         }else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
-
-            $this->app = new callu;
-            $this->app->socket_fd = $data->app_fd;
-            $this->app->socket_server = $server;
             $resl = $server->push($data->app_fd , $data->text);
             $data_ = ['status'=>$resl];
-            $server->push($this->fd , json_encode($data_ , true));
+            $server->push($frame->fd , json_encode($data_ , true));
         }
 
 
