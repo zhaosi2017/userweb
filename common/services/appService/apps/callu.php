@@ -15,6 +15,8 @@ use frontend\models\Friends\Friends;
 use frontend\models\User;
 use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
+use WebSocket\Client;
+use yii\db\Exception;
 
 class callu {
     /**
@@ -48,19 +50,33 @@ class callu {
     public function sendText($string){
 
         $this->result['message'] = $string;
-        $this->socket_server->push($this->socket_fd , json_encode($this->result , JSON_UNESCAPED_UNICODE));
+        $client = new WebSocket();
+        $client->connect('127.0.0.1' , '9803');
+        $data = [
+            'action'=>2,
+            'app_fd'=>$this->socket_fd,
+            'text'=>json_encode($this->result , JSON_UNESCAPED_UNICODE)
+        ];
+        $client->send_data(json_encode($data ,JSON_UNESCAPED_UNICODE));
+        $data = $client->recv_data();
+        file_put_contents('/tmp/test-call.log' , var_export($data ,true) , 8);
+        $json = json_decode($data);
+        return $json->status;
 
+
+//        $client = new Client("ws://127.0.0.1:9803");
+//        $client->send(json_encode($data ,JSON_UNESCAPED_UNICODE));
+//
+//        $data =  $client->receive();
+//        file_put_contents('/tmp/test-call.log' , var_export($data ,true) , 8);
+//        $json = json_decode($data);
+//        return $json->status;
     }
 
 
 
     public function call($data){
         $data = json_decode($data);
-        if(empty($data) ){
-            $this->sendText('json格式错误');
-            return;
-        }
-        $this->sendText($data);
         $user =  User::findOne(['token'=>$data->token]);   //身份校验
         if(empty($user)){
             $this->sendText('token错误');

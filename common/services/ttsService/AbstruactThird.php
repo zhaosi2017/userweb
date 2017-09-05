@@ -103,7 +103,6 @@ abstract  class AbstruactThird{
         }catch ( Exception $e){
               $response = new Response();
         }
-       //$this->_send_data_log(array($copy->getBody()->getContents()));
         return $response;
 
     }

@@ -109,7 +109,7 @@ class CallService {
         $this->to_user      = unserialize($catch['to_user']);
         $this->from_user    = unserialize($catch['from_user']);
         $this->call_type    = $catch['call_type'];
-        $this->third        = unserialize($catch['third']);
+
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！");
         }
@@ -165,7 +165,11 @@ class CallService {
 
 
         $numbers = json_decode($catch['numbers']);
-
+        if(empty($numbers)){
+            $this->app->sendtext("呼叫完成！");
+            return;
+        }
+        $this->third = unserialize($catch['third']);   //恢复为原始的呼叫状态
         $number = array_shift($numbers);
         $this->third->To   =  $number;
         $this->app->sendtext("正在尝试呼叫，请稍后");

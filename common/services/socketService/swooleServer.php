@@ -13,6 +13,7 @@ ini_set("display_errors" , "on");
 
 use common\models\User;
 use common\services\appService\apps\callu;
+use common\services\socketService\Clerk\ClerkCallu;
 use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\Channel;
@@ -21,6 +22,12 @@ class swooleServer{
 
     public $server;
 
+    private static  $action_map =[
+        1=>'打电话',
+        2=>'电话回调通知',
+        3=>'好友申请消息通知'
+
+    ];
     public function __construct(){
         if( $this->server == null){
             $this->server = new \swoole_websocket_server('0.0.0.0', 9803);
@@ -43,13 +50,20 @@ class swooleServer{
      * 只是呼叫消息处理  如果需要增加其他业务 请将业务层封装
      */
     public function onMessage($server,  $frame){
+        $data = json_decode($frame->data);
+        if(empty($data) ){
+            $server->push($frame->fd , json_encode(['json格式错误']));
+            return;
+        }
+        if($data->action == 1 || $data->action == 2){    //电话相关
+            $clerk = new ClerkCallu();
+        }elseif ($data->action == 3){
 
-        $app = new callu();
-        $app->socket_fd = $frame->fd;
-        $app->socket_server = $server;
-        $app->call($frame->data);
-
-
+        }else{
+            $server->push($frame->fd , json_encode(['请求类型错误']));
+            return ;
+        }
+        $clerk->stratClerk($server,  $frame , $data);
     }
 
 
