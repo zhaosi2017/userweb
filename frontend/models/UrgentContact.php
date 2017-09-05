@@ -10,7 +10,7 @@ use frontend\services\SmsService;
 
 
 /**
- * User model
+ * UrgentContact model
  *
  * @property integer $id
  * @property string $account

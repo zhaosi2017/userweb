@@ -10,6 +10,7 @@ use frontend\models\User;
 use Yii;
 use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;
+use yii\db\Transaction;
 
 /**
  * Class FriendsRequest
@@ -78,61 +79,6 @@ class FriendsRequest extends FActiveRecord {
         return $this->jsonResponse($tmp,'操作成功',0,ErrCode::SUCCESS);
     }
 
-    /**
-     * 拒绝优友的好友请求
-     */
-    public function refuseFriendsRequest($data)
-    {
-        $account =isset($data['account']) ? $data['account'] : '';
-        if(empty($account)){return $this->jsonResponse([],'参数不全',1,ErrCode::PARAM_NOT_INCOMPLETE);}
-        $_friend = User::findOne(['account'=>$account]);
-        if(empty($_friend))
-        {
-            return $this->jsonResponse([],'不存在优友',1,ErrCode::USER_NOT_EXIST);
-        }
-        $userId = Yii::$app->user->id;
-        $_friendRequest = FriendsRequest::findOne(['to_id'=>$userId,'from_id'=>$_friend->id,'status'=>self::NORMAL_STATUS]);
-        if(empty($_friendRequest))
-        {
-            return $this->jsonResponse([],'无好友请求',1,ErrCode::USER_NOT_EXIST);
-        }
-
-        $_friendRequest->status = self::REFUSE_STATUS;
-        if($_friendRequest->save())
-        {
-            return $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
-        }else{
-            return $this->jsonResponse([],$_friendRequest->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
-        }
-    }
-
-    /**
-     * 同意优友的好友请求
-     */
-    public function agreeFriendsRequest($data)
-    {
-        $account =isset($data['account']) ? $data['account'] : '';
-        if(empty($account)){return $this->jsonResponse([],'参数不全',1,ErrCode::PARAM_NOT_INCOMPLETE);}
-        $_friend = User::findOne(['account'=>$account]);
-        if(empty($_friend))
-        {
-            return $this->jsonResponse([],'不存在优友',1,ErrCode::USER_NOT_EXIST);
-        }
-        $userId = Yii::$app->user->id;
-        $_friendRequest = FriendsRequest::findOne(['to_id'=>$userId,'from_id'=>$_friend->id,'status'=>self::NORMAL_STATUS]);
-        if(empty($_friendRequest))
-        {
-            return $this->jsonResponse([],'无好友请求',1,ErrCode::USER_NOT_EXIST);
-        }
-
-        $_friendRequest->status = self::NORMAL_STATUS;
-        if($_friendRequest->save())
-        {
-            return $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
-        }else{
-            return $this->jsonResponse([],$_friendRequest->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
-        }
-    }
 
 
 

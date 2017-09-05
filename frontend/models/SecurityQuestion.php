@@ -11,7 +11,7 @@ use frontend\models\FActiveRecord;
 
 
 /**
- * User model
+ * SecurityQuestion model
  *
  * @property integer $id
  * @property string $account

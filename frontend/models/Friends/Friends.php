@@ -1,13 +1,14 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhangqing
+ * Users: zhangqing
  * Date: 2017/9/2
  * Time: 上午10:33
  */
 namespace frontend\models\Friends;
 
 use frontend\models\FActiveRecord;
+use yii\db\Transaction;
 
 /**
  * Class Friends
@@ -43,5 +44,7 @@ class Friends extends FActiveRecord {
             ['extsion','string'],
         ];
     }
+
+
 
 }

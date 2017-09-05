@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhangqing
+ * Users: zhangqing
  * Date: 2017/8/30
  * Time: 下午1:54
  * 优呼app  这个对象主要用于和app端的业务交互

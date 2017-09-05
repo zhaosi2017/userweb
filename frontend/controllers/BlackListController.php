@@ -1,24 +1,32 @@
 <?php
 namespace frontend\controllers;
 
-use frontend\models\WhiteLists\WhiteListForm;
-use frontend\models\UserForm\WhiteListSwitchForm;
-use frontend\models\WhiteLists\WhiteList;
+use frontend\models\BlackLists\BlackList;
+use frontend\models\BlackLists\BlackListForm;
+use frontend\models\Friends\FriendsInfoSearch;
+use frontend\models\Friends\FriendsRemarkForm;
+use frontend\models\Friends\FriendsRequestForm;
+use frontend\models\Friends\FriendsSearch;
 use Yii;
+use frontend\models\WhiteLists\WhiteList;
+use frontend\models\Channel;
 use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
+use frontend\models\User;
 use frontend\models\ErrCode;
+use frontend\models\UrgentContact;
+use frontend\models\Friends\Friends;
+use frontend\models\Friends\FriendsRequest;
+use frontend\models\Friends\FriendsGroup;
 
-class WhiteListController extends AuthController
+class BlackListController extends AuthController
 {
 
     public $enableCsrfValidation = false;
 
-    /**
-     * @inheritdoc
-     */
+
     public function behaviors()
     {
 
@@ -28,7 +36,7 @@ class WhiteListController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['remove', 'add', 'list','switch'],
+                        'actions' => ['remove', 'add', 'list'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -39,7 +47,6 @@ class WhiteListController extends AuthController
                     'remove' => ['post'],
                     'add' => ['post'],
                     'list' => ['post'],
-                    'switch'=>['post']
 
                 ],
             ],
@@ -48,27 +55,6 @@ class WhiteListController extends AuthController
         return array_merge($behaviors, $self);
     }
 
-    public function actionSwitch()
-    {
-
-        try {
-            $data = $this->getRequestContent();
-            $userModel = new WhiteListSwitchForm();
-            $userModel->status = isset($data['status']) ? (int)$data['status'] : '';
-
-            return $userModel->Switchs();
-        }catch (Exception $e)
-        {
-            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
-        }catch (\Exception $e)
-        {
-            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
-        }
-    }
-
-
-
-
     /**
      * 添加某个好友到黑名单列表
      */
@@ -76,9 +62,9 @@ class WhiteListController extends AuthController
     {
         try{
             $data = $this->getRequestContent();
-            $blackList = new WhiteListForm();
+            $blackList = new BlackListForm();
             $blackList->account = isset($data['account']) ? $data['account'] : '';
-            return $blackList->addWhiteList();
+            return $blackList->addBlackList();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
@@ -92,7 +78,7 @@ class WhiteListController extends AuthController
     {
         try{
             $data = $this->getRequestContent();
-            $blackList = new WhiteListForm();
+            $blackList = new BlackListForm();
             $blackList->account = isset($data['account']) ? $data['account'] : '';
             return $blackList->remove();
         }catch (Exception $e)
@@ -107,7 +93,7 @@ class WhiteListController extends AuthController
     public function actionList()
     {
         try {
-            $blackList = new WhiteList();
+            $blackList = new BlackList();
             return $blackList->lists();
         }catch (Exception $e)
         {
@@ -117,4 +103,9 @@ class WhiteListController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
     }
+
+
+
+
+
 }

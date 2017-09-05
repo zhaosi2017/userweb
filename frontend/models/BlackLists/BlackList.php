@@ -1,5 +1,5 @@
 <?php
-namespace frontend\models\WhiteLists;
+namespace frontend\models\BlackLists;
 
 
 use Yii;
@@ -7,9 +7,9 @@ use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 use frontend\models\FActiveRecord;
 use frontend\services\SmsService;
-use frontend\models\ErrCode;
-use frontend\models\User;
 use frontend\models\Friends\Friends;
+use frontend\models\User;
+use frontend\models\ErrCode;
 
 
 /**
@@ -18,20 +18,20 @@ use frontend\models\Friends\Friends;
  * @property integer $id
  * @property string $account
  */
-class WhiteList extends FActiveRecord
+class BlackList extends FActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'white_list';
+        return 'black_list';
     }
 
     public function rules()
     {
         return [
-            [['uid', 'white_uid'], 'integer'],
+            [['uid', 'black_uid'], 'integer'],
         ];
 
     }
@@ -40,7 +40,7 @@ class WhiteList extends FActiveRecord
     {
         return [
             'uid' => '用户id',
-            'white_uid' => '白名单用户',
+            'black_uid' => '黑名单用户',
         ];
     }
 
@@ -48,14 +48,14 @@ class WhiteList extends FActiveRecord
     public function lists()
     {
         $userId = Yii::$app->user->id ;
-        $res = self::find()->select('white_uid')->where(['uid'=>$userId])->all();
+        $res = self::find()->select('black_uid')->where(['uid'=>$userId])->all();
         $data = [];
         if(!empty($res))
         {
             foreach ($res as $k => $v)
             {
-                $_friends = Friends::find()->select('remark')->where(['user_id'=>$userId,'friend_id'=>$v['white_uid']])->one();
-                $_user = User::find()->select(['nickname','account'])->where(['id'=>$v['white_uid']])->one();
+                $_friends = Friends::find()->select('remark')->where(['user_id'=>$userId,'friend_id'=>$v['black_uid']])->one();
+                $_user = User::find()->select(['nickname','account'])->where(['id'=>$v['black_uid']])->one();
                 if(!empty($_friends) && !empty($_user)) {
                     $data[$k]['account'] = $_user->account;
                     $data[$k]['remark'] = $_friends['remark'] ? $_friends['remark'] : $_user['nickname'];
@@ -65,6 +65,5 @@ class WhiteList extends FActiveRecord
         return  $this->jsonResponse($data,'操作成功',0, ErrCode::SUCCESS);
 
     }
-
 
 }

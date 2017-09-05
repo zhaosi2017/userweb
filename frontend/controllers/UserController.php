@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use frontend\models\Channel;
+use frontend\models\UserForm\ResetPasswordForm;
 use frontend\models\Question;
 use frontend\models\SecurityQuestion;
 use frontend\models\UserPhone;
@@ -10,9 +11,13 @@ use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
-use frontend\models\User;
+
 use frontend\models\ErrCode;
 use frontend\models\UrgentContact;
+USE frontend\models\UserForm\ChannelForm;
+USE frontend\models\UserForm\NicknameForm;
+USE frontend\models\UserForm\WhiteListSwitchForm;
+use frontend\models\User;
 
 class UserController extends AuthController
 {
@@ -163,7 +168,7 @@ class UserController extends AuthController
         $nickname = isset($postData['nickname']) ? $postData['nickname'] :'';
         $userId = Yii::$app->user->id;
         try{
-            $model = User::findOne($userId);
+            $model = new NicknameForm();
             $model->nickname = $nickname;
             return $model->updateNickname();
         }catch (Exception $e)
@@ -193,11 +198,7 @@ class UserController extends AuthController
         try{
             $data = $this->getRequestContent();
             $channel = isset($data['chan']) ? $data['chan']: '';
-            $model = $this->findModel();
-            if($model === false)
-            {
-                return $this->jsonResponse([],'用户不存在',1, ErrCode::USER_NOT_EXIST);
-            }
+            $model = new ChannelForm();
             $model->channel = $channel;
             return $model->updateChannel();
         }catch (Exception $e)
@@ -367,12 +368,12 @@ class UserController extends AuthController
     {
         $data = $this->getRequestContent();
         try {
-            $model = new User();
+            $model = new ResetPasswordForm();
             $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
-            $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
-            $model->password = isset($data['pass']) ? $data['pass'] : '';
-            $token = isset($data['token']) ? $data['token'] : '';
-            return $model->resetPassword($token);
+            $model->phone = isset($data['phone']) ? $data['phone'] : '';
+            $model->pass = isset($data['pass']) ? $data['pass'] : '';
+            $model->token = isset($data['token']) ? $data['token'] : '';
+            return $model->resetPasswords();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

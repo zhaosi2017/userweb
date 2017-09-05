@@ -32,6 +32,17 @@ class ErrCode
     const USER_NO_ADD_SELF = '2018';//用户不能添加自己为好友
     const USER_ADD_FRIEND_REQUEST_EXIST = '2019';//用户已经向某优客发送拉请求，不能重复发送
     const PARAM_NOT_INCOMPLETE = '6000';//参数不完整
+    const LOGIN_UPDATE_TOKEN_ERROR = '2020';//登录时候，修改稿token错误
+    const DO_NOT_YOURSELF = '2021'; //不能操作自己
+    const YOU_ARE_NOT_FRIENDS = '2022';//你们不是好友
+    const THE_FRIEND_IN_YOU_WHITELIST = '2023';//该好友在你的白名单列表，不能在添加到黑名单，需先删除白名单
+    const THE_FRIEND_IN_YOU_BLACKLIST = '2024';//该好友在你的黑名单列表，不能在添加到黑名单，需先删除白名单
+    const THE_FRIEND_ALREADY_IN_YOU_BLACKLIST = '2025';//该好友已经在你的黑名单列表，不能在重复添加到黑名单
+    const THE_FRIEND_ALREADY_IN_YOU_WHITELIST = '2026';//该好友已经在你的白名单列表，不能在重复添加到白名单
+    const THE_FRIEND_NOT_IN_YOU_BLACKLIST = '2027';//对方不再你的黑名单列表
+    const THE_FRIEND_NOT_IN_YOU_WHITELISTS = '2028';//对方不再你的白名单列表
+    const NO_USER_REQUEST = '2029';//无用户请求（添加好友）
+
 
 
 

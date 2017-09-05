@@ -67,9 +67,6 @@ class User extends FActiveRecord implements IdentityInterface
             ['country_code','match','pattern'=>'/^[0-9]{2,6}$/','message'=>'{attribute}必须为2到6位纯数字'],
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'{attribute}必须为4到11位纯数字'],
             ['phone_number','validatePhone','on'=>'register'],
-            ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
-            ['nickname','ValidateNickname','on'=>'update_nickname'],
-            ['channel','ValidateChannel','on'=>'update_channel'],
 
         ];
     }
@@ -97,8 +94,6 @@ class User extends FActiveRecord implements IdentityInterface
         $scenarios = parent::scenarios();
         $res = [
             'register' => [ 'password','country_code', 'phone_number'],
-            'update_nickname'=>['nickname'],
-            'update_channel'=>['channel']
 
         ];
         return array_merge($scenarios,$res);
@@ -112,7 +107,6 @@ class User extends FActiveRecord implements IdentityInterface
         {
             $this->addError('phone_number', '该手机号不能为空');
         }
-
 
         $rows = self::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
 
@@ -131,37 +125,9 @@ class User extends FActiveRecord implements IdentityInterface
         }
     }
 
-    public function ValidateChannel()
-    {
-        $tmp = explode(',',$this->channel);
-        $channelArr = Channel::find()->select('id')->indexBy('id')->all();
-        if(!empty($tmp))
-        {
-            foreach ($tmp as $c){
-                if(array_key_exists($c,$channelArr))
-                {
-                    continue;
-                }
-                $this->addError('channel','渠道非法');
-                break;
-            }
-        }
-        return true;
-    }
 
-    public function ValidateNickname()
-    {
-        if(empty($this->nickname)){ $this->addError('nickname', '昵称不能为空'); }
 
-        $res = self::find()->where(['nickname'=>$this->nickname])->one();
 
-        if(!empty($res) &&  $res->id != Yii::$app->user->id){
-             $this->addError('nickname', '该昵称已被占用！');
-        }else{
-            return true;
-        }
-
-    }
     /**
      * @inheritdoc
      */
@@ -231,9 +197,18 @@ class User extends FActiveRecord implements IdentityInterface
             }
             if(Yii::$app->user->login($identity))
             {
-                if(isset($identity->password)){unset($identity->password);}
-                if(isset($identity->auth_key)){unset($identity->auth_key);}
-                return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
+                $user = User::findOne(['id'=>$identity->id]);
+                $user->token = $user->makeToken();
+                if($user->save())
+                {
+                    $identity->token = $user->token;
+                    if(isset($identity->password)){unset($identity->password);}
+                    if(isset($identity->auth_key)){unset($identity->auth_key);}
+                    return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
+                }else{
+                    return $this->jsonResponse($identity,'登录失败',1,ErrCode::LOGIN_UPDATE_TOKEN_ERROR);
+                }
+
             }else{
                 return $this->jsonResponse([],'登录失败',1,ErrCode::FAILURE);
             }
@@ -505,7 +480,7 @@ class User extends FActiveRecord implements IdentityInterface
 
     private function makeToken()
     {
-        return md5($this->phone_number.time().$this->country_code.$this->makeCode() );
+        return md5($this->phone_number.time().$this->country_code.$this->makeCode(7) );
     }
 
     private function makeCode($len = 4)
@@ -648,40 +623,6 @@ class User extends FActiveRecord implements IdentityInterface
 
 
 
-    public function resetPassword($token)
-    {
-        $redis = Yii::$app->redis;
-        $key = $this->country_code.$this->phone_number.self::REDIS_TOKEN;
-        $_token = $redis->get($key);
-        if(empty($token) || $token != $_token)
-        {
-            return  $this->jsonResponse([],'非法操作','0',ErrCode::ILLEGAL_OPERATION);
-        }
-
-        if(empty($this->password))
-        {
-            return  $this->jsonResponse([],'密码不能为空','0',ErrCode::PASSWORD_EMPTY);
-        }
-        if($this->validate(['country_code','phone_number','password']) ){
-            $res = self::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone_number])->one();
-            if ($res){
-                $res->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
-                if($res->validate(['country_code','phone_number','password']) && $res->save())
-                {
-                    $redis->del($key);
-                    return  $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
-
-                }else{
-                    return  $this->jsonResponse([],$res->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);
-                }
-
-            }else{
-                return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
-            }
-        }else{
-            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
-        }
-    }
 
 
     public function resetPasswordQuestion($data)
@@ -760,20 +701,6 @@ class User extends FActiveRecord implements IdentityInterface
     }
 
 
-    public function Switchs()
-    {
-       if($this->validate('whitelist_switch'))
-       {
-           if($this->save())
-           {
-               return  $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
-           }else{
-               return  $this->jsonResponse([],$this->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);
-           }
-       }
-        return  $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
-
-    }
 
 
 

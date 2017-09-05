@@ -1,10 +1,15 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\Friends\FriendsAgreeForm;
+use frontend\models\Friends\FriendsDelFrom;
+use frontend\models\Friends\FriendsInfoSearch;
+use frontend\models\Friends\FriendsRefuseForm;
+use frontend\models\Friends\FriendsRemarkForm;
 use frontend\models\Friends\FriendsRequestForm;
 use frontend\models\Friends\FriendsSearch;
 use Yii;
-use frontend\model\WhiteLists\WhiteList;
+use frontend\models\WhiteLists\WhiteList;
 use frontend\models\Channel;
 use yii\db\Exception;
 use yii\filters\AccessControl;
@@ -32,7 +37,8 @@ class FriendController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['search','friend-detail','add-friend-request','get-friend-request','refuse-friend-request'],
+                        'actions' => ['search','update-friend-remark','get-friend-info','friend-detail','delete-friend',
+                            'add-friend-request','get-friend-request','refuse-friend-request','agree-friend-request'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -44,7 +50,11 @@ class FriendController extends AuthController
                     'friend-detail'=>['post'],
                     'add-friend-request'=>['post'],
                     'get-friend-request'=>['post'],
-                    'refuse-friend-request'=>['post']
+                    'refuse-friend-request'=>['post'],
+                    'get-friend-info'=>['post'],
+                    'update-friend-remark'=>['post'],
+                    'agree-friend-request'=>['post'],
+                    'delete-friend'=>['post'],
 
                 ],
             ],
@@ -130,10 +140,12 @@ class FriendController extends AuthController
      */
     public function actionAgreeFriendRequest()
     {
+
         try{
             $data = $this->getRequestContent();
-            $friendsSearch = new FriendsRequest();
-            return $friendsSearch->agreeFriendsRequest($data);
+            $friends = new FriendsAgreeForm();
+            $friends->account = isset($data['account']) ? $data['account'] :'';
+            return $friends->agreeFriendsRequest($data);
         }catch (Exception $e) {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
         }catch (\Exception $e) {
@@ -145,13 +157,60 @@ class FriendController extends AuthController
     {
         try{
             $data = $this->getRequestContent();
-            $friendsSearch = new FriendsRequest();
+            $friendsSearch = new FriendsRefuseForm();
             return $friendsSearch->refuseFriendsRequest($data);
         }catch (Exception $e) {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
         }catch (\Exception $e) {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
+    }
+
+    /**
+     * 查看好友信息（已经是好友）
+     */
+    public function actionGetFriendInfo()
+    {
+        try{
+            $data = $this->getRequestContent();
+            $friends = new FriendsInfoSearch();
+            $friends->account = isset($data['account']) ? $data['account'] : '';
+            return $friends->getFriendInfo();
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionUpdateFriendRemark()
+    {
+        try{
+            $data = $this->getRequestContent();
+            $friends = new FriendsRemarkForm();
+            $friends->account = isset($data['account']) ? $data['account'] : '';
+            $friends->remark = isset($data['remark']) ? $data['remark'] : '';
+            return $friends->updateFriendRemark();
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionDeleteFriend()
+    {
+        try{
+            $data = $this->getRequestContent();
+            $friends = new FriendsDelFrom();
+            $friends->account = isset($data['account']) ? $data['account'] : '';
+            return $friends->deleteFriend();
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
     }
 
 
