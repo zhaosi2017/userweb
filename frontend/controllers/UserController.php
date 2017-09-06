@@ -5,6 +5,7 @@ use frontend\models\Channel;
 use frontend\models\UserForm\ResetPasswordForm;
 use frontend\models\Question;
 use frontend\models\SecurityQuestion;
+use frontend\models\UserForm\UserImageForm;
 use frontend\models\UserPhone;
 use Yii;
 use yii\db\Exception;
@@ -18,6 +19,7 @@ USE frontend\models\UserForm\ChannelForm;
 USE frontend\models\UserForm\NicknameForm;
 USE frontend\models\UserForm\WhiteListSwitchForm;
 use frontend\models\User;
+use yii\web\UploadedFile;
 
 class UserController extends AuthController
 {
@@ -44,7 +46,7 @@ class UserController extends AuthController
                         'allow' => true,
                         'actions' => ['nickname','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
-                            'delete-user-phone','logout','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
+                            'delete-user-phone','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -75,6 +77,7 @@ class UserController extends AuthController
                     'delete-urgent-contact'=>['post'],
                     'set-urgent-contact'=>['post'],
                     'logout'=>['post'],
+                    'update-image'=>['post'],
                 ],
             ],
         ];
@@ -520,6 +523,23 @@ class UserController extends AuthController
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
+    }
+
+    public function actionUpdateImage()
+    {
+        try {
+            $uploadImage = new UserImageForm();
+            $uploadImage->file = UploadedFile::getInstanceByName('file');
+            return $uploadImage->upload();
+
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse([],$e->getMessage(),'1',ErrCode::FAILURE);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse([],$e->getMessage(),'1',ErrCode::FAILURE);
+        }
+
     }
 
     public function actionLogout()

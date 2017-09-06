@@ -112,6 +112,7 @@ CREATE TABLE `security_question` (
 ALTER TABLE `user` ADD `channel` VARCHAR(255) NULL DEFAULT NULL COMMENT '渠道' AFTER `token`;
 
 ALTER TABLE `user` ADD `balance` DECIMAL(14,4) NOT NULL DEFAULT '0.0000'  COMMENT '余额' AFTER `channel`;
+ALTER TABLE `user` ADD `header_img` VARCHAR (255)   DEFAULT NULL  COMMENT '头像' AFTER `balance`;
 
 /********************通话记录表********************/
 CREATE TABLE `call_record` (

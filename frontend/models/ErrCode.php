@@ -42,6 +42,7 @@ class ErrCode
     const THE_FRIEND_NOT_IN_YOU_BLACKLIST = '2027';//对方不再你的黑名单列表
     const THE_FRIEND_NOT_IN_YOU_WHITELISTS = '2028';//对方不再你的白名单列表
     const NO_USER_REQUEST = '2029';//无用户请求（添加好友）
+    const UPLOAD_FILE_FAILURE = '2030';//上传文件失败
 
 
 
