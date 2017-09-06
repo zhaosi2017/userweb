@@ -59,6 +59,10 @@ class swooleServer{
             $clerk = new ClerkCallu();
         }elseif ($data->action == 3){
 
+        }elseif($data->action==4)
+        {
+
+
         }else{
             $server->push($frame->fd , json_encode(['请求类型错误']));
             return ;
