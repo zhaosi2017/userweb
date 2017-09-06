@@ -30,7 +30,7 @@ class swooleServer{
     ];
     public function __construct(){
         if( $this->server == null){
-            $this->server = new \swoole_websocket_server('0.0.0.0', 9803);
+            $this->server = new \swoole_websocket_server('103.235.171.146', 9803);
         }
         $this->server->set([
             'worker_num' => 2,
