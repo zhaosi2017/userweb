@@ -51,7 +51,7 @@ class callu {
 
         $this->result['message'] = $string;
         $client = new WebSocket();
-        $client->connect('127.0.0.1' , '9803');
+        $client->connect('103.235.171.146' , '9803');
         $data = [
             'action'=>2,
             'app_fd'=>$this->socket_fd,
