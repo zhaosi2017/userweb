@@ -68,7 +68,7 @@ class UserImageForm extends User
                 if($this->file->saveAs($path))
                 {
                     $transaction->commit();
-                    return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
+                    return $this->jsonResponse(['img_url'=>$path],'操作成功','0',ErrCode::SUCCESS);
                 }else{
                     $transaction->rollBack();
                     return $this->jsonResponse([],'上传文件失败','1',ErrCode::UPLOAD_FILE_FAILURE);
