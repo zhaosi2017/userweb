@@ -38,6 +38,7 @@ class swooleServer{
             'max_request' => 10000,
             'dispatch_mode' => 2,
             'debug_mode'=> 1,
+            'log_file '=>'/tmp/test-swoole.log'
         ]);
         $this->server->on('message', [$this, 'onMessage']);
         $this->server->on('close' ,[$this , 'onClose']);

@@ -59,18 +59,9 @@ class callu {
         ];
         $client->send_data(json_encode($data ,JSON_UNESCAPED_UNICODE));
         $data = $client->recv_data();
-        file_put_contents('/tmp/test-call.log' , var_export($data ,true) , 8);
         $json = json_decode($data);
         return $json->status;
 
-
-//        $client = new Client("ws://127.0.0.1:9803");
-//        $client->send(json_encode($data ,JSON_UNESCAPED_UNICODE));
-//
-//        $data =  $client->receive();
-//        file_put_contents('/tmp/test-call.log' , var_export($data ,true) , 8);
-//        $json = json_decode($data);
-//        return $json->status;
     }
 
 
