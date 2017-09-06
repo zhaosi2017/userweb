@@ -28,14 +28,6 @@ class WebSocket
             fclose($this->_socket);
             return false;
         }
-        //$buffer = ' ';
-        //while($buffer !== '')
-        //{
-        //$buffer = fread($this->_socket, 512);
-        //}
-        // 注意如果服务端没有发送数据过来，会一直堵塞到超时
-        // 比如下面链接的时候设置了2秒超时
-        // socket_set_timeout($this->_socket, 2, 10000);
         $this->_recv_buffer = fread($this->_socket, self::READ_BUFFER_SIZE);
         $data = $this->_recv_buffer;
         if ($this->_recv_buffer === "" || $this->_recv_buffer === false)
@@ -44,8 +36,6 @@ class WebSocket
             return $data;
         }
 
-        $payloadLength = '';
-        $mask = '';
         $unmaskedPayload = '';
         $decodedData = array();
 
@@ -159,22 +149,6 @@ class WebSocket
         {
             return false;
         }
-
-        //$buffer = ' ';
-        //while($buffer !== '')
-        //{
-        //$buffer = fread($this->_socket, 512);
-        //}
-
-        //$buffer = '';
-        //while(!feof($this->_socket))
-        //{
-        //$buffer .= fread($this->_socket, 512);
-        //}
-
-        //$buffer = fread($this->_socket, 512);
-        //$buffer = $this->_hybi10_decode($buffer, $type, $masked);
-        //var_dump($buffer);
         return true;
     }
 
