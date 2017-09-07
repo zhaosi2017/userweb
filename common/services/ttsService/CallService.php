@@ -15,6 +15,7 @@ use frontend\models\UserPhone;
 use phpDocumentor\Reflection\DocBlock\Tags\Throws;
 use yii\base\Object;
 use Yii;
+
 class CallService {
 
     /**
@@ -119,6 +120,11 @@ class CallService {
         }
 
         if(!$this->_Event_ActionResult()){
+            $numbers = json_decode($catch['numbers']);
+            if(empty($numbers)){
+                $this->app->sendtext("呼叫完成！");
+                return;
+            }
             if(!$this->_call($catch)){
                 $this->app->sendtext("呼叫异常，请稍后再试！");
             }
@@ -166,23 +172,19 @@ class CallService {
      * 开始呼叫
      */
     private function _call(Array $catch){
-
-
         $numbers = json_decode($catch['numbers']);
-        if(empty($numbers)){
-            $this->app->sendtext("呼叫完成！");
-            return;
-        }
         $this->third = unserialize($catch['third']);   //恢复为原始的呼叫状态
         $number = array_shift($numbers);
         $this->third->To   =  $number;
         $this->app->sendtext("正在尝试呼叫 ".$this->to_user->nickname." 的".self::$call_type_map[$this->call_type].($catch['serial']+1)."，请稍后");
         if(!$this->third->CallStart()){
+            file_put_contents('/tmp/test-call.log' , var_export(3333 , true),8);
             $this->app->sendtext("呼叫异常，请稍后再试！");
             return false;
         }
+        file_put_contents('/tmp/test-call.log' , var_export(4444 , true),8);
         $this->_catch($numbers , ($catch['serial']+1));                  //呼叫开始就不能受发起方控制 直至呼叫完成
-
+        file_put_contents('/tmp/test-call.log' , var_export(5555 , true),8);
         return true;
 
     }
