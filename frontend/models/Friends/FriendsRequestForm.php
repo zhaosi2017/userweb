@@ -7,10 +7,13 @@
  */
 namespace frontend\models\Friends;
 
+use frontend\services\FriendNoticeService;
 use Yii;
 use frontend\models\User;
 use frontend\models\ErrCode;
 use frontend\models\Friends\FriendsRequest;
+use common\services\appService\apps\WebSocket;
+
 
 class FriendsRequestForm extends FriendsRequest
 {
@@ -55,6 +58,9 @@ class FriendsRequestForm extends FriendsRequest
             $friendsRequest->note = $this->note;
             if($friendsRequest->save())
             {
+                $noticeService = new FriendNoticeService();
+                $noticeService->notice();
+
                 return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
             }else{
                 return $this->jsonResponse([],$friendsRequest->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);
