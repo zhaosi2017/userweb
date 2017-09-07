@@ -57,11 +57,8 @@ class Sinch extends  AbstruactThird{
                 ],
             ]);
         $this->_signature($body);
-        file_put_contents('/tmp/log_tts.send.log' , var_export($body , true).PHP_EOL,8);
         $header = ['x-timestamp'=>$this->timestamp , 'Content-type'=>'application/json' ,'Authorization'=>$this->authorization];
-        file_put_contents('/tmp/log_tts.send.log' , var_export($header , true).PHP_EOL,8);
         $request  = new Request('POST' , $this->uri , $header , $body);
-        file_put_contents('/tmp/log_tts.send.log' , var_export($request , true).PHP_EOL,8);
         $response =  $this->HttpSend($request);
 
         if(empty($response)){
