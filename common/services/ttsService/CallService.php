@@ -176,15 +176,17 @@ class CallService {
         $this->third = unserialize($catch['third']);   //恢复为原始的呼叫状态
         $number = array_shift($numbers);
         $this->third->To   =  $number;
+        file_put_contents('/tmp/test-call.log' , var_export(1111 , true),8);
         $this->app->sendtext("正在尝试呼叫 ".$this->to_user->nickname." 的".self::$call_type_map[$this->call_type].($catch['serial']+1)."，请稍后");
+        file_put_contents('/tmp/test-call.log' , var_export(2222 , true),8);
         if(!$this->third->CallStart()){
-            file_put_contents('/tmp/test-call.log' , var_export($this->third , true),8);
+            file_put_contents('/tmp/test-call.log' , var_export(3333 , true),8);
             $this->app->sendtext("呼叫异常，请稍后再试！");
             return false;
         }
-        file_put_contents('/tmp/test-call.log' , var_export($this->third , true),8);
+        file_put_contents('/tmp/test-call.log' , var_export(4444 , true),8);
         $this->_catch($numbers , ($catch['serial']+1));                  //呼叫开始就不能受发起方控制 直至呼叫完成
-        file_put_contents('/tmp/test-call.log' , var_export($this->third , true),8);
+        file_put_contents('/tmp/test-call.log' , var_export(5555 , true),8);
         return true;
 
     }
