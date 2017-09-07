@@ -50,6 +50,11 @@ class CallService {
      */
     public $text;
 
+    private static $call_type_map = [
+        CallRecord::CALLRECORD_TYPE_URGENT =>'紧急联系人',
+        CallRecord::CALLRECORD_TYPE_UNURGENT=>'联系电话'
+    ];
+
 
     public function __construct($className = null){
 
@@ -76,22 +81,21 @@ class CallService {
 
         $numbers = $this->_getToUserNumber();
         if(empty($numbers)){
-            $this->app->sendtext("被叫没有可用的联系电话！");
+            $this->app->sendtext($this->to_user->nickname."没有可用的".self::$call_type_map[$this->call_type]."！");
             return false;
         }
-        $this->app->sendtext("开始操作，请稍后！");
         $number = array_shift($numbers);
         $this->third->To        = $number;
         $this->third->From      = $this->_getFromUserNumber();
         $this->third->Text      = $this->text;
         $this->third->Language  = $this->to_user->language;
         $this->third->Loop      = 2;//Yii::$apps->params['tts_loop'];
-        $this->app->sendtext("正在尝试呼叫，请稍后");
+        $this->app->sendtext("正在尝试呼叫".$this->to_user->nickname."的".self::$call_type_map[$this->call_type]."1，请稍后");
         if(!$this->third->CallStart()){
             $this->app->sendtext("呼叫异常，请稍后再试！");
             return false;
         }
-        $this->_catch($numbers);                  //呼叫开始就不能受发起方控制 直至呼叫完成
+        $this->_catch($numbers , 1);                  //呼叫开始就不能受发起方控制 直至呼叫完成
         return true;
     }
 
@@ -172,12 +176,12 @@ class CallService {
         $this->third = unserialize($catch['third']);   //恢复为原始的呼叫状态
         $number = array_shift($numbers);
         $this->third->To   =  $number;
-        $this->app->sendtext("正在尝试呼叫，请稍后");
+        $this->app->sendtext("正在尝试呼叫 ".$this->to_user->nickname." 的".self::$call_type_map[$this->call_type].($catch['serial']+1)."，请稍后");
         if(!$this->third->CallStart()){
             $this->app->sendtext("呼叫异常，请稍后再试！");
             return false;
         }
-        $this->_catch($numbers);                  //呼叫开始就不能受发起方控制 直至呼叫完成
+        $this->_catch($numbers , ($catch['serial']+1));                  //呼叫开始就不能受发起方控制 直至呼叫完成
 
         return true;
 
@@ -187,7 +191,7 @@ class CallService {
      * @param $numbers 号码集合
      * 创建呼叫队列
      */
-    private function _catch($numbers){
+    private function _catch($numbers, $Serial = 1){
 
         $call_key = get_class($this->third).$this->third->callId;
 
@@ -198,6 +202,7 @@ class CallService {
         Yii::$app->redis->hset($call_key , 'third' , serialize($this->third));
         Yii::$app->redis->hset($call_key , 'apps' ,serialize($this->app) );
         Yii::$app->redis->hset($call_key , 'call_type' , $this->call_type);
+        Yii::$app->redis->hset($call_key , 'serial' , $Serial);
         Yii::$app->redis->expire($call_key , 60*60 );
 
     }

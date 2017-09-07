@@ -51,7 +51,7 @@ class callu {
 
         $this->result['message'] = $string;
         $client = new WebSocket();
-        $client->connect('103.235.171.146' , '9803');
+        $client->connect('127.0.0.1' , '9803');
         $data = [
             'action'=>2,
             'app_fd'=>$this->socket_fd,
@@ -89,12 +89,12 @@ class callu {
             return ;
         }
         $this->from_user   = $user;
-        $this->to_user = $to_user;
+        $this->to_user     = $to_user;
 
         $service = new  CallService(Sinch::class);
         $service->from_user = $user;
         $service->to_user   = $to_user;
-
+        $this->_linkFriend();
         $friend = Friends::findOne(['user_id'=>$this->to_user->id , 'friend_id'=>$this->from_user->id]); //这里取的是主叫在被叫好友列表中的名字
         $name = empty($friend->remark)?$this->from_user->nickname:$friend->remark;
         if($data->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT){
@@ -106,6 +106,26 @@ class callu {
         $service->call_type = $data->call_type;
 
         $service->start_call();
+
+    }
+
+    /**
+     * 最近联系人记录
+     */
+    private function _linkFriend(){
+
+        $friend_by_from = Friends::findOne(['friend_id'=>$this->from_user->id , 'user_id'=>$this->to_user->id]);   //被叫的好友（指主叫）
+        $friend_by_to   = Friends::findOne(['friend_id'=>$this->to_user->id , 'user_id'=>$this->from_user->id]);      //主叫的好友（指被叫）
+
+        if(!empty($friend_by_from)){
+            $friend_by_from->link_time = time();
+            $friend_by_from->save();
+        }
+
+        if(!empty($friend_by_to)){
+            $friend_by_to->link_time = time();
+            $friend_by_to->save();
+        }
 
     }
 

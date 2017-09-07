@@ -163,3 +163,5 @@ CREATE TABLE `friends_request` (
   `create_at` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `friends` ADD `link_time` int(11) unsigned DEFAULT '0' COMMENT '最近联系时间' AFTER `group_id`;
