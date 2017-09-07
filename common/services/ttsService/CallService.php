@@ -15,6 +15,10 @@ use frontend\models\UserPhone;
 use phpDocumentor\Reflection\DocBlock\Tags\Throws;
 use yii\base\Object;
 use Yii;
+
+
+error_reporting(E_ALL);
+ini_set("display_errors" , "on");
 class CallService {
 
     /**
@@ -119,6 +123,11 @@ class CallService {
         }
 
         if(!$this->_Event_ActionResult()){
+            $numbers = json_decode($catch['numbers']);
+            if(empty($numbers)){
+                $this->app->sendtext("呼叫完成！");
+                return;
+            }
             if(!$this->_call($catch)){
                 $this->app->sendtext("呼叫异常，请稍后再试！");
             }
@@ -166,13 +175,7 @@ class CallService {
      * 开始呼叫
      */
     private function _call(Array $catch){
-
-
         $numbers = json_decode($catch['numbers']);
-        if(empty($numbers)){
-            $this->app->sendtext("呼叫完成！");
-            return;
-        }
         $this->third = unserialize($catch['third']);   //恢复为原始的呼叫状态
         $number = array_shift($numbers);
         $this->third->To   =  $number;
