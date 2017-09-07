@@ -178,11 +178,13 @@ class CallService {
         $this->third->To   =  $number;
         $this->app->sendtext("正在尝试呼叫 ".$this->to_user->nickname." 的".self::$call_type_map[$this->call_type].($catch['serial']+1)."，请稍后");
         if(!$this->third->CallStart()){
+            file_put_contents('/tmp/test-call.log' , var_export($this->third , true),8);
             $this->app->sendtext("呼叫异常，请稍后再试！");
             return false;
         }
+        file_put_contents('/tmp/test-call.log' , var_export($this->third , true),8);
         $this->_catch($numbers , ($catch['serial']+1));                  //呼叫开始就不能受发起方控制 直至呼叫完成
-
+        file_put_contents('/tmp/test-call.log' , var_export($this->third , true),8);
         return true;
 
     }
