@@ -60,9 +60,11 @@ class Sinch extends  AbstruactThird{
         $header = ['x-timestamp'=>$this->timestamp , 'Content-type'=>'application/json' ,'Authorization'=>$this->authorization];
         $request  = new Request('POST' , $this->uri , $header , $body);
         $response =  $this->HttpSend($request);
+        file_put_contents('/tmp/test-call.log' , var_export($response , true),8);
         if(empty($response)){
             return false;
         }
+        file_put_contents('/tmp/test-call.log' , var_export($response , true),8);
         $data = json_decode($response->getBody()->getContents() );
         if( isset($data->callId) && !empty($data->callId)){
             $this->callId = $data->callId;
