@@ -16,9 +16,6 @@ use phpDocumentor\Reflection\DocBlock\Tags\Throws;
 use yii\base\Object;
 use Yii;
 
-
-error_reporting(E_ALL);
-ini_set("display_errors" , "on");
 class CallService {
 
     /**
