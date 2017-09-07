@@ -163,3 +163,6 @@ CREATE TABLE `friends_request` (
   `create_at` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `friends` ADD `direction` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '请求方向：0主动发送请求，1接受好友请求' AFTER `extsion`;
