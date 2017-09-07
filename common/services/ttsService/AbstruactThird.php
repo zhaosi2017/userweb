@@ -92,7 +92,6 @@ abstract  class AbstruactThird{
      * 这里统一发送http请求方便记录日志
      */
     public function HttpSend(Request $request){
-        file_put_contents('/tmp/log_tts.send.log' , var_export(11111 , true).PHP_EOL,8);
         $log = [
             'url'=>$request->getUri(),                   //交互的地址
             'data'=>$request->getBody()->getContents(),  //请求的内容
