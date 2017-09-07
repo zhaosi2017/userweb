@@ -37,7 +37,7 @@ class FriendController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['search','update-friend-remark','get-friend-info','friend-detail','delete-friend',
+                        'actions' => ['search','new-friend-list','friend-list','update-friend-remark','get-friend-info','friend-detail','delete-friend',
                             'add-friend-request','get-friend-request','refuse-friend-request','agree-friend-request'],
                         'roles' => ['@'],
                     ],
@@ -55,6 +55,8 @@ class FriendController extends AuthController
                     'update-friend-remark'=>['post'],
                     'agree-friend-request'=>['post'],
                     'delete-friend'=>['post'],
+                    'friend-list'=>['post'],
+                    'new-friend-list'=>['post'],
 
                 ],
             ],
@@ -211,6 +213,30 @@ class FriendController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
 
+    }
+
+    public function actionFriendList()
+    {
+        try{
+        $fiends = new Friends();
+        return $fiends->lists();
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionNewFriendList()
+    {
+        try{
+            $fiends = new Friends();
+            return $fiends->newFriendList();
+        }catch (Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e) {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
     }
 
 

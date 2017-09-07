@@ -166,3 +166,4 @@ CREATE TABLE `friends_request` (
 
 
 ALTER TABLE `friends` ADD `direction` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '请求方向：0主动发送请求，1接受好友请求' AFTER `extsion`;
+ALTER TABLE `friends` ADD `link_time` int(11) unsigned DEFAULT '0' COMMENT '最近联系时间' AFTER `group_id`;

@@ -25,7 +25,7 @@ class FriendsSearch extends User
         ];
     }
 
-    //根据用户的优码 和昵称 搜索用户 以便添加好友 目前是精确匹配 以后看需要可以该模糊
+    //根据用户的优码 和昵称 搜索用户 以便添加好友 目前是模糊匹配 以后看需要可以该精确匹配
     public function searchUser()
     {
         if(empty($this->search_word)){
