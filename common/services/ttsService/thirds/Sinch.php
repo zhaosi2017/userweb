@@ -56,9 +56,7 @@ class Sinch extends  AbstruactThird{
                     'enabledice' => true,
                 ],
             ]);
-        file_put_contents('/tmp/test-call.log' , var_export($body , true),8);
         $this->_signature($body);
-        file_put_contents('/tmp/test-call.log' , var_export($this->timestamp , true),8);
         $header = ['x-timestamp'=>$this->timestamp , 'Content-type'=>'application/json' ,'Authorization'=>$this->authorization];
         $request  = new Request('POST' , $this->uri , $header , $body);
         $response =  $this->HttpSend($request);
@@ -66,7 +64,6 @@ class Sinch extends  AbstruactThird{
         if(empty($response)){
             return false;
         }
-        file_put_contents('/tmp/test-call.log' , var_export($response , true),8);
         $data = json_decode($response->getBody()->getContents() );
         if( isset($data->callId) && !empty($data->callId)){
             $this->callId = $data->callId;
