@@ -37,7 +37,7 @@ class FriendController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['search','new-friend-list','friend-list','update-friend-remark','get-friend-info','friend-detail','delete-friend',
+                        'actions' => ['search','new-friend-num','friend-list','update-friend-remark','get-friend-info','friend-detail','delete-friend',
                             'add-friend-request','get-friend-request','refuse-friend-request','agree-friend-request'],
                         'roles' => ['@'],
                     ],
@@ -56,7 +56,7 @@ class FriendController extends AuthController
                     'agree-friend-request'=>['post'],
                     'delete-friend'=>['post'],
                     'friend-list'=>['post'],
-                    'new-friend-list'=>['post'],
+                    'new-friend-num'=>['post'],
 
                 ],
             ],
@@ -215,6 +215,7 @@ class FriendController extends AuthController
 
     }
 
+    //好友列表
     public function actionFriendList()
     {
         try{
@@ -226,12 +227,12 @@ class FriendController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
     }
-
-    public function actionNewFriendList()
+    //新朋友列表
+    public function actionNewFriendNum()
     {
         try{
             $fiends = new Friends();
-            return $fiends->newFriendList();
+            return $fiends->newFriendNum();
         }catch (Exception $e) {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
         }catch (\Exception $e) {

@@ -52,6 +52,7 @@ class FriendsRefuseForm extends FriendsRequest
             }
 
             $_friendRequest->status = self::REFUSE_STATUS;
+            $_friendRequest->update_at = time();
             if ($_friendRequest->save()) {
                 return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
             } else {

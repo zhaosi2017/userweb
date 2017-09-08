@@ -40,7 +40,8 @@ class FriendsRequestForm extends FriendsRequest
             {
                 return $this->jsonResponse([],'请求的好友不存在','1',ErrCode::USER_NOT_EXIST);
             }
-            $from_id = Yii::$app->user->id;
+            $identity= Yii::$app->user->identity;
+            $from_id = $identity->id;
             if($from_id == $user->id)
             {
                 return $this->jsonResponse([],'用户不能添加自己为好友','1',ErrCode::USER_NO_ADD_SELF);
@@ -58,8 +59,9 @@ class FriendsRequestForm extends FriendsRequest
             $friendsRequest->note = $this->note;
             if($friendsRequest->save())
             {
+
                 $noticeService = new FriendNoticeService();
-                $noticeService->notice();
+                $noticeService->notice($this->account, $identity->token);
 
                 return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
             }else{

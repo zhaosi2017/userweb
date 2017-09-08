@@ -46,6 +46,7 @@ class FriendsAgreeForm extends FriendsRequest
             }
 
             $_friendRequest->status = self::AGREE_STATUS;
+            $_friendRequest->update_at = time();
             Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
             $transaction = Yii::$app->db->getTransaction();
 
@@ -63,6 +64,8 @@ class FriendsAgreeForm extends FriendsRequest
                     $fromFriend->user_id = $userId;
                     $fromFriend->friend_id = $_friend->id;
                     $fromFriend->create_at = $time;
+                    $fromFriend->direction = 0;
+                    $fromFriend->link_time = $time;
 
 
                     if (!$fromFriend->save()) {
@@ -77,6 +80,8 @@ class FriendsAgreeForm extends FriendsRequest
                     $toFriend->user_id = $_friend->id;
                     $toFriend->friend_id = $userId;
                     $toFriend->create_at = $time;
+                    $toFriend->direction = 1;
+                    $toFriend->link_time = $time;
 
                     if (!$toFriend->save()) {
                         $transaction->rollBack();

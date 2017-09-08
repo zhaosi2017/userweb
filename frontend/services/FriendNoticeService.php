@@ -18,6 +18,7 @@ class FriendNoticeService
         $client->send_data(json_encode($data ,JSON_UNESCAPED_UNICODE));
         $data = $client->recv_data();
         $json = json_decode($data);
+        file_put_contents('/tmp/swooles',var_export($json,true).PHP_EOL,8);
         return $json->status;
     }
 }

@@ -33,6 +33,8 @@ class FriendRequetNotice extends  AbstruactClerk{
                 $server->push($server->fd, json_encode(['status'=>1,'msg'=>'非法用户']));
             }
 
+        }else{
+            $server->push($server->fd, json_encode(['status'=>1,'msg'=>'参数非法']));
         }
         $redis = Yii::$app->redis;
         $_data = User::find()->select(['id','account'])->where(['account'=>$data->account])->one();
