@@ -142,7 +142,7 @@ class Friends extends FActiveRecord {
     public function newFriendNum()
     {
         $userId = \Yii::$app->user->id;
-        $new_friends = self::find()->where(['user_id'=>$userId])->andWhere("`link_time`=`create_at`")->all();
+        $new_friends = self::find()->where(['user_id'=>$userId,'link_time'=>0])->all();
         $_friend = 0;
         if(!empty($new_friends)){
             $time = time();

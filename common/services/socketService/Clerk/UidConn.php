@@ -34,6 +34,7 @@ class UidConn extends  AbstruactClerk{
                 $redis->set(self::UID_CONN_FD . $frame->fd, $data->account);
                 $server->push($frame->fd,json_encode(['status'=>0,'msg'=>'连接成功']));
             }
+
         }
         return ;
     }

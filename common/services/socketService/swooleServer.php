@@ -15,6 +15,7 @@ use common\models\User;
 use common\services\appService\apps\callu;
 use common\services\socketService\Clerk\ClerkCallu;
 use common\services\socketService\Clerk\FriendRequetNotice;
+use common\services\socketService\Clerk\AgreeFriendNotice;
 use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\Channel;
@@ -29,6 +30,8 @@ class swooleServer{
         2=>'电话回调通知',
         3=>'好友申请消息通知',
         0=>'连接',
+        5=>'同意好友的添加请求',
+
 
     ];
     public function __construct(){
@@ -75,6 +78,8 @@ class swooleServer{
             $clerk = new FriendRequetNotice();
         }elseif(isset($data->action) && $data->action === 0){
             $clerk = new UidConn();
+        }elseif (isset($data->action) && $data->action == 5){
+            $clerk = new AgreeFriendNotice();
         }else{
             $server->push($frame->fd , json_encode(['请求类型错误']));
             return ;

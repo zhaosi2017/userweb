@@ -1,6 +1,8 @@
 <?php
 namespace frontend\models\Friends;
 
+use common\services\appService\apps\WebSocket;
+use common\services\socketService\Clerk\AgreeFriendNotice;
 use frontend\models\BlackLists\BlackList;
 use frontend\models\ErrCode;
 use frontend\models\User;
@@ -10,6 +12,7 @@ use frontend\models\Friends\Friends;
 use frontend\models\Friends\FriendsRequest;
 use yii\db\Transaction;
 use yii;
+use frontend\services\AgreeFriendService;
 
 class FriendsAgreeForm extends FriendsRequest
 {
@@ -65,7 +68,7 @@ class FriendsAgreeForm extends FriendsRequest
                     $fromFriend->friend_id = $_friend->id;
                     $fromFriend->create_at = $time;
                     $fromFriend->direction = 0;
-                    $fromFriend->link_time = $time;
+                    $fromFriend->link_time = 0;
 
 
                     if (!$fromFriend->save()) {
@@ -81,7 +84,7 @@ class FriendsAgreeForm extends FriendsRequest
                     $toFriend->friend_id = $userId;
                     $toFriend->create_at = $time;
                     $toFriend->direction = 1;
-                    $toFriend->link_time = $time;
+                    $toFriend->link_time = 0;
 
                     if (!$toFriend->save()) {
                         $transaction->rollBack();
@@ -89,7 +92,13 @@ class FriendsAgreeForm extends FriendsRequest
                     }
                 }
 
+
+
                 $transaction->commit();
+                //同意好友请求,主动推送
+                $agreeFriend = new AgreeFriendService();
+                $identity = Yii::$app->user->identity;
+                $agreeFriend->notice($this->account,$identity->token);
                 return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
             } else {
                 $transaction->rollBack();

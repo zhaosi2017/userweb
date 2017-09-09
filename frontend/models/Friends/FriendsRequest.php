@@ -59,7 +59,7 @@ class FriendsRequest extends FActiveRecord {
         $offset = $page == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($page-1);
 
         $data  = self::find()->where(['to_id'=>$userId])->select(['id','note','from_id','status'])
-        ->offset($offset)->limit($limit)->orderBy('id desc') ->all();
+        ->offset($offset)->limit($limit)->orderBy('update_at desc,id desc') ->all();
         $tmp = [];
         if(!empty($data))
         {

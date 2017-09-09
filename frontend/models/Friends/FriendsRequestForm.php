@@ -57,12 +57,12 @@ class FriendsRequestForm extends FriendsRequest
             $friendsRequest->to_id = $user->id;
             $friendsRequest->create_at = time();
             $friendsRequest->note = $this->note;
+
             if($friendsRequest->save())
             {
-
                 $noticeService = new FriendNoticeService();
-                $noticeService->notice($this->account, $identity->token);
-
+                $data = @$noticeService->notice($this->account, $identity->token);
+                file_put_contents('/tmp/swoole.log',var_export($data,true).PHP_EOL,8);
                 return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
             }else{
                 return $this->jsonResponse([],$friendsRequest->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);

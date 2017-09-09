@@ -12,7 +12,12 @@ use Yii;
 use common\services\socketService\AbstruactClerk;
 use common\services\socketService\Clerk\UidConn;
 
-class FriendRequetNotice extends  AbstruactClerk{
+/** 同意好友的请求
+ *
+ * Class AgreeFriendNotice
+ * @package common\services\socketService\Clerk
+ */
+class AgreeFriendNotice extends  AbstruactClerk{
     /**
      * @var callu
      */
@@ -25,21 +30,20 @@ class FriendRequetNotice extends  AbstruactClerk{
 
     public function stratClerk($server,  $frame , $data){
 
-        if(!isset($data->token)  || empty($data->token) || !isset($data->account) || empty($data->account))
+
+        if(!isset($data->token) || empty($data->token) || !isset($data->account) || empty($data->account) )
         {
-            $server->push($frame->fd, json_encode(['status'=>1,'msg'=>'参数非法']));
+            $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'参数非法']));
             return ;
         }
 
         $_user = User::findOne(['token'=>$data->token]);
         if(empty($_user))
         {
-            $server->push($frame->fd, json_encode(['status'=>1,'msg'=>'非法用户']));
+            $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'非法用户']));
             return;
         }
 
-
-        $redis = Yii::$app->redis;
         $_data = User::find()->select(['id','account'])->where(['account'=>$data->account])->one();
 
 
@@ -47,27 +51,25 @@ class FriendRequetNotice extends  AbstruactClerk{
         {
             if($_user->account == $data->account)
             {
-                $server->push($frame->fd, json_encode(['status'=>1,'msg'=>'参数非法']));
+                $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'参数非法']));
                 return ;
             }
+            $redis = Yii::$app->redis;
             $redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_data['account']);
             $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_data['account']);
 
             if($_fd)
             {
-                $server->push($_fd,  json_encode(['action'=>'0','msg'=>$_user->account .'向你发送了好友请求']));
+                $server->push($_fd, json_encode(['action'=>6,'msg'=>$_user->account .'同意了你的好友请求']));
             }else {
-                $server->push($frame->fd, json_encode(['msg'=>$_data['account'] . '通知的好友不在线' ]));
-
+                $server->push($frame->fd, json_encode(['action'=>6,'status','msg'=>$_data['account'] . '通知的好友不在线']));
             }
 
         }else{
-            $server->push($frame->fd, json_encode(['msg'=>'通知的好友不存在']));
+            $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'通知的好友不存在']));
         }
         return ;
     }
-
-
 
 
 
