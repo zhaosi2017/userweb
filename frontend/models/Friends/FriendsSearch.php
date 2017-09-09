@@ -34,7 +34,7 @@ class FriendsSearch extends User
        if($this->validate('search_word'))
        {
            $data =  User::find()
-               ->select(['id','nickname','account'])
+               ->select(['id','nickname','account','header_img'])
                ->orWhere(['like','account',$this->search_word])
                ->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
 //               ->orWhere(['account'=>$this->search_word])
@@ -54,7 +54,7 @@ class FriendsSearch extends User
         if($this->validate('account'))
         {
             $user = User::find()
-                ->select(['id','nickname','account','channel'])
+                ->select(['id','nickname','account','channel','header_img'])
                 ->Where(['account'=>$this->account])
                ->one();
             if(empty($user))
