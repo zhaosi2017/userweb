@@ -5,7 +5,7 @@
  * Date: 2017/9/2
  * Time: 上午10:33
  */
-namespace frontend\models\Friends;
+namespace frontend\models\FriendGroups;
 
 use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;

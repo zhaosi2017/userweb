@@ -22,6 +22,7 @@ use frontend\models\UrgentContact;
 use frontend\models\Friends\Friends;
 use frontend\models\Friends\FriendsRequest;
 use frontend\models\Friends\FriendsGroup;
+use frontend\models\FriendGroups\FriendUpdateGroupNameForm;
 
 class FriendGroupController extends AuthController
 {
@@ -77,6 +78,54 @@ class FriendGroupController extends AuthController
 
     public function actionUpdateGroupName()
     {
+        try {
+            $data = $this->getRequestContent();
+            $group = new FriendUpdateGroupNameForm();
+            $group->cid = isset($data['cid']) ? $data['cid'] : '';
+            $group->name = isset($data['name']) ? $data['name'] : '';
+            return $group->updateGroupName();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
 
+
+    public function actionAddFriend()
+    {
+        try {
+            $data = $this->getRequestContent();
+            $group = new FriendUpdateGroupNameForm();
+            $group->cid = isset($data['cid']) ? $data['cid'] : '';
+            $group->name = isset($data['name']) ? $data['name'] : '';
+            return $group->updateGroupName();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+
+    }
+
+    public function actionRemoveFriend()
+    {
+        try {
+            $data = $this->getRequestContent();
+            $group = new FriendUpdateGroupNameForm();
+            $group->cid = isset($data['cid']) ? $data['cid'] : '';
+            $group->name = isset($data['name']) ? $data['name'] : '';
+            return $group->updateGroupName();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
     }
 }

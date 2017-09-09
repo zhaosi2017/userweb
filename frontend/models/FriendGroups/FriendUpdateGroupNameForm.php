@@ -5,7 +5,7 @@
  * Date: 2017/9/2
  * Time: 上午10:33
  */
-namespace frontend\models\Friends;
+namespace frontend\models\FriendGroups;
 
 use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;
@@ -26,7 +26,7 @@ use frontend\models\Friends\FriendsGroup;
  * @property string  $extsion
  *
  */
-class FriendAddGroupForm extends FriendsGroup {
+class FriendUpdateGroupNameForm extends FriendsGroup {
 
 
     public $name;
@@ -73,12 +73,15 @@ class FriendAddGroupForm extends FriendsGroup {
             {
                 return $this->jsonResponse('','操作成功',0,ErrCode::SUCCESS);
             }else{
-                return $this->jsonResponse('',$_group->getErrors(),1,ErrCode::GROUP_NAME_EXIST);
+                return $this->jsonResponse('',$_group->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
             }
         }else{
             return $this->jsonResponse('',$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
 
         }
     }
+
+
+
 
 }
