@@ -17,6 +17,14 @@ class SmsService
         if($number){
 
             $redis = Yii::$app->redis;
+            if($redis->exists($number))
+            {
+                if($verifyCode = $redis->get($number))
+                {
+                    return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
+                }
+            }
+
             $verifyCode = self::makeVerifyCode();
             $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
             $redis->setex($number,$expire,$verifyCode);

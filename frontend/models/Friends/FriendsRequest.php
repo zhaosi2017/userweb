@@ -54,28 +54,44 @@ class FriendsRequest extends FActiveRecord {
     public function getFriendsRequest($data)
     {
         $userId = Yii::$app->user->id;
+
         $page = isset($data['p']) && $data['p'] > 0 ? (int)$data['p'] : 0;
         $limit =  $page == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
         $offset = $page == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($page-1);
 
-        $data  = self::find()->where(['to_id'=>$userId])->select(['id','note','from_id','status'])
-        ->offset($offset)->limit($limit)->orderBy('update_at desc,id desc') ->all();
+        $data  = self::find()->where(['to_id'=>$userId])
+            ->orWhere(['from_id'=>$userId])
+            ->select(['id','note','from_id','status','to_id','update_at'])
+        ->offset($offset)->limit($limit)->orderBy('update_at desc,id desc')->distinct()->all();
         $tmp = [];
         if(!empty($data))
         {
             foreach ($data as $k=>$v)
             {
-
                 $_v['id'] = $v['id'];
                 $_v['note'] = $v['note'];
                 $_v['from_id'] = $v['from_id'];
                 $_v['status'] = $v['status'];
-                $_tmp =  User::find()->where(['id'=>$v['from_id']])->select(['nickname','account'])->one();
+                $_v['to_id'] = $v['to_id'];
+
+                if($_v['to_id'] == $userId)
+                {
+                    $_tmp =  User::find()->where(['id'=>$v['from_id']])->select(['nickname','account'])->one();
+                    $_v['direction'] = '1';// 被邀请者
+                }
+                if($_v['from_id'] == $userId)
+                {
+                    $_tmp =  User::find()->where(['id'=>$v['to_id']])->select(['nickname','account'])->one();
+                    $_v['direction'] = '0';// 邀请者
+                }
                 $_v['nickname'] = isset($_tmp['nickname']) ?$_tmp['nickname']:'';
                 $_v['account'] = isset($_tmp['account']) ?$_tmp['account']:'';
                 $tmp[$k]=$_v;
             }
         }
+
+
+
         return $this->jsonResponse($tmp,'操作成功',0,ErrCode::SUCCESS);
     }
 

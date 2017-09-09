@@ -27,12 +27,12 @@ class UidConn extends  AbstruactClerk{
         $redis = Yii::$app->redis;
 
 
-        if(isset($data->account) && $data->account ) {
+        if(isset($data->account) && $data->account && isset($data->token)) {
             $_data = User::find()->select(['id', 'token'])->where(['account' => $data->account])->one();
             if (!empty($_data) && $_data['token'] == $data->token) {
                 $redis->set(self::UID_CONN_ACCOUNT . $data->account, $frame->fd);
                 $redis->set(self::UID_CONN_FD . $frame->fd, $data->account);
-                $server->push($frame->fd,json_encode(['status'=>0,'msg'=>'连接成功']));
+                $server->push($frame->fd,json_encode(['data'=>'','status'=>0,'message'=>'连接成功','code'=>'0000','type'=>'0']));
             }
 
         }

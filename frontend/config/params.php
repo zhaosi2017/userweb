@@ -5,5 +5,5 @@ return [
     'nexmo_api_secret'  => '755026fdd40f34c2',
     'nexmo_account_number'  => '+855965323063',
     'private_token_key' => 'Callu@#$%qweASdefAFJMi9',
-    'redis_expire_time'=> 120,//120秒钟
+    'redis_expire_time'=> 300,//5分钟
 ];

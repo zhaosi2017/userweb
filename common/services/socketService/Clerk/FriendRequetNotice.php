@@ -55,7 +55,7 @@ class FriendRequetNotice extends  AbstruactClerk{
 
             if($_fd)
             {
-                $server->push($_fd,  json_encode(['action'=>'0','msg'=>$_user->account .'向你发送了好友请求']));
+                $server->push($_fd,  json_encode(['data'=>$_user->account,'status'=>'0','message'=>$_user->account .'向你发送了好友请求','code'=>'0000','type'=>'1']));
             }else {
                 $server->push($frame->fd, json_encode(['msg'=>$_data['account'] . '通知的好友不在线' ]));
 

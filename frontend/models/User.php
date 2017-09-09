@@ -349,6 +349,14 @@ class User extends FActiveRecord implements IdentityInterface
 
             $redis = Yii::$app->redis;
             $verifyCode = self::makeVerifyCode();
+            if($redis->exists($number))
+            {
+                $verifyCode = $redis->get($number);
+                if($verifyCode)
+                {
+                    return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
+                }
+            }
             $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
             $redis->setex($number,$expire,$verifyCode);
             if(defined('YII_ENV') && YII_ENV =='dev'){
