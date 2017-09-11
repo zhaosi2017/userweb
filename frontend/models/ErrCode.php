@@ -44,13 +44,13 @@ class ErrCode
     const NO_USER_REQUEST = '2029';//无用户请求（添加好友）
     const UPLOAD_FILE_FAILURE = '2030';//上传文件失败
     const GROUP_NAME_EXIST = '2031';//组名已经存在
-
-    const CALL_SUCCESS    = '2031'; //呼叫成功
+    
     const CALL_EXCEPTION  = '2032'; //呼叫异常
     const CALL_ERROR      = '2033'; //呼叫错误 ，呼叫参数检测不通过
     const CALL_MESSAGE    = '2034'; //呼叫的反馈消息
     const CALL_FAIL       = '2035'; //呼叫失败（一次呼叫）
     const CALL_END        = '2036'; //呼叫结束
+    const CALL_SUCCESS    = '2037'; //呼叫成功
 
 
 
