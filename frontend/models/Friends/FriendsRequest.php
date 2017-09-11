@@ -76,13 +76,15 @@ class FriendsRequest extends FActiveRecord {
 
                 if($_v['to_id'] == $userId)
                 {
-                    $_tmp =  User::find()->where(['id'=>$v['from_id']])->select(['nickname','account'])->one();
+                    $_tmp =  User::find()->where(['id'=>$v['from_id']])->select(['nickname','account','header_img'])->one();
                     $_v['direction'] = '1';// 被邀请者
+                    $_v['header_url'] = $_tmp['header_img'];
                 }
                 if($_v['from_id'] == $userId)
                 {
-                    $_tmp =  User::find()->where(['id'=>$v['to_id']])->select(['nickname','account'])->one();
+                    $_tmp =  User::find()->where(['id'=>$v['to_id']])->select(['nickname','account','header_img'])->one();
                     $_v['direction'] = '0';// 邀请者
+                    $_v['header_url'] = $_tmp['header_img'];
                 }
                 $_v['nickname'] = isset($_tmp['nickname']) ?$_tmp['nickname']:'';
                 $_v['account'] = isset($_tmp['account']) ?$_tmp['account']:'';
