@@ -43,6 +43,7 @@ class ErrCode
     const THE_FRIEND_NOT_IN_YOU_WHITELISTS = '2028';//对方不再你的白名单列表
     const NO_USER_REQUEST = '2029';//无用户请求（添加好友）
     const UPLOAD_FILE_FAILURE = '2030';//上传文件失败
+    const GROUP_NAME_EXIST = '2031';//组名已经存在
 
     const CALL_SUCCESS    = '2031'; //呼叫成功
     const CALL_EXCEPTION  = '2032'; //呼叫异常

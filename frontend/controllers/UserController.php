@@ -92,8 +92,7 @@ class UserController extends AuthController
      */
     public function actionRegister()
     {
-        $postData = file_get_contents('php://input');
-        $postData = json_decode($postData,true);
+       $postData = $this->getRequestContent();
 
         try{
             $model = new User();
