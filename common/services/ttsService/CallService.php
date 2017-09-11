@@ -9,9 +9,12 @@
  */
 namespace  common\services\ttsService;
 
+use frontend\models\BlackLists\BlackList;
 use frontend\models\CallRecord\CallRecord;
+use frontend\models\ErrCode;
 use frontend\models\User;
 use frontend\models\UserPhone;
+use frontend\models\WhiteLists\WhiteList;
 use phpDocumentor\Reflection\DocBlock\Tags\Throws;
 use yii\base\Object;
 use Yii;
@@ -52,8 +55,8 @@ class CallService {
     public $text;
 
     private static $call_type_map = [
-        CallRecord::CALLRECORD_TYPE_URGENT =>'紧急联系人',
-        CallRecord::CALLRECORD_TYPE_UNURGENT=>'联系电话'
+        CallRecord::CALLRECORD_TYPE_URGENT =>'个紧急联系人',
+        CallRecord::CALLRECORD_TYPE_UNURGENT=>'部联系电话'
     ];
 
 
@@ -66,6 +69,30 @@ class CallService {
     }
 
     /**
+     * 检测呼叫条件  设置相应的提示
+     * 1 话费
+     * 2 黑名单
+     * 3 白名单
+     */
+    public function check(){
+
+        if($this->from_user->balance <= 0){   //话费检测  暂时无用
+           // return false;
+        }
+        $black  = BlackList::findOne(['uid'=>$this->to_user->id , 'black_uid'=>$this->from_user->id]);
+        if(!empty($black)){
+            return '对方不方便接听，无法呼叫';
+        }
+        if($this->to_user->whitelist_switch  == User::WHITE_SWITCH_OFF){
+            $white = WhiteList::findOne(['uid'=>$this->to_user->id , 'white_uid'=>$this->from_user->id]);
+            if(empty($white)){
+                return '对方开启白名单模式，您不再其中';
+            }
+        }
+        return true;
+    }
+
+    /**
      * 发起呼叫
      */
     public function start_call(){
@@ -75,25 +102,21 @@ class CallService {
         }
         if(empty($this->call_type)) $this->call_type = CallRecord::CALLRECORD_TYPE_UNURGENT;  //默认为正常呼叫
 
-        if(!$this->_check()){
-            $this->app->sendtext($this->message);
-            return false;
-        }
-
         $numbers = $this->_getToUserNumber();
         if(empty($numbers)){
-            $this->app->sendtext($this->to_user->nickname."没有可用的".self::$call_type_map[$this->call_type]."！");
+            $this->app->sendtext("被叫没有可用的".self::$call_type_map[$this->call_type]."！", ErrCode::CALL_EXCEPTION );
             return false;
         }
+        $count = count($numbers);
         $number = array_shift($numbers);
         $this->third->To        = $number;
         $this->third->From      = $this->_getFromUserNumber();
         $this->third->Text      = $this->text;
         $this->third->Language  = $this->to_user->language;
-        $this->third->Loop      = 2;//Yii::$apps->params['tts_loop'];
-        $this->app->sendtext("正在尝试呼叫".$this->to_user->nickname."的".self::$call_type_map[$this->call_type]."1，请稍后");
+        $this->third->Loop      = Yii::$app->params['tts_loop'];
+        $this->app->sendtext('正在拨打第1'.self::$call_type_map[$this->call_type].'（共'.$count.'部)' , ErrCode::CALL_MESSAGE);
         if(!$this->third->CallStart()){
-            $this->app->sendtext("呼叫异常，请稍后再试！");
+            $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return false;
         }
         $this->_catch($numbers , 1);                  //呼叫开始就不能受发起方控制 直至呼叫完成
@@ -116,17 +139,17 @@ class CallService {
         $this->call_type    = $catch['call_type'];
 
         if(empty($catch)){
-            $this->app->sendtext("呼叫异常，请稍后再试！");
+            $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
         }
 
         if(!$this->_Event_ActionResult()){
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
-                $this->app->sendtext("呼叫完成！");
+                $this->app->sendtext("呼叫结束" , ErrCode::CALL_END);
                 return;
             }
             if(!$this->_call($catch)){
-                $this->app->sendtext("呼叫异常，请稍后再试！");
+                $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
             }
         }
         return $result;
@@ -138,7 +161,7 @@ class CallService {
 
         $cache_keys = Yii::$app->redis->hkeys($cacheKey);
         $catch_vals = Yii::$app->redis->hvals($cacheKey);
-        //Yii::$app->redis->del($cacheKey);
+        Yii::$app->redis->del($cacheKey);
         return array_combine($cache_keys , $catch_vals);
 
     }
@@ -149,20 +172,20 @@ class CallService {
         $this->_saveRecord();                   //保存通话记录
         switch ($this->third->Event_Status){
             case CallRecord::CALLRECORD_STATUS_SUCCESS:
-                $this->app->sendText('呼叫成功！');
+                $this->app->sendText('呼叫成功！' , ErrCode::CALL_SUCCESS);
                 return true;
                 break;
             case CallRecord::CALLRECORD_STATUS_FILED:
-                $this->app->sendText('呼叫失败，请稍后再试！');
+                $this->app->sendText('呼叫失败，请稍后再试！', ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_BUSY:
-                $this->app->sendText('呼叫的用户忙！');
+                $this->app->sendText('呼叫的用户忙！',ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_NOANWSER:
-                $this->app->sendText('呼叫用户暂时无人接听！');
+                $this->app->sendText('呼叫用户暂时无人接听！',ErrCode::CALL_FAIL);
                 break;
             default:
-                $this->app->sendText('呼叫失败，请稍后再试！');
+                $this->app->sendText('呼叫失败，请稍后再试！',ErrCode::CALL_FAIL);
                 break;
         }
         return false;
@@ -176,15 +199,12 @@ class CallService {
         $this->third = unserialize($catch['third']);   //恢复为原始的呼叫状态
         $number = array_shift($numbers);
         $this->third->To   =  $number;
-        $this->app->sendtext("正在尝试呼叫 ".$this->to_user->nickname." 的".self::$call_type_map[$this->call_type].($catch['serial']+1)."，请稍后");
+        $this->app->sendtext('正在拨打第'.($catch['serial']+1).self::$call_type_map[$this->call_type].'（共'.$catch['count'].'部)' , ErrCode::CALL_MESSAGE);
         if(!$this->third->CallStart()){
-            file_put_contents('/tmp/test-call.log' , var_export(3333 , true),8);
-            $this->app->sendtext("呼叫异常，请稍后再试！");
+            $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return false;
         }
-        file_put_contents('/tmp/test-call.log' , var_export(4444 , true),8);
         $this->_catch($numbers , ($catch['serial']+1));                  //呼叫开始就不能受发起方控制 直至呼叫完成
-        file_put_contents('/tmp/test-call.log' , var_export(5555 , true),8);
         return true;
 
     }
@@ -205,6 +225,7 @@ class CallService {
         Yii::$app->redis->hset($call_key , 'apps' ,serialize($this->app) );
         Yii::$app->redis->hset($call_key , 'call_type' , $this->call_type);
         Yii::$app->redis->hset($call_key , 'serial' , $Serial);
+        Yii::$app->redis->hset($call_key , 'count' ,(count($numbers) + $Serial) );
         Yii::$app->redis->expire($call_key , 60*60 );
 
     }
@@ -234,18 +255,6 @@ class CallService {
         return "12345678";
     }
 
-    /**
-     * 检测呼叫条件  设置相应的提示
-     * 黑名单 1
-     * 白名单 2
-     * 呼叫限制设置 3
-     * 主叫金额  4
-     */
-    private function _check(){
-
-
-        return true;
-    }
 
     /**
      * 保存通话记录

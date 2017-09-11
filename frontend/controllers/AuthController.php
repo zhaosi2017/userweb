@@ -56,6 +56,9 @@ class AuthController extends Controller
     {
         $arr = ['login', 'register', 'register-user','user-question','reset-message','forget-password','reset-password','reset-pass-phone','reset-pass-question'];
         $_action = \Yii::$app->controller->action->id;
+        if(in_array($_action , ['event-sinch' , 'test'])){    //三方的回调数据校验不再这里
+              return true;
+        }
         if(in_array($_action,$arr))
         {
 
