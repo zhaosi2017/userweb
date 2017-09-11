@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\FriendGroups\FriendAddFriendForm;
+use frontend\models\FriendGroups\FriendRemoveFriend;
 use frontend\models\Friends\FriendAddGroupForm;
 use frontend\models\Friends\FriendsAgreeForm;
 use frontend\models\Friends\FriendsDelFrom;
@@ -98,10 +100,10 @@ class FriendGroupController extends AuthController
     {
         try {
             $data = $this->getRequestContent();
-            $group = new FriendUpdateGroupNameForm();
+            $group = new FriendAddFriendForm();
             $group->cid = isset($data['cid']) ? $data['cid'] : '';
-            $group->name = isset($data['name']) ? $data['name'] : '';
-            return $group->updateGroupName();
+            $group->name = isset($data['account']) ? $data['account'] : '';
+            return $group->addFriend();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
@@ -116,10 +118,10 @@ class FriendGroupController extends AuthController
     {
         try {
             $data = $this->getRequestContent();
-            $group = new FriendUpdateGroupNameForm();
+            $group = new FriendRemoveFriend();
             $group->cid = isset($data['cid']) ? $data['cid'] : '';
-            $group->name = isset($data['name']) ? $data['name'] : '';
-            return $group->updateGroupName();
+            $group->name = isset($data['account']) ? $data['account'] : '';
+            return $group->removeFriend();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

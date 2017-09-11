@@ -91,18 +91,23 @@ class Friends extends FActiveRecord {
                     $_name = isset($_u->nickname) ? $_u->nickname : '';
                 }
                 if (empty($_name)) {
-                    $settlesRes['other'][$sett['id']]['nickname'] = '';//以这个首字母作为key
-                    $settlesRes['other'][$sett['id']]['account'] = isset($_u->account) ? $_u->account :'';
-                    $settlesRes['other'][$sett['id']]['header_url'] = isset($_u->header_img)? $_u->header_img :'';
+                    $_other = [
+                        "nickname"=>'',
+                        'account'=>isset($_u->account) ? $_u->account :'',
+                        'header_url'=>isset($_u->header_img)? $_u->header_img :''
+                    ];
+                    $settlesRes['other'][]= $_other;
                     continue;
                 }
 
                 $sett['remark'] = $_name;
                 $snameFirstChar = $this->_getMyFirstCharter($_name,$pydic); //取出门店的第一个汉字的首字母
-                $settlesRes[$snameFirstChar][$sett['id']]['nickname'] = $sett['remark'];//以这个首字母作为key
-                $settlesRes[$snameFirstChar][$sett['id']]['account'] = isset($_u->account) ? $_u->account :'';//以这个首字母作为key
-                $settlesRes[$snameFirstChar][$sett['id']]['header_url'] = isset($_u->header_img)? $_u->header_img :'';
-
+                $_tmp = [
+                    "nickname"=>$sett['remark'],
+                    'account'=>isset($_u->account) ? $_u->account :'',
+                    'header_url'=>isset($_u->header_img)? $_u->header_img :''
+                ];
+                $settlesRes[$snameFirstChar][] = $_tmp;
             }
             ksort($settlesRes); //对数据进行ksort排序，以key的值升序排序
         }

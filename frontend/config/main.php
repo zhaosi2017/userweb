@@ -29,6 +29,7 @@ return [
             'name' => 'advanced-frontend',
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'sms'=> require(__DIR__ . '/sms.php'),
         'redis' => require(__DIR__ . '/redis.php'),
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

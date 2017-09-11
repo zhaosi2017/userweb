@@ -26,7 +26,8 @@
         "yiisoft/yii2-redis": "^2.0",
         "nexmo/client":"1.0.0-beta3",
         "codeception/base": "^2.3",
-        "kartik-v/yii2-widget-fileinput":"v1.0.6"
+        "kartik-v/yii2-widget-fileinput":"v1.0.6",
+        "twilio/sdk": "^5.14"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

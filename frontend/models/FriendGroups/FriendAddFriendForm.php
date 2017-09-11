@@ -30,13 +30,21 @@ class FriendAddFriendForm extends FriendsGroup
 {
 
 
-    public $name;
+    public $gid;
+    public  $account;
 
     public function rules()
     {
         return [
-            ['name', 'required'],
-            ['name', 'string'],
+            ['gid','integer'],
+            ['account', 'required'],
+
         ];
+    }
+
+
+    public function addFriend()
+    {
+
     }
 }

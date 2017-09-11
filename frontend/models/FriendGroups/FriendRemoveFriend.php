@@ -30,14 +30,15 @@ class FriendRemoveFriend extends FriendsGroup
 {
 
 
-    public $name;
+    public $gid;
+    public  $account;
 
     public function rules()
     {
         return [
             ['gid','integer'],
-            ['name', 'required'],
-            ['name', 'string'],
+            ['account', 'required'],
+
         ];
     }
 }
