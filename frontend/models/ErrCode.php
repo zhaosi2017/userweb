@@ -44,7 +44,7 @@ class ErrCode
     const NO_USER_REQUEST = '2029';//无用户请求（添加好友）
     const UPLOAD_FILE_FAILURE = '2030';//上传文件失败
     const GROUP_NAME_EXIST = '2031';//组名已经存在
-    
+
     const CALL_EXCEPTION  = '2032'; //呼叫异常
     const CALL_ERROR      = '2033'; //呼叫错误 ，呼叫参数检测不通过
     const CALL_MESSAGE    = '2034'; //呼叫的反馈消息
