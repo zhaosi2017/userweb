@@ -9,6 +9,7 @@ namespace frontend\models\FriendGroups;
 
 use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;
+use frontend\models\Friends\Friends;
 use frontend\models\User;
 use yii\base\Model;
 use yii\db\Transaction;
@@ -31,20 +32,63 @@ class FriendAddFriendForm extends FriendsGroup
 
 
     public $gid;
-    public  $account;
+    public $account;
 
     public function rules()
     {
         return [
             ['gid','integer'],
-            ['account', 'required'],
+            [['required','account'], 'required'],
+            ['account','ValidateAccount'],
+            ['gid','ValidateGid'],
 
         ];
     }
 
 
+    public function ValidateAccount()
+    {
+        $_user = User::findOne(['account'=>$this->account]);
+        if(empty($_user))
+        {
+            $this->addError('account','该用户不存在');
+        }
+    }
+
+    public function ValidateGid()
+    {
+        $userId = \Yii::$app->user->id;
+        $_group = FriendsGroup::findOne(['id'=>$this->gid, 'user_id'=>$userId]);
+
+        if(empty($_group))
+        {
+            $this->addError('account','该分组不存在');
+        }
+    }
+
+
+
+
     public function addFriend()
     {
+        if($this->validate(['gid','account'])) {
+            $userId = \Yii::$app->user->id;
+            $_user = User::findOne(['account' => $this->account]);
+            $_friend = Friends::findOne(['user_id' => $userId, 'friend_id' => $_user->id]);
+            if (empty($_friend)) {
+                return $this->jsonResponse([], '你们还不是好友，请先添加好友', '1', ErrCode::YOU_ARE_NOT_FRIENDS);
+            }
+            $_friend->group_id = $this->gid;
+            if ($_friend->save()) {
+                return $this->jsonResponse([], '操作成功', '0', ErrCode::SUCCESS);
+            } else {
+                return $this->jsonResponse([], $_friend->getErrors(), '1', ErrCode::DATA_SAVE_ERROR);
+            }
+        }else{
+            return $this->jsonResponse([], $this->getErrors(), '1', ErrCode::VALIDATION_NOT_PASS);
+
+        }
+
 
     }
 }

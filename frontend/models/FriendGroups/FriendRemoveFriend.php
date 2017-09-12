@@ -31,14 +31,56 @@ class FriendRemoveFriend extends FriendsGroup
 
 
     public $gid;
-    public  $account;
+    public $account;
 
     public function rules()
     {
         return [
             ['gid','integer'],
-            ['account', 'required'],
+            [['gid','account'], 'required'],
+            ['account','ValidateAccount'],
 
         ];
+    }
+
+    public function ValidateAccount()
+    {
+        $_user = User::findOne(['account'=>$this->account]);
+        if(empty($_user))
+        {
+            $this->addError('account','该用户不存在');
+        }
+    }
+
+    public function ValidateGid()
+    {
+        $userId = \Yii::$app->user->id;
+        $_group = FriendsGroup::findOne(['id'=>$this->gid, 'user_id'=>$userId]);
+
+        if(empty($_group))
+        {
+            $this->addError('account','该分组不存在');
+        }
+    }
+
+    public function removeFriend()
+    {
+        if($this->validate(['gid','account']))
+        {
+            $userId = \Yii::$app->user->id;
+            $_user = User::findOne(['account' => $this->account]);
+            $_friend = Friends::findOne(['user_id' => $userId, 'friend_id' => $_user->id]);
+            if (empty($_friend)) {
+                return $this->jsonResponse([], '你们还不是好友，请先添加好友', '1', ErrCode::YOU_ARE_NOT_FRIENDS);
+            }
+            if($_friend->gid != $this->gid)
+            {
+                return $this->jsonResponse([], '该好友不在这个分组下面', '1', ErrCode::YOU_ARE_NOT_FRIENDS);
+
+            }
+        }else{
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
+        }
+
     }
 }

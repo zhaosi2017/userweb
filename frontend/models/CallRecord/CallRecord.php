@@ -69,7 +69,7 @@ use frontend\models\User;
                   $_v['time'] = date('Y-m-d H:i',$v['time']);
                   $_v['call_type']= $v['call_type'];
                   $_v['status'] = $v['status'];
-                  $_tmp =  User::find()->where(['id'=>$v['to_user_id']])->select(['nickname','account',''])->one();
+                  $_tmp =  User::find()->where(['id'=>$v['to_user_id']])->select(['nickname','account','header_img'])->one();
                   $friend = Friends::find()->select('remark')->where(['friend_id'=>$v['to_user_id'],'user_id'=>$userId])->one();
                   $_name =isset($friend['remark']) && $friend['remark'] ? $friend['remark'] :'';
                   if(empty($_name)){

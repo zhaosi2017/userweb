@@ -168,4 +168,4 @@ CREATE TABLE `friends_request` (
 ALTER TABLE `friends` ADD `direction` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '请求方向：0主动发送请求，1接受好友请求' AFTER `extsion`;
 ALTER TABLE `friends` ADD `link_time` int(11) unsigned DEFAULT '0' COMMENT '最近联系时间' AFTER `group_id`;
 ALTER TABLE `friends_request` ADD `update_at` int(11)  DEFAULT '0' COMMENT '更新时间' AFTER `create_at`;
-ALTER TABLE `call_record` ADD `group_id` string(64)  DEFAULT NULL COMMENT '呼叫组记录id' AFTER `third`;
+ALTER TABLE `call_record` ADD `group_id` char(64)  DEFAULT NULL COMMENT '呼叫组记录id' AFTER `third`;

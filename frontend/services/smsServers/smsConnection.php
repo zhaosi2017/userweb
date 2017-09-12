@@ -13,9 +13,9 @@ class smsConnection extends Component
     public $server = null;
 
     public static $smsArr = [
-        'nexmoSms'=>'frontend\services\smsServers\nexmoSms',
+        'nexmo'=>'frontend\services\smsServers\nexmoSms',
         'sinch',
-        'twilioSms'=>'frontend\services\smsServers\twilioSms',
+        'twilio'=>'frontend\services\smsServers\twilioSms',
         'infobip',
     ];
 

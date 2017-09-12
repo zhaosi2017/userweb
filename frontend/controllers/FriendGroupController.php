@@ -3,7 +3,7 @@ namespace frontend\controllers;
 
 use frontend\models\FriendGroups\FriendAddFriendForm;
 use frontend\models\FriendGroups\FriendRemoveFriend;
-use frontend\models\Friends\FriendAddGroupForm;
+use frontend\models\FriendGroups\FriendAddGroupForm;
 use frontend\models\Friends\FriendsAgreeForm;
 use frontend\models\Friends\FriendsDelFrom;
 use frontend\models\Friends\FriendsInfoSearch;
@@ -83,7 +83,7 @@ class FriendGroupController extends AuthController
         try {
             $data = $this->getRequestContent();
             $group = new FriendUpdateGroupNameForm();
-            $group->cid = isset($data['cid']) ? $data['cid'] : '';
+            $group->gid = isset($data['gid']) ? $data['gid'] : '';
             $group->name = isset($data['name']) ? $data['name'] : '';
             return $group->updateGroupName();
         }catch (Exception $e)
@@ -101,8 +101,8 @@ class FriendGroupController extends AuthController
         try {
             $data = $this->getRequestContent();
             $group = new FriendAddFriendForm();
-            $group->cid = isset($data['cid']) ? $data['cid'] : '';
-            $group->name = isset($data['account']) ? $data['account'] : '';
+            $group->gid = isset($data['gid']) ? $data['gid'] : '';
+            $group->account = isset($data['account']) ? $data['account'] : '';
             return $group->addFriend();
         }catch (Exception $e)
         {
@@ -119,8 +119,8 @@ class FriendGroupController extends AuthController
         try {
             $data = $this->getRequestContent();
             $group = new FriendRemoveFriend();
-            $group->cid = isset($data['cid']) ? $data['cid'] : '';
-            $group->name = isset($data['account']) ? $data['account'] : '';
+            $group->gid = isset($data['gid']) ? $data['gid'] : '';
+            $group->account = isset($data['account']) ? $data['account'] : '';
             return $group->removeFriend();
         }catch (Exception $e)
         {

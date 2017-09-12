@@ -28,24 +28,24 @@ use frontend\models\Friends\FriendsGroup;
  */
 class FriendUpdateGroupNameForm extends FriendsGroup {
 
-
+    public $gid;
     public $name;
 
     public function rules()
     {
         return [
-            ['cid','integer'],
-            ['name','required'],
+            ['gid','integer'],
+            [['gid','name'],'required'],
             ['name','string'],
-            ['cid','ValidateId'],
+            ['gid','ValidateId'],
         ];
     }
     public function ValidateId()
     {
-        $data = FriendsGroup::findOne($this->cid);
+        $data = FriendsGroup::findOne($this->gid);
         if(empty($data))
         {
-            $this->addError('cid','不存在该分组');
+            $this->addError('gid','不存在该分组');
         }
 
     }
@@ -54,19 +54,19 @@ class FriendUpdateGroupNameForm extends FriendsGroup {
 
     public function updateGroupName()
     {
-        if($this->validate(['cid','name']))
+        if($this->validate(['gid','name']))
         {
             $userId= \Yii::$app->user->id;
             $_data = FriendsGroup::find()->where(['user_id'=>$userId,'group_name'=>$this->name])->one();
 
             if(!empty($_data))
             {
-                if($this->cid != $_data['id'])
+                if($this->gid != $_data['id'])
                 {
                     return $this->jsonResponse('','该组名已存在！',1,ErrCode::GROUP_NAME_EXIST);
                 }
             }
-            $_group  = FriendsGroup::findOne($this->cid);
+            $_group  = FriendsGroup::findOne($this->gid);
             $_group->group_name = $this->name;
 
             if($_group->save())
