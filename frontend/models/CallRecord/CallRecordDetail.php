@@ -28,7 +28,7 @@ class CallRecordDetail extends CallRecord
     public function ValidateCall()
     {
         $userId = Yii::$app->user->id;
-        $callRecord = CallRecord::findOne(['id'=>$this->cid,'from_user_id'=>$userId]);
+        $callRecord = CallRecord::findOne(['group_id'=>$this->cid,'from_user_id'=>$userId]);
         if(empty($callRecord))
         {
             $this->addError('cid','没有对应的呼叫记录');
