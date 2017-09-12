@@ -31,6 +31,7 @@ class swooleServer{
         3=>'好友申请消息通知',
         0=>'连接',
         5=>'同意好友的添加请求',
+        6=>'中断电话呼叫'
 
 
     ];
@@ -40,7 +41,7 @@ class swooleServer{
         }
 
         $this->server->set([
-            'worker_num' => 2,
+            'worker_num' => 3,
             'daemonize' => false,
             'max_request' => 10000,
             'dispatch_mode' => 2,
@@ -72,7 +73,7 @@ class swooleServer{
             $server->push($frame->fd , json_encode(['json格式错误']));
             return;
         }
-        if($data->action == 1 || $data->action == 2){    //电话相关
+        if($data->action == 1 || $data->action == 2 || $data->action == 6){    //电话相关
             $clerk = new ClerkCallu();
         }elseif (isset($data->action) && $data->action == 3){
             $clerk = new FriendRequetNotice();

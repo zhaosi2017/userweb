@@ -41,8 +41,11 @@ class callu {
 
     public $channel;
 
-
-    private $result = [
+    /**
+     * @var array
+     * 返回对象
+     */
+    public $result = [
         "data"=> [],
         "message"=>"",
         "status"=> 0,
@@ -92,6 +95,24 @@ class callu {
         $service->start_call();
     }
 
+    /**
+     * @param $data
+     * 放弃呼叫
+     */
+    public function call_stop($data){
+        $data = json_decode($data);
+        $user =  User::findOne(['token'=>$data->token]);   //身份校验
+        $this->result['status'] = 1;
+        if(empty($user)){
+            $this->sendText('token错误' , ErrCode::CODE_ERROR);
+            return false;
+        }
+        $this->result['status'] = 0;
+        $service = new  CallService();
+        $service->group_id = $data->group_id;
+        $service->stop_call();
+
+    }
     /**
      * @param $data
      * 只有参数错误的时候 返回的状态是1 其他通知消息状体都是0

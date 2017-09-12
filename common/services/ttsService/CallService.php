@@ -54,6 +54,11 @@ class CallService {
      */
     public $text;
 
+    /**
+     * @var int 每次呼叫的id 一次呼叫多条记录拥有统一id
+     */
+    public $group_id;
+
     private static $call_type_map = [
         CallRecord::CALLRECORD_TYPE_URGENT =>'个紧急联系人',
         CallRecord::CALLRECORD_TYPE_UNURGENT=>'部联系电话'
@@ -114,11 +119,23 @@ class CallService {
         $this->third->Text      = $this->text;
         $this->third->Language  = $this->to_user->language;
         $this->third->Loop      = Yii::$app->params['tts_loop'];
+        if($this->call_type == CallRecord::CALLRECORD_TYPE_URGENT && empty($this->group_id)){
+            $tmp = $this->_redisGetVByK($this->group_id);
+            if(empty($tmp)){
+                $this->app->sendtext("不能单独呼叫紧急联系人" , ErrCode::CALL_EXCEPTION);
+                return false;
+            }
+        }else{
+            $this->group_id = $this->from_user->id.'-'.time().'-'.rand(1000, 9999);
+            $this->app->sendtext($this->group_id , ErrCode::CALL_MESSAGE_GROUP);   //给客户端一个打电话的唯一标志 用于中断呼叫
+        }
+        $this->app->result['data']['group_id'] = $this->group_id;
         $this->app->sendtext('正在拨打第1'.self::$call_type_map[$this->call_type].'（共'.$count.'部)' , ErrCode::CALL_MESSAGE);
         if(!$this->third->CallStart()){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return false;
         }
+
         $this->_catch($numbers , 1);                  //呼叫开始就不能受发起方控制 直至呼叫完成
         return true;
     }
@@ -130,14 +147,14 @@ class CallService {
      */
     public function Event(Array $event_data){
 
-        $result = $this->third->Event($event_data);
+        $result = $this->third->Event($event_data);   //反馈第三方的消息 和业务处理无关 用于输出
         $catch_key =  get_class($this->third).$this->third->callId;
         $catch = $this->_redisGetVByK($catch_key);
         $this->app = unserialize($catch['apps']);
         $this->to_user      = unserialize($catch['to_user']);
         $this->from_user    = unserialize($catch['from_user']);
         $this->call_type    = $catch['call_type'];
-
+        $this->group_id     = $catch['group_id'];
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
         }
@@ -146,7 +163,11 @@ class CallService {
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
                 $this->app->sendtext("呼叫结束" , ErrCode::CALL_END);
-                return;
+                return  $result;
+            }
+            $tmp = $this->_redisGetVByK($this->group_id);
+            if(empty($tmp)){    //认为强制呼叫中断
+                $this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
             }
             if(!$this->_call($catch)){
                 $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
@@ -155,6 +176,14 @@ class CallService {
         return $result;
     }
 
+    /**
+     * 放弃呼叫
+     */
+    public function stop_call(){
+        if(!empty($this->group_id)){
+            Yii::$app->redis->del($this->group_id);
+        }
+    }
 
 
     private function _redisGetVByK($cacheKey){
@@ -226,8 +255,12 @@ class CallService {
         Yii::$app->redis->hset($call_key , 'call_type' , $this->call_type);
         Yii::$app->redis->hset($call_key , 'serial' , $Serial);
         Yii::$app->redis->hset($call_key , 'count' ,(count($numbers) + $Serial) );
+        Yii::$app->redis->hset($call_key , 'group_id' ,$this->group_id );
+
         Yii::$app->redis->expire($call_key , 60*60 );
 
+        Yii::$app->redis->hset($this->group_id , 'call_type' ,$this->call_type );   //这个记录的是同一次呼叫 的呼叫类型
+        Yii::$app->redis->expire($this->group_id , 60*60 );
     }
     /**
      * 获取被叫的电话号码
@@ -274,6 +307,7 @@ class CallService {
         $model->from_number  = $this->third->From;
         $model->to_number    = $this->third->To;
         $model->third        = get_class($this->third);
+        $model->group_id     = $this->group_id;
         $model->save();
 
     }

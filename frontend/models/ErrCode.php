@@ -51,6 +51,7 @@ class ErrCode
     const CALL_FAIL       = '2035'; //呼叫失败（一次呼叫）
     const CALL_END        = '2036'; //呼叫结束
     const CALL_SUCCESS    = '2037'; //呼叫成功
+    const CALL_MESSAGE_GROUP = '2038';  //返回给用户一个呼叫id 用于中断呼叫 连续呼叫紧急联系人
 
 
 
