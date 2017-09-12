@@ -166,7 +166,9 @@ class CallService {
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
                 $this->app->sendtext("呼叫结束" , ErrCode::CALL_END);
-                $this->_redisGetVByK($this->group_id ,true);
+                if($this->call_type == CallRecord::CALLRECORD_TYPE_URGENT){  //紧急联系人呼叫结束时 删除这个group呼叫id
+                    $this->_redisGetVByK($this->group_id ,true);
+                }
                 return  $result;
             }
             $tmp = $this->_redisGetVByK($this->group_id , false);
