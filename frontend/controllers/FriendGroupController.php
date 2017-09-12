@@ -41,7 +41,7 @@ class FriendGroupController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['add-group', 'update-group-name', 'add-friend', 'remove-friend'],
+                        'actions' => ['add-group', 'update-group-name','group-list' ,'add-friend', 'remove-friend'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -53,6 +53,7 @@ class FriendGroupController extends AuthController
                     'update-group-name'=>['post'],
                     'add-friend'=>['post'],
                     'remove-friend'=>['post'],
+                    'group-list'=>['post'],
                 ],
             ],
         ];
@@ -130,4 +131,19 @@ class FriendGroupController extends AuthController
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
     }
+
+    public function actionGroupList()
+    {
+        try {
+            $_friend = new Friends();
+            return $_friend->getGroupList();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
 }

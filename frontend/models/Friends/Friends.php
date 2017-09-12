@@ -27,6 +27,7 @@ use yii\db\Transaction;
 class Friends extends FActiveRecord {
 
     const FRIENDS_LIMIT = 20;
+    const GROUP_EMPTY = 0; //表示好友没有被分到自己的建立的分组里面
     /**
      * @inheritdoc
      */
@@ -229,13 +230,64 @@ class Friends extends FActiveRecord {
         if($asc>=-11055&&$asc<=-10247) return 'Z';
 
 
-
-
         return 'other';
     }
 
 
+    public function getGroupList()
+    {
+        $userId = \Yii::$app->user->id;
+        $_friendGroup = FriendsGroup::findAll(['user_id'=>$userId]);
+        $data = [];
+        $tmp = [];
+        if(!empty($_friendGroup))
+        {
+            foreach ($_friendGroup as $k =>$_group)
+            {
+                $_friend = Friends::findAll(['group_id'=>$_group->id]);
+                $_f = [];
+                if(!empty($_friend))
+                {
+                    foreach ($_friend as $i =>$f)
+                    {
+                        $_user = User::findOne($f->friend_id);
+                        if(empty($_user))
+                        {
+                            continue;
+                        }
+                        $_f[$i]['account']  = $_user->account;
+                        $_f[$i]['nickname'] = !empty($f->remark)?  $f->remark : $_user->nickname;
+                        $_f[$i]['header_url'] = $_user->header_img;
+                    }
+                }
 
+                $tmp[$k] = [
+                    'friend'=>$_f,
+                    'group_info'=>$_group,
+                ];
+            }
+
+        }
+        $data['group'] = $tmp;
+        $other = Friends::findAll(['user_id'=>$userId,'group_id'=>self::GROUP_EMPTY]);
+        $_other = [];
+        if(!empty($other))
+        {
+            foreach ($other as $j => $o) {
+                $_user = User::findOne($o->friend_id);
+                if (empty($_user)) {
+                    continue;
+                }
+                $_other[$j]['account'] = $_user->account;
+                $_other[$j]['nickname'] = !empty($o->remark) ? $o->remark : $_user->nickname;
+                $_other[$j]['header_url'] = $_user->header_img;
+            }
+
+        }
+        $data['other'] = $_other;
+
+        return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
+    }
 
 
 }
