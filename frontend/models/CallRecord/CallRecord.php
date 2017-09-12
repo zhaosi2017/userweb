@@ -56,7 +56,7 @@ use frontend\models\User;
           $limit =  $p == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
           $offset = $p == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($p-1);
 
-          $data  = self::find()->where(['from_user_id'=>$userId])->select(['id','to_user_id','time','call_type','status'])
+          $data  = self::find()->where(['from_user_id'=>$userId])->groupBy('group_id')->select(['id','to_user_id','time','group_id','call_type','status'])
               ->offset($offset)->limit($limit)->orderBy('id desc') ->all();
           $tmp = [];
           if(!empty($data))
@@ -69,6 +69,7 @@ use frontend\models\User;
                   $_v['time'] = date('Y-m-d H:i',$v['time']);
                   $_v['call_type']= $v['call_type'];
                   $_v['status'] = $v['status'];
+                  $_v['group_id'] = $v['group_id'];
                   $_tmp =  User::find()->where(['id'=>$v['to_user_id']])->select(['nickname','account','header_img'])->one();
                   $friend = Friends::find()->select('remark')->where(['friend_id'=>$v['to_user_id'],'user_id'=>$userId])->one();
                   $_name =isset($friend['remark']) && $friend['remark'] ? $friend['remark'] :'';

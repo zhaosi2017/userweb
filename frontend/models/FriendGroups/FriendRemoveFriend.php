@@ -75,8 +75,14 @@ class FriendRemoveFriend extends FriendsGroup
             }
             if($_friend->gid != $this->gid)
             {
-                return $this->jsonResponse([], '该好友不在这个分组下面', '1', ErrCode::YOU_ARE_NOT_FRIENDS);
-
+                return $this->jsonResponse([], '该好友不在这个分组下面', '1', ErrCode::THE_FRIEND_NOT_IN_THE_GROUP);
+            }
+            $_friend->group_id = 0;
+            if($_friend->save())
+            {
+                return $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
+            }else{
+                return $this->jsonResponse([],$_friend->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
             }
         }else{
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
