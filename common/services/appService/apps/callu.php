@@ -91,7 +91,7 @@ class callu {
         }
         $service->app       = $this;
         $service->call_type = $data->call_type;
-        $service->group_id  = $data->group_id;
+        $service->group_id  = isset($data->group_id)?$data->group_id:'';
         $service->start_call();
     }
 
