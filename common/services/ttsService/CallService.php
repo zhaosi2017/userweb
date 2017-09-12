@@ -12,6 +12,7 @@ namespace  common\services\ttsService;
 use frontend\models\BlackLists\BlackList;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\ErrCode;
+use frontend\models\UrgentContact;
 use frontend\models\User;
 use frontend\models\UserPhone;
 use frontend\models\WhiteLists\WhiteList;
@@ -119,9 +120,9 @@ class CallService {
         $this->third->Text      = $this->text;
         $this->third->Language  = $this->to_user->language;
         $this->third->Loop      = Yii::$app->params['tts_loop'];
-        if($this->call_type == CallRecord::CALLRECORD_TYPE_URGENT && empty($this->group_id)){
-            $tmp = $this->_redisGetVByK($this->group_id);
-            if(empty($tmp)){
+        if($this->call_type == CallRecord::CALLRECORD_TYPE_URGENT ){
+            $tmp = $this->_redisGetVByK($this->group_id , false);
+            if(empty($this->group_id) || empty($tmp)){
                 $this->app->sendtext("不能单独呼叫紧急联系人" , ErrCode::CALL_EXCEPTION);
                 return false;
             }
@@ -157,20 +158,23 @@ class CallService {
         $this->group_id     = $catch['group_id'];
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
+            $this->_redisGetVByK($this->group_id);
+            return $result;
         }
 
         if(!$this->_Event_ActionResult()){
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
                 $this->app->sendtext("呼叫结束" , ErrCode::CALL_END);
+                if($this->call_type == CallRecord::CALLRECORD_TYPE_URGENT){  //紧急联系人呼叫结束时 删除这个group呼叫id
+                    $this->_redisGetVByK($this->group_id ,true);
+                }
                 return  $result;
             }
-            $tmp = $this->_redisGetVByK($this->group_id);
-            if(empty($tmp)){    //认为强制呼叫中断
-                $this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
-            }
-            if(!$this->_call($catch)){
+            $tmp = $this->_redisGetVByK($this->group_id , false);
+            if(!empty($tmp) && !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
                 $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
+                $this->_redisGetVByK($this->group_id);
             }
         }
         return $result;
@@ -183,14 +187,18 @@ class CallService {
         if(!empty($this->group_id)){
             Yii::$app->redis->del($this->group_id);
         }
+        $this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
     }
 
 
-    private function _redisGetVByK($cacheKey){
+    private function _redisGetVByK($cacheKey , $flag = true){
 
         $cache_keys = Yii::$app->redis->hkeys($cacheKey);
         $catch_vals = Yii::$app->redis->hvals($cacheKey);
-        Yii::$app->redis->del($cacheKey);
+        if($flag){
+            Yii::$app->redis->del($cacheKey);
+        }
+
         return array_combine($cache_keys , $catch_vals);
 
     }
@@ -202,6 +210,7 @@ class CallService {
         switch ($this->third->Event_Status){
             case CallRecord::CALLRECORD_STATUS_SUCCESS:
                 $this->app->sendText('呼叫成功！' , ErrCode::CALL_SUCCESS);
+                $this->_redisGetVByK($this->group_id ,true);
                 return true;
                 break;
             case CallRecord::CALLRECORD_STATUS_FILED:
@@ -231,6 +240,7 @@ class CallService {
         $this->app->sendtext('正在拨打第'.($catch['serial']+1).self::$call_type_map[$this->call_type].'（共'.$catch['count'].'部)' , ErrCode::CALL_MESSAGE);
         if(!$this->third->CallStart()){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
+            $this->_redisGetVByK($this->group_id);
             return false;
         }
         $this->_catch($numbers , ($catch['serial']+1));                  //呼叫开始就不能受发起方控制 直至呼叫完成
@@ -273,7 +283,7 @@ class CallService {
                 array_push($result ,$number->phone_country_code.$number->user_phone_number);
             }
         }else{
-            $numbers = UserGrentPhone::findAll(['user_id'=>$this->to_user->id]);
+            $numbers = UrgentContact::findAll(['user_id'=>$this->to_user->id]);
             foreach($numbers as $number){
                 array_push($result ,$number->contact_country_code.$number->contact_phone_number);
             }
