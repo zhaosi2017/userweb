@@ -35,10 +35,10 @@ class FriendsSearch extends User
        {
            $data =  User::find()
                ->select(['id','nickname','account','header_img'])
-               ->orWhere(['like','account',$this->search_word])
-               ->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
-//               ->orWhere(['account'=>$this->search_word])
-//               ->orWhere(['nickname'=>$this->search_word])->distinct()->all() ;
+//               ->orWhere(['like','account',$this->search_word])
+//               ->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
+               ->orWhere(['account'=>$this->search_word])
+               ->orWhere(['nickname'=>$this->search_word])->distinct()->all() ;
            return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
        }else{
            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
