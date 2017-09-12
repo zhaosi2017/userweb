@@ -91,7 +91,7 @@ class callu {
         }
         $service->app       = $this;
         $service->call_type = $data->call_type;
-
+        $service->group_id  = $data->group_id;
         $service->start_call();
     }
 
@@ -109,6 +109,7 @@ class callu {
         }
         $this->result['status'] = 0;
         $service = new  CallService();
+        $service->app = $this;
         $service->group_id = $data->group_id;
         $service->stop_call();
 

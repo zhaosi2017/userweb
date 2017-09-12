@@ -48,7 +48,7 @@ class ClerkCallu extends  AbstruactClerk{
     }
 
 
-    private function __stop_call($server,  $frame){
+    private function _stop_call($server,  $frame){
 
         $this->app = new callu();
         $this->app->socket_fd = $frame->fd;
