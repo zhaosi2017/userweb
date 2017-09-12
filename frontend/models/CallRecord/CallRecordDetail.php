@@ -20,7 +20,7 @@ class CallRecordDetail extends CallRecord
     {
         return [
             ['cid', 'required'],
-            ['cid', 'integer'],
+            ['cid', 'string'],
             ['cid', 'ValidateCall'],
         ];
     }
@@ -41,15 +41,17 @@ class CallRecordDetail extends CallRecord
         {
             $userId = Yii::$app->user->id;
             $callRecord = CallRecord::find()->select(['id','to_user_id','time','status','call_type'])
-                ->where(['id'=>$this->cid,'from_user_id'=>$userId])
-                ->one();
+                ->where(['group_id'=>$this->cid,'from_user_id'=>$userId])
+                ->all();
             $data = [];
-            if($callRecord['to_user_id'] || !empty($callRecord))
+            if(!empty($callRecord))
             {
-                $data['time'] = date('Y-m-d H:i',$callRecord['time']);
-                $data['status'] = isset(self::$status_map[$callRecord['status']]) ? self::$status_map[$callRecord['status']] :'未知错误';
-                $_user = User::find()->select('account')->where(['id'=>$callRecord['to_user_id']])->one();
-                $data['account'] = isset($_user['account'])? $_user['account']:'';
+                foreach ($callRecord as $key => $call) {
+                    $data['time'] = date('Y-m-d H:i', $call['time']);
+                    $data['status'] = isset(self::$status_map[$call['status']]) ? self::$status_map[$call['status']] : '未知错误';
+                    $_user = User::find()->select('account')->where(['id' => $call['to_user_id']])->one();
+                    $data['account'] = isset($_user['account']) ? $_user['account'] : '';
+                }
             }
 
             return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
