@@ -41,21 +41,27 @@ class FriendAddGroupForm extends FriendsGroup {
 
     public function addGroup()
     {
-        $userId= \Yii::$app->user->id;
-        $_data = FriendsGroup::find()->where(['user_id'=>$userId,'group_name'=>$this->name])->one();
-        if(!empty($_data))
+        if($this->validate(['name']))
         {
-            return $this->jsonResponse('','该组名已存在！',1,ErrCode::GROUP_NAME_EXIST);
-        }
-        $friendGroup = new FriendsGroup();
-        $friendGroup->user_id = $userId;
-        $friendGroup->group_name = $this->name;
-        if($friendGroup->save())
-        {
-            return $this->jsonResponse('','操作成功',0,ErrCode::SUCCESS);
+            $userId= \Yii::$app->user->id;
+            $_data = FriendsGroup::find()->where(['user_id'=>$userId,'group_name'=>$this->name])->one();
+            if(!empty($_data))
+            {
+                return $this->jsonResponse('','该组名已存在！',1,ErrCode::GROUP_NAME_EXIST);
+            }
+            $friendGroup = new FriendsGroup();
+            $friendGroup->user_id = $userId;
+            $friendGroup->group_name = $this->name;
+            if($friendGroup->save())
+            {
+                return $this->jsonResponse('','操作成功',0,ErrCode::SUCCESS);
+            }else{
+                return $this->jsonResponse('',$friendGroup->getErrors(),1,ErrCode::GROUP_NAME_EXIST);
+            }
         }else{
-            return $this->jsonResponse('',$friendGroup->getErrors(),1,ErrCode::GROUP_NAME_EXIST);
+            return $this->jsonResponse('',$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
+
     }
 
 }

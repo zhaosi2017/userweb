@@ -205,7 +205,13 @@ class User extends FActiveRecord implements IdentityInterface
                     $identity->token = $user->token;
                     if(isset($identity->password)){unset($identity->password);}
                     if(isset($identity->auth_key)){unset($identity->auth_key);}
-                    return $this->jsonResponse($identity,'登录成功',0,ErrCode::SUCCESS);
+                    $userPhoneNum = UserPhone::find()->where(['user_id'=>$identity->id])->count();
+                    $urgentContactNum = UrgentContact::find()->where(['user_id'=>$identity->id])->count();
+                    $data = [];
+                    $data = $identity->toArray();
+                    $data['userPhoneNum'] = $userPhoneNum;
+                    $data['urgentContactNum'] = $urgentContactNum;
+                    return $this->jsonResponse($data,'登录成功',0,ErrCode::SUCCESS);
                 }else{
                     return $this->jsonResponse($identity,'登录失败',1,ErrCode::LOGIN_UPDATE_TOKEN_ERROR);
                 }

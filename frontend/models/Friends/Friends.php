@@ -237,6 +237,7 @@ class Friends extends FActiveRecord {
     public function getGroupList()
     {
         $userId = \Yii::$app->user->id;
+        //获取用户自己的分组
         $_friendGroup = FriendsGroup::findAll(['user_id'=>$userId]);
         $data = [];
         $tmp = [];
@@ -244,12 +245,14 @@ class Friends extends FActiveRecord {
         {
             foreach ($_friendGroup as $k =>$_group)
             {
+                //获取该分组下所有的好友
                 $_friend = Friends::findAll(['group_id'=>$_group->id]);
                 $_f = [];
                 if(!empty($_friend))
                 {
                     foreach ($_friend as $i =>$f)
                     {
+                        //获取分组下某一个具体的好友信息
                         $_user = User::findOne($f->friend_id);
                         if(empty($_user))
                         {
@@ -269,6 +272,7 @@ class Friends extends FActiveRecord {
 
         }
         $data['group'] = $tmp;
+        //获取所有的好友，且不在自己建立的分组下
         $other = Friends::findAll(['user_id'=>$userId,'group_id'=>self::GROUP_EMPTY]);
         $_other = [];
         if(!empty($other))
