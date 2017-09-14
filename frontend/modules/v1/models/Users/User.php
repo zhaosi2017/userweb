@@ -1,5 +1,5 @@
 <?php
-namespace frontend\models;
+namespace frontend\modules\v1\models\Users;
 
 use frontend\services\SmsService;
 use Yii;
@@ -198,17 +198,17 @@ class User extends FActiveRecord implements IdentityInterface
     {
 
 
-       $user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
-       if(empty($user))
-       {
-           return false;
-       }else{
+        $user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+        if(empty($user))
+        {
+            return false;
+        }else{
             if( Yii::$app->getSecurity()->validatePassword($this->password, $user->password))
-           {
-               return $user;
-           }
-           return false;
-       }
+            {
+                return $user;
+            }
+            return false;
+        }
     }
     /**
      * Finds out if password reset token is valid

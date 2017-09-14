@@ -2,7 +2,14 @@
 namespace frontend\controllers;
 
 use frontend\models\Channel;
-use frontend\models\UserForm\ResetPasswordForm;
+use frontend\models\Logins\LoginForm;
+use frontend\models\Registers\RegisterForm;
+use frontend\models\Registers\RegisterUserForm;
+use frontend\models\ResetPasswords\ResetPasswordByPhoneForm;
+use frontend\models\ResetPasswords\ResetPasswordByQuestionForm;
+use frontend\models\ResetPasswords\ResetPasswordFristForm;
+use frontend\models\ResetPasswords\ResetPasswordMessageForm;
+use frontend\models\ResetPasswords\ResetPasswordForm;
 use frontend\models\Question;
 use frontend\models\SecurityQuestion;
 use frontend\models\UserForm\UserImageForm;
@@ -95,7 +102,7 @@ class UserController extends AuthController
        $postData = $this->getRequestContent();
 
         try{
-            $model = new User();
+            $model = new RegisterForm();
             $model->country_code = isset($postData['country_code'])?$postData['country_code']:'';
             $model->phone_number = isset($postData['phone_number'])?$postData['phone_number']:'';
             $model->password = isset($postData['password'])?$postData['password']:'';
@@ -120,12 +127,12 @@ class UserController extends AuthController
         $postData = $this->getRequestContent();
 
         try {
-            $model = new User();
+            $model = new RegisterUserForm();
             $model->country_code = isset($postData['country_code']) ? $postData['country_code'] : '';
             $model->phone_number = isset($postData['phone_number']) ? $postData['phone_number'] : '';
             $model->password = isset($postData['password']) ? $postData['password'] : '';
-            $veryCode = isset($postData['code']) ? $postData['code']:'';
-            return  $model->registerUser($veryCode);
+            $model->code = isset($postData['code']) ? $postData['code']:'';
+            return  $model->registerUser();
 
         }catch (\Exception $e)
         {
@@ -144,7 +151,7 @@ class UserController extends AuthController
 
         try {
 
-            $model = new User();
+            $model = new LoginForm();
             $model->country_code = isset($postData['country_code'])?$postData['country_code']:'';
             $model->phone_number = isset($postData['phone_number'])?$postData['phone_number']:'';
             $model->password = isset($postData['password'])?$postData['password']:'';
@@ -248,9 +255,9 @@ class UserController extends AuthController
     public function actionForgetPassword()
     {
         $data = $this->getRequestContent();
-        $model = new User();
+        $model = new ResetPasswordFristForm();
         $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
-        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+        $model->phone= isset($data['phone']) ? $data['phone'] : '';
         try{
            return $model->checkResetPassword();
 
@@ -272,9 +279,9 @@ class UserController extends AuthController
     public function actionResetMessage()
     {
         $data = $this->getRequestContent();
-        $model = new User();
+        $model = new ResetPasswordMessageForm();
         $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
-        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+        $model->phone = isset($data['phone']) ? $data['phone'] : '';
 
         try {
 
@@ -322,12 +329,12 @@ class UserController extends AuthController
     public function actionResetPassPhone()
     {
         $data = $this->getRequestContent();
-        $model = new User();
+        $model = new ResetPasswordByPhoneForm();
         $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
-        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
-        $code = isset($data['code']) ? $data['code'] : '';
+        $model->phone = isset($data['phone']) ? $data['phone'] : '';
+        $model->code = isset($data['code']) ? $data['code'] : '';
         try{
-            return $model->resetPasswordPhone($code);
+            return $model->resetPasswordPhone();
 
         }catch (Exception $e)
         {
@@ -345,11 +352,17 @@ class UserController extends AuthController
     public function actionResetPassQuestion()
     {
         $data = $this->getRequestContent();
-        $model = new User();
+        $model = new ResetPasswordByQuestionForm();
         $model->country_code = isset($data['country_code']) ? $data['country_code'] : '';
-        $model->phone_number = isset($data['phone']) ? $data['phone'] : '';
+        $model->phone = isset($data['phone']) ? $data['phone'] : '';
+        $model->q1 = isset($data['q1']) ? $data['q1'] : '';
+        $model->q2 = isset($data['q2']) ? $data['q2'] : '';
+        $model->q3 = isset($data['q3']) ? $data['q3'] : '';
+        $model->a1 = isset($data['a1']) ? $data['a1'] : '';
+        $model->a2 = isset($data['a2']) ? $data['a2'] : '';
+        $model->a3 = isset($data['a3']) ? $data['a3'] : '';
         try{
-            return $model->resetPasswordQuestion($data);
+            return $model->resetPasswordQuestion();
 
         }catch (Exception $e)
         {

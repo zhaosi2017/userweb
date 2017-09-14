@@ -31,13 +31,18 @@ class SmsService
                 return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
             }
             $msg = 'Your Verification Code '.$verifyCode;
-            $_sms = Yii::$app->sms;
-            $res = $_sms->sendSms($number,$msg);
-            if($res === true)
+            try {
+                $_sms = Yii::$app->sms;
+                $res = $_sms->sendSms($number, $msg);
+                if ($res === true) {
+                    return $this->jsonResponse(['code' => $verifyCode], '操作成功', 0, ErrCode::SUCCESS);
+                } else {
+                    return $this->jsonResponse([], '号码错误/网络错误', 1, ErrCode::NETWORK_OR_PHONE_ERROR);
+                }
+            }catch (\Exception $e)
             {
-                return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
-            }else{
-                return $this->jsonResponse([],'号码错误/网络错误',1,ErrCode::NETWORK_OR_PHONE_ERROR);
+                $redis->del($number);
+                return $this->jsonResponse([], $e->getMessage(), 1, ErrCode::NETWORK_OR_PHONE_ERROR);
             }
         }else{
             return $this->jsonResponse([],'国码,号码不能为空',1,ErrCode::COUNTRY_CODE_OR_PHONE_EMPTY);

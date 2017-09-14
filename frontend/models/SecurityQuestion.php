@@ -66,7 +66,7 @@ class SecurityQuestion extends FActiveRecord
         $model = Question::find()->where(['id'=>$this->q_two,'type'=>Question::GROUP_TWO])->one();
         if(empty($model))
         {
-            $this->addError('q_one','题库2非法');
+            $this->addError('q_two','题库2非法');
         }
     }
 
@@ -75,7 +75,7 @@ class SecurityQuestion extends FActiveRecord
         $model = Question::find()->where(['id'=>$this->q_three,'type'=>Question::GROUP_THREE])->one();
         if(empty($model))
         {
-            $this->addError('q_one','题库3非法');
+            $this->addError('q_three','题库3非法');
         }
     }
 
