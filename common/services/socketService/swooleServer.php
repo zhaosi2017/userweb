@@ -79,7 +79,7 @@ class swooleServer{
                 "code"=>ErrCode::FAILURE
             ];
 
-            $server->push($frame->fd , json_encode($result));
+            $server->push($frame->fd , json_encode($result , JSON_UNESCAPED_UNICODE));
             return;
         }
         if($data->action == 1 || $data->action == 2 || $data->action == 6){    //电话相关
@@ -97,7 +97,7 @@ class swooleServer{
                 "status"=> 1,
                 "code"=>ErrCode::FAILURE
             ];
-            $server->push($frame->fd , json_encode($result));
+            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
             return ;
         }
         $clerk->stratClerk($server,  $frame , $data);
