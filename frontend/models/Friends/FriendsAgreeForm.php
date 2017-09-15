@@ -49,7 +49,8 @@ class FriendsAgreeForm extends FriendsRequest
             }
 
             $_friendRequest->status = self::AGREE_STATUS;
-            $_friendRequest->update_at = time();
+            $time = time();
+            $_friendRequest->update_at = $time;
             Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
             $transaction = Yii::$app->db->getTransaction();
 
@@ -60,7 +61,7 @@ class FriendsAgreeForm extends FriendsRequest
                     $transaction->commit();
                     return $this->jsonResponse([], '你们已经是好友了', 0, ErrCode::SUCCESS);
                 }
-                $time = time();
+
 
                 if (empty($_from)) {
                     $fromFriend = new Friends();

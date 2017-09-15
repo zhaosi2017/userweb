@@ -53,7 +53,7 @@ class Friends extends FActiveRecord {
         $userId = \Yii::$app->user->id;
         $time = strtotime(date('Y-m-d',time()));
 
-        $newFriend = false;
+        $newFriend = 0;
 
 
         $recent_frinds = self::find()->where(['user_id'=>$userId])->orderBy('link_time desc')->limit(SELF::FRIENDS_LIMIT)->all() ;
@@ -67,9 +67,9 @@ class Friends extends FActiveRecord {
                 $_recent[$k]['account']  = $_user['account'];
                 $_recent[$k]['msg'] ='';
                 $_recent[$k]['header_url'] = $_user['header_img'];
-                if($v->link_time == $v->create_at)
+                if($v->link_time == 0)
                 {
-                    $newFriend = true;
+                    $newFriend += 1;
                     $_recent[$k]['msg'] = $v->direction == 0 ? '已经接受你的请求':'已接受该用户的请求';
                 }
             }
