@@ -50,12 +50,12 @@ class FriendsInfoSearch extends Friends {
 
         if($this->validate('account'))
         {
-           $user =  User::find()->select(['id','account','nickname','channel'])->where(['account'=>$this->account])->one();
+           $user =  User::find()->select(['id','account','nickname','channel','header_img'])->where(['account'=>$this->account])->one();
             if(empty($user))
             {
                 return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
             }
-           
+
             $userId = \Yii::$app->user->id;
             $_friend = Friends::findOne(['user_id'=>$userId,'friend_id'=>$user->id]);
             if(empty($_friend))
@@ -71,6 +71,7 @@ class FriendsInfoSearch extends Friends {
             $data['account'] = $user['account'];
             $data['nickname'] = $user['nickname'];
             $data['channel'] = $user['channel'];
+            $data['header_url'] = $user['header_img'];
             $data['userPhoneNum'] =$userPhoneNum;
             $data['urgentContactNum'] = $urgentContactNum;
             $data['white_status'] =empty($white)? 0 : 1;
