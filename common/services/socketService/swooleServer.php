@@ -20,6 +20,7 @@ use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\Channel;
 use common\services\socketService\Clerk\UidConn;
+use frontend\models\ErrCode;
 
 class swooleServer{
 
@@ -70,7 +71,15 @@ class swooleServer{
     public function onMessage($server,  $frame){
         $data = json_decode($frame->data);
         if(empty($data) ){
-            $server->push($frame->fd , json_encode(['json格式错误']));
+
+            $result = [
+                "data"=> [],
+                "message"=>"json格式错误",
+                "status"=> 1,
+                "code"=>ErrCode::FAILURE
+            ];
+
+            $server->push($frame->fd , json_encode($result));
             return;
         }
         if($data->action == 1 || $data->action == 2 || $data->action == 6){    //电话相关
@@ -82,7 +91,13 @@ class swooleServer{
         }elseif (isset($data->action) && $data->action == 5){
             $clerk = new AgreeFriendNotice();
         }else{
-            $server->push($frame->fd , json_encode(['请求类型错误']));
+            $result = [
+                "data"=> [],
+                "message"=>"请求类型错误",
+                "status"=> 1,
+                "code"=>ErrCode::FAILURE
+            ];
+            $server->push($frame->fd , json_encode($result));
             return ;
         }
         $clerk->stratClerk($server,  $frame , $data);
