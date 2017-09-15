@@ -175,7 +175,7 @@ class User extends FActiveRecord implements IdentityInterface
         ]);
     }
 
-    private function makeYouCode()
+    protected function makeYouCode()
     {
         $code =  self::INIT_YOUCODE;
         $code = $code + $this->id;
@@ -319,7 +319,7 @@ class User extends FActiveRecord implements IdentityInterface
 
     }
 
-    private function updateYouCode()
+    protected function updateYouCode()
     {
         try{
 
