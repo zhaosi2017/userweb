@@ -64,7 +64,7 @@ class FriendsSearch extends User
             $userPhoneNum =  UserPhone::find()->where(['user_id'=>$user->id])->count();
             $urgentContactNum =  UrgentContact::find()->where(['user_id'=>$user->id])->count();
             $data = [
-                $user,
+                'userInfo'=>$user,
                 'userPhoneNum'=>$userPhoneNum,
                 'urgentContactNum'=>$urgentContactNum,
             ];

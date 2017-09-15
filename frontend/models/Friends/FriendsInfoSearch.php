@@ -55,6 +55,12 @@ class FriendsInfoSearch extends Friends {
             {
                 return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
             }
+            $userId = \Yii::$app->user->id;
+            $_friend = Friends::findOne(['user_id'=>$userId,'friend_id'=>$user->id]);
+            if(empty($_friend))
+            {
+                return $this->jsonResponse([],'你们还不是好友','1',ErrCode::YOU_ARE_NOT_FRIENDS);
+            }
             $userPhoneNum =  UserPhone::find()->where(['user_id'=>$user->id])->count();
             $urgentContactNum =  UrgentContact::find()->where(['user_id'=>$user->id])->count();
 
