@@ -81,31 +81,35 @@ class RegisterUserForm extends User
             {
                 return $this->jsonResponse($this,'验证码错误',1,ErrCode::CODE_ERROR);
             }
+            $user = new User();
 
-            $this->auth_key = Yii::$app->security->generateRandomString();
-            $this->password && $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
-            $this->reg_time = time();
-            $this->token = $this->makeToken();
-            $this->status = 0;
-            $this->reg_ip = Yii::$app->request->getUserIP();
+            $user->auth_key = Yii::$app->security->generateRandomString();
+            $this->password && $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+            $user->reg_time = time();
+            $user->token = $this->makeToken();
+            $user->status = 0;
+            $user->reg_ip = Yii::$app->request->getUserIP();
+            $user->country_code = $this->country_code;
+            $user->phone_number = $this->phone_number;
+
             Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
             $transaction = Yii::$app->db->getTransaction();
 
-            if($this->save())
+            if($user->save())
             {
-                $tmp = $this->updateYouCode();
+                $tmp = $user->updateYouCode();
                 if($tmp !== true)
                 {
                     $transaction->rollBack();
                     return $tmp;
                 }
-                if($res = $this->addUserPhone($this->id) === true)
+                $res = $user->addUserPhone($user->id);
+                if($res  === true)
                 {
                     $transaction->commit();
-
-                    if(isset($this->password)){ unset($this->password);}
-                    if(isset($this->auth_key)){ unset($this->auth_key);}
-                    $data = $this;
+                    if(isset($user->password)){ unset($user->password);}
+                    if(isset($user->auth_key)){ unset($user->auth_key);}
+                    $data = $user;
                     return $this->jsonResponse($data,'注册成功',0,ErrCode::SUCCESS);
 
                 }else{

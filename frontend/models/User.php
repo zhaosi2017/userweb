@@ -175,7 +175,7 @@ class User extends FActiveRecord implements IdentityInterface
         ]);
     }
 
-    private function makeYouCode()
+    protected function makeYouCode()
     {
         $code =  self::INIT_YOUCODE;
         $code = $code + $this->id;
@@ -319,7 +319,7 @@ class User extends FActiveRecord implements IdentityInterface
 
     }
 
-    private function updateYouCode()
+    protected function updateYouCode()
     {
         try{
 
@@ -386,10 +386,10 @@ class User extends FActiveRecord implements IdentityInterface
                 $transaction->rollBack();
                 return $this->jsonResponse([],$userPhone->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
             }
-        }catch (Exception $e)
+        }catch (\Exception $e)
         {
             $transaction->rollBack();
-            return $this->jsonResponse([],$e->getErrors(),1,ErrCode::UNKNOWN_ERROR);
+            return $this->jsonResponse([],$e->getMessage(),1,ErrCode::UNKNOWN_ERROR);
 
         }
     }

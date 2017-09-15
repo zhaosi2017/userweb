@@ -62,7 +62,7 @@ class FriendAddFriendForm extends FriendsGroup
 
         if(empty($_group))
         {
-            $this->addError('account','该分组不存在');
+            $this->addError('gid','该分组不存在');
         }
     }
 

@@ -50,10 +50,17 @@ class FriendsInfoSearch extends Friends {
 
         if($this->validate('account'))
         {
-           $user =  User::find()->select(['account','nickname','channel'])->where(['account'=>$this->account])->one();
+           $user =  User::find()->select(['id','account','nickname','channel','header_img'])->where(['account'=>$this->account])->one();
             if(empty($user))
             {
                 return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+            }
+
+            $userId = \Yii::$app->user->id;
+            $_friend = Friends::findOne(['user_id'=>$userId,'friend_id'=>$user->id]);
+            if(empty($_friend))
+            {
+                return $this->jsonResponse([],'你们还不是好友','1',ErrCode::YOU_ARE_NOT_FRIENDS);
             }
             $userPhoneNum =  UserPhone::find()->where(['user_id'=>$user->id])->count();
             $urgentContactNum =  UrgentContact::find()->where(['user_id'=>$user->id])->count();
@@ -61,14 +68,14 @@ class FriendsInfoSearch extends Friends {
             $white =   WhiteList::findOne(['white_uid'=>$user->id,'uid'=>\Yii::$app->user->id]);
 
             $black =  BlackList::findOne(['black_uid'=>$user->id,'uid'=>\Yii::$app->user->id]);
-            $data = [
-                $user,
-                'userPhoneNum'=>$userPhoneNum,
-                'urgentContactNum'=>$urgentContactNum,
-                'white_status'=>empty($white)? 0 : 1,
-                'black_status'=>empty($black)? 0 :1,
-            ];
-
+            $data['account'] = $user['account'];
+            $data['nickname'] = $user['nickname'];
+            $data['channel'] = $user['channel'];
+            $data['header_url'] = $user['header_img'];
+            $data['userPhoneNum'] =$userPhoneNum;
+            $data['urgentContactNum'] = $urgentContactNum;
+            $data['white_status'] =empty($white)? 0 : 1;
+            $data['black_status'] = empty($black)? 0 :1;
             return $this->jsonResponse($data,'操作成功',0,ErrCode::SUCCESS);
         }else{
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);

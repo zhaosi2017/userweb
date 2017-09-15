@@ -11,6 +11,7 @@ use frontend\models\User;
 use Yii;
 use common\services\socketService\AbstruactClerk;
 use common\services\socketService\Clerk\UidConn;
+use frontend\models\ErrCode;
 
 /** 同意好友的请求
  *
@@ -33,14 +34,14 @@ class AgreeFriendNotice extends  AbstruactClerk{
 
         if(!isset($data->token) || empty($data->token) || !isset($data->account) || empty($data->account) )
         {
-            $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'参数非法']));
+            $server->push($frame->fd, json_encode(['status'=>1,'code'=>ErrCode::FAILURE,'message'=>'参数非法']));
             return ;
         }
 
         $_user = User::findOne(['token'=>$data->token]);
         if(empty($_user))
         {
-            $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'非法用户']));
+            $server->push($frame->fd, json_encode(['status'=>1,'code'=>ErrCode::FAILURE,'message'=>'非法用户']));
             return;
         }
 
@@ -51,7 +52,7 @@ class AgreeFriendNotice extends  AbstruactClerk{
         {
             if($_user->account == $data->account)
             {
-                $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'参数非法']));
+                $server->push($frame->fd, json_encode(['status'=>1,'code'=>ErrCode::FAILURE,'message'=>'参数非法']));
                 return ;
             }
             $redis = Yii::$app->redis;
@@ -60,13 +61,13 @@ class AgreeFriendNotice extends  AbstruactClerk{
 
             if($_fd)
             {
-                $server->push($_fd, json_encode(['action'=>6,'msg'=>$_user->account .'同意了你的好友请求']));
+                $server->push($_fd, json_encode(['data'=>['account'=>$_user->account],'type'=>2,'code'=>ErrCode::SUCCESS,'message'=>$_user->account .'同意了你的好友请求']));
             }else {
-                $server->push($frame->fd, json_encode(['action'=>6,'status','msg'=>$_data['account'] . '通知的好友不在线']));
+                $server->push($frame->fd, json_encode(['status'=>1,'code'=>ErrCode::FAILURE,'message'=>$_data['account'] . '通知的好友不在线']));
             }
 
         }else{
-            $server->push($frame->fd, json_encode(['action'=>6,'status'=>1,'msg'=>'通知的好友不存在']));
+            $server->push($frame->fd, json_encode(['status'=>1,'code'=>ErrCode::FAILURE, 'message'=>'通知的好友不存在']));
         }
         return ;
     }

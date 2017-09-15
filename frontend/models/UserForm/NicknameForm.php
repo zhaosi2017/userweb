@@ -30,13 +30,12 @@ class NicknameForm extends User
         return [
             ['nickname','required'],
             ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
-           ['nickname','ValidateNickname'],
+            ['nickname','ValidateNickname'],
         ];
     }
 
     public function ValidateNickname()
     {
-        if(empty($this->nickname)){ $this->addError('nickname', '昵称不能为空'); }
 
         $res = self::find()->where(['nickname'=>$this->nickname])->one();
 
@@ -51,10 +50,6 @@ class NicknameForm extends User
 
     public function updateNickname()
     {
-        if(empty($this->nickname))
-        {
-            return $this->jsonResponse([],'昵称不能为空',1,ErrCode::NICKNAME_EMPTY);
-        }
         if($this->validate('nickname'))
         {
             $userId = Yii::$app->user->id;
