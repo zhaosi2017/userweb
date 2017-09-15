@@ -63,11 +63,13 @@ class FriendsSearch extends User
             }
             $userPhoneNum =  UserPhone::find()->where(['user_id'=>$user->id])->count();
             $urgentContactNum =  UrgentContact::find()->where(['user_id'=>$user->id])->count();
-            $data = [
-                'userInfo'=>$user,
-                'userPhoneNum'=>$userPhoneNum,
-                'urgentContactNum'=>$urgentContactNum,
-            ];
+            $data['id']=$user['id'];
+            $data['nickname']=$user['nickname'];
+            $data['account']=$user['account'];
+            $data['channel']=$user['channel'];
+            $data['header_img']=$user['header_img'];
+            $data['userPhoneNum']=$userPhoneNum;
+            $data['urgentContactNum']=$urgentContactNum;
 
             return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
         }else{
