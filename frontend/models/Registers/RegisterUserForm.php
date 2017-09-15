@@ -91,7 +91,6 @@ class RegisterUserForm extends User
             $user->reg_ip = Yii::$app->request->getUserIP();
             $user->country_code = $this->country_code;
             $user->phone_number = $this->phone_number;
-            $user->balance = '0.0000';
 
             Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
             $transaction = Yii::$app->db->getTransaction();

@@ -56,10 +56,7 @@ class ChannelForm extends User
 
     public function updateCHannel()
     {
-        if(empty($this->channel))
-        {
-            return $this->jsonResponse([],'渠道不能为空',1,ErrCode::CHANNEL_EMPTY);
-        }
+
         if ($this->validate('channel'))
         {
             $userId = Yii::$app->user->id;

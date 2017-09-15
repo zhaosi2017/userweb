@@ -14,6 +14,8 @@ use frontend\models\Question;
 use frontend\models\SecurityQuestion;
 use frontend\models\UserForm\UserImageForm;
 use frontend\models\UserPhone;
+use frontend\models\UserPhones\UserPhoneAddForm;
+use frontend\models\UserPhones\UserPhoneForm;
 use Yii;
 use yii\db\Exception;
 use yii\filters\AccessControl;
@@ -406,7 +408,7 @@ class UserController extends AuthController
     {
         $data = $this->getRequestContent();
         try {
-            $model = new UserPhone();
+            $model = new UserPhoneForm();
             $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
             $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
             return $model->checkUserPhone();
@@ -425,11 +427,11 @@ class UserController extends AuthController
     {
         $data = $this->getRequestContent();
         try {
-            $model = new UserPhone();
+            $model = new UserPhoneAddForm();
             $model->phone_country_code = isset($data['country_code']) ? $data['country_code'] : '';
             $model->user_phone_number = isset($data['phone']) ? $data['phone'] : '';
-            $code = isset($data['code']) ? $data['code'] : '';
-            return $model->setUserPhone($code);
+            $model->code = isset($data['code']) ? $data['code'] : '';
+            return $model->setUserPhone();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
