@@ -35,11 +35,25 @@ class FriendsSearch extends User
        {
            $data =  User::find()
                ->select(['id','nickname','account','header_img'])
-//               ->orWhere(['like','account',$this->search_word])
-//               ->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
+             // ->orWhere(['like','account',$this->search_word])
+              //->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
                ->orWhere(['account'=>$this->search_word])
                ->orWhere(['nickname'=>$this->search_word])->distinct()->all() ;
-           return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
+           $tmp = [];
+           if(!empty($data))
+           {
+                foreach ($data as $k => $v)
+                {
+
+
+                    $tmp[$k]['id'] = $v['id'];
+                    $tmp[$k]['nickname'] = $v['nickname'];
+                    $tmp[$k]['account'] = $v['account'];
+                    $tmp[$k]['header_url'] = $v['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$v['header_img']: '';
+
+                }
+           }
+           return $this->jsonResponse($tmp,'操作成功','0',ErrCode::SUCCESS);
        }else{
            return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
        }
@@ -67,7 +81,7 @@ class FriendsSearch extends User
             $data['nickname']=$user['nickname'];
             $data['account']=$user['account'];
             $data['channel']=$user['channel'];
-            $data['header_img']=$user['header_img'];
+            $data['header_url']= $user['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] :'';
             $data['userPhoneNum']=$userPhoneNum;
             $data['urgentContactNum']=$urgentContactNum;
 

@@ -66,7 +66,7 @@ class Friends extends FActiveRecord {
                 $_recent[$k]['nickname'] = $v['remark'] ? $v['remark'] : $_user['nickname'];
                 $_recent[$k]['account']  = $_user['account'];
                 $_recent[$k]['msg'] ='';
-                $_recent[$k]['header_url'] = $_user['header_img'];
+                $_recent[$k]['header_url'] = $_user['header_img']? \Yii::$app->params['frontendBaseDomain'].$_user['header_img']: '';
                 if($v->link_time == 0)
                 {
                     $newFriend += 1;
@@ -260,7 +260,7 @@ class Friends extends FActiveRecord {
                         }
                         $_f[$i]['account']  = $_user->account;
                         $_f[$i]['nickname'] = !empty($f->remark)?  $f->remark : $_user->nickname;
-                        $_f[$i]['header_url'] = $_user->header_img;
+                        $_f[$i]['header_url'] = $_user->header_img? \Yii::$app->params['frontendBaseDomain'].$_user->header_img: '';
                     }
                 }
 
@@ -284,7 +284,7 @@ class Friends extends FActiveRecord {
                 }
                 $_other[$j]['account'] = $_user->account;
                 $_other[$j]['nickname'] = !empty($o->remark) ? $o->remark : $_user->nickname;
-                $_other[$j]['header_url'] = $_user->header_img;
+                $_other[$j]['header_url'] = $_user->header_img? \Yii::$app->params['frontendBaseDomain'].$_user->header_img: '';;
             }
 
         }

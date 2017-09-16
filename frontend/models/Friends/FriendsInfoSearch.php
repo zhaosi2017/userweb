@@ -71,7 +71,7 @@ class FriendsInfoSearch extends Friends {
             $data['account'] = $user['account'];
             $data['nickname'] = $user['nickname'];
             $data['channel'] = $user['channel'];
-            $data['header_url'] = $user['header_img'];
+            $data['header_url'] = $user['header_img']? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] : '';
             $data['userPhoneNum'] =$userPhoneNum;
             $data['urgentContactNum'] = $urgentContactNum;
             $data['white_status'] =empty($white)? 0 : 1;
