@@ -197,8 +197,24 @@ class UserController extends AuthController
      */
     public function actionChannelList()
     {
-        $data =  Channel::find()->select(['id','name','img_url'])->all();
-        return $this->jsonResponse($data,'操作成功',0,ErrCode::SUCCESS);
+        try {
+            $data = Channel::find()->select(['id', 'name', 'img_url'])->all();
+            if (!empty($data)) {
+                foreach ($data as $k => $v) {
+                    $v['img_url'] = Yii::$app->params['fileBaseDomain'] . $v['img_url'];
+                    $data[$k] = $v;
+                }
+            }
+            return $this->jsonResponse($data,'操作成功',0,ErrCode::SUCCESS);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+
+        }
+
     }
 
     /**更新渠道

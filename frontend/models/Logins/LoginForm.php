@@ -77,6 +77,15 @@ class LoginForm extends User
                     $urgentContactNum = UrgentContact::find()->where(['user_id'=>$identity->id])->count();
                     $data = [];
                     $data = $identity->toArray();
+                    $data['header_url'] = '';
+                    if(isset($data['header_img']))
+                    {
+                        if(  !empty($data['header_img'])) {
+                            $data['header_url'] = Yii::$app->params['frontendBaseDomain'] . $data['header_img'];
+                        }
+                        unset($data['header_img']);
+                    }
+
                     $data['userPhoneNum'] = $userPhoneNum;
                     $data['urgentContactNum'] = $urgentContactNum;
                     return $this->jsonResponse($data,'登录成功',0,ErrCode::SUCCESS);

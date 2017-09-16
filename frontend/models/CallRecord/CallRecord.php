@@ -56,12 +56,21 @@ use frontend\models\User;
           $limit =  $p == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
           $offset = $p == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($p-1);
 
-          $data  = self::find()->where(['from_user_id'=>$userId])->groupBy('group_id')->select(['id','to_user_id','time','group_id','call_type','status'])
-              ->offset($offset)->limit($limit)->orderBy('id desc') ->all();
-          $tmp = [];
+          $data  = self::find()->select('min(id) as id,group_id')->where(['from_user_id'=>$userId])->groupBy('group_id')
+              ->offset($offset)->limit($limit)->orderBy('id desc') ->all();//createCommand()->getRawSql() ;
+          $_res = [];
           if(!empty($data))
           {
-              foreach ($data as $k=>$v)
+              foreach ($data as $i => $r)
+              {
+                  $_res[] = CallRecord::findOne($r->id);
+              }
+          }
+
+          $tmp = [];
+          if(!empty($_res))
+          {
+              foreach ($_res as $k=>$v)
               {
 
                   $_v['id'] = $v['id'];
@@ -78,7 +87,7 @@ use frontend\models\User;
                   }
                   $_v['nickname'] = $_name;
                   $_v['account'] = isset($_tmp['account']) ?$_tmp['account']:'';
-                  $_v['header_url'] = isset($_tmp['header_img']) ? $_tmp['header_img']:'';
+                  $_v['header_url'] = isset($_tmp['header_img'])  && $_tmp['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_tmp['header_img']:'';
                   $tmp[$k]=$_v;
               }
           }

@@ -59,7 +59,7 @@ class BlackList extends FActiveRecord
                 if(!empty($_friends) && !empty($_user)) {
                     $data[$k]['account'] = $_user->account;
                     $data[$k]['remark'] = $_friends['remark'] ? $_friends['remark'] : $_user['nickname'];
-                    $data[$k]['header_url'] = $_user['header_img'] ?  $_user['header_img']:'';
+                    $data[$k]['header_url'] = $_user['header_img'] ?  Yii::$app->params['frontendBaseDomain'].$_user['header_img']:'';
                 }
             }
         }
