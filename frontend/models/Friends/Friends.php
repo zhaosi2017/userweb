@@ -95,7 +95,7 @@ class Friends extends FActiveRecord {
                     $_other = [
                         "nickname"=>'',
                         'account'=>isset($_u->account) ? $_u->account :'',
-                        'header_url'=>isset($_u->header_img)? $_u->header_img :''
+                        'header_url'=>isset($_u->header_img) && $_u->header_img ? \Yii::$app->params['frontendBaseDomain'].$_u->header_img :''
                     ];
                     $settlesRes['other'][]= $_other;
                     continue;
@@ -106,7 +106,7 @@ class Friends extends FActiveRecord {
                 $_tmp = [
                     "nickname"=>$sett['remark'],
                     'account'=>isset($_u->account) ? $_u->account :'',
-                    'header_url'=>isset($_u->header_img)? $_u->header_img :''
+                    'header_url'=>isset($_u->header_img) && $_u->header_img? \Yii::$app->params['frontendBaseDomain'].$_u->header_img :''
                 ];
                 $settlesRes[$snameFirstChar][] = $_tmp;
             }
