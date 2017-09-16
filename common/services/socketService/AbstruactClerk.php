@@ -8,9 +8,17 @@
  */
 
 namespace  common\services\socketService;
+use frontend\models\ErrCode;
 
 abstract  class AbstruactClerk{
 
+  public $result =
+      [
+          "data"=> [],
+          "message"=>"json格式错误",
+          "status"=> 1,
+          "code"=>ErrCode::FAILURE
+      ];
   abstract public function stratClerk($server,  $frame , $data);
 
 

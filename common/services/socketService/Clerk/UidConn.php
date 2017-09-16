@@ -33,11 +33,17 @@ class UidConn extends  AbstruactClerk{
             if (!empty($_data) && $_data['token'] == $data->token) {
                 $redis->set(self::UID_CONN_ACCOUNT . $data->account, $frame->fd);
                 $redis->set(self::UID_CONN_FD . $frame->fd, $data->account);
-                $server->push($frame->fd,json_encode(['data'=>'','status'=>0,'message'=>'连接成功','code'=>ErrCode::SUCCESS,'type'=>'0']));
+                $this->result['status'] = 0;
+                $this->result['message'] = '连接成功';
+                $this->result['code']= ErrCode::SUCCESS;
+                $this->result['data'] = ['type'=>0];
+                $server->push($frame->fd,json_encode($this->result));
+                return ;
             }
 
         }
-        $server->push($frame->fd,json_encode(['data'=>'','status'=>1,'message'=>'连接失败','code'=>ErrCode::FAILURE]));
+        $this->result['message'] = '连接失败';
+        $server->push($frame->fd,json_encode($this->result));
 
         return ;
     }
