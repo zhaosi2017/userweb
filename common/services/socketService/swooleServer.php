@@ -21,7 +21,7 @@ use frontend\models\CallRecord\CallRecord;
 use frontend\models\Channel;
 use common\services\socketService\Clerk\UidConn;
 use frontend\models\ErrCode;
-
+use common\services\socketService\Clerk\HeartCheckNotice;
 class swooleServer{
 
     public $server;
@@ -32,7 +32,8 @@ class swooleServer{
         3=>'好友申请消息通知',
         0=>'连接',
         5=>'同意好友的添加请求',
-        6=>'中断电话呼叫'
+        6=>'中断电话呼叫',
+        7=>'心跳检查',
 
 
     ];
@@ -48,6 +49,8 @@ class swooleServer{
             'dispatch_mode' => 2,
             'log_file'=>'/tmp/swooles.log',
             'debug_mode'=> 1,
+//            'heartbeat_check_interval' => 5,
+//            'heartbeat_idle_time' => 15,
         ]);
 
 
@@ -90,7 +93,9 @@ class swooleServer{
             $clerk = new UidConn();
         }elseif (isset($data->action) && $data->action == 5){
             $clerk = new AgreeFriendNotice();
-        }else{
+        }elseif (isset($data->action) && $data->action == 7){
+            $clerk = new HeartCheckNotice();
+        } else{
             $result = [
                 "data"=> [],
                 "message"=>"请求类型错误",

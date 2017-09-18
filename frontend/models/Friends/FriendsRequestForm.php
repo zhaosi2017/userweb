@@ -62,7 +62,6 @@ class FriendsRequestForm extends FriendsRequest
             {
                 $noticeService = new FriendNoticeService();
                 $data = @$noticeService->notice($this->account, $identity->token);
-                file_put_contents('/tmp/swoole.log',var_export($data,true).PHP_EOL,8);
                 return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
             }else{
                 return $this->jsonResponse([],$friendsRequest->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);

@@ -31,6 +31,15 @@ class UidConn extends  AbstruactClerk{
         if(isset($data->account) && $data->account && isset($data->token)) {
             $_data = User::find()->select(['id', 'token'])->where(['account' => $data->account])->one();
             if (!empty($_data) && $_data['token'] == $data->token) {
+                if($redis->exists(self::UID_CONN_ACCOUNT . $data->account))
+                {
+                   $_fd = $redis->get(self::UID_CONN_ACCOUNT . $data->account);
+                   if($_fd)
+                   {
+                       $redis->del(self::UID_CONN_ACCOUNT . $data->account);
+                       $redis->del(self::UID_CONN_FD.$_fd);
+                   }
+                }
                 $redis->set(self::UID_CONN_ACCOUNT . $data->account, $frame->fd);
                 $redis->set(self::UID_CONN_FD . $frame->fd, $data->account);
                 $this->result['status'] = 0;
