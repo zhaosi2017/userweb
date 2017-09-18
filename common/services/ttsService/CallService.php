@@ -129,9 +129,11 @@ class CallService {
         }else{
             $this->group_id = $this->from_user->id.'-'.time().'-'.rand(1000, 9999);
             $this->app->result['data']['group_id'] = $this->group_id;
+            $this->app->result['data']['call_type'] = $this->call_type;
             $this->app->sendtext($this->group_id , ErrCode::CALL_MESSAGE_GROUP);   //给客户端一个打电话的唯一标志 用于中断呼叫
         }
         $this->app->result['data']['group_id'] = $this->group_id;
+        $this->app->result['data']['call_type'] = $this->call_type;
         $this->app->sendtext('正在拨打第1'.self::$call_type_map[$this->call_type].'（共'.$count.'部)' , ErrCode::CALL_MESSAGE);
         if(!$this->third->CallStart()){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);

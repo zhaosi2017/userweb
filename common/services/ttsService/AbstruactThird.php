@@ -114,7 +114,7 @@ abstract  class AbstruactThird{
         $log['interface'] = get_class($this);
         $log['object']    = serialize($this);
         $log['time']      = date('Y-m-d H:i:s');
-       //file_put_contents('/tmp/log_tts.send.log' , var_export($log , true).PHP_EOL,8);
+        $log['number']    = $this->To;
 
     }
 
@@ -125,8 +125,9 @@ abstract  class AbstruactThird{
 
         $log['interface'] = get_class($this);
         $log['object']    = serialize($this);
-        $log['time']      =date('Y-m-d H:i:s');
-        //file_put_contents('/tmp/log_tts.event.log' , var_export($log , true).PHP_EOL,8);
+        $log['time']      = date('Y-m-d H:i:s');
+        $log['call_id']   = $this->callId;
+
     }
 
 }
