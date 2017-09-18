@@ -54,6 +54,7 @@ class swooleServer{
         $this->server->on('message', [$this, 'onMessage']);
         $this->server->on('close' ,[$this , 'onClose']);
         $this->server->on('open' ,[$this , 'onOpen']);
+        $this->server->on('connect' ,[$this , 'onConnect']);
         $this->server->start();
     }
 
@@ -117,6 +118,12 @@ class swooleServer{
     }
 
 
+    public function onConnect( $server,  $fd,  $from_id){
+
+
+        file_put_contents('/tmp/test-call.log' , var_export($fd).PHP_EOL, 8);
+
+    }
 
 
 }
