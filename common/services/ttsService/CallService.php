@@ -128,6 +128,7 @@ class CallService {
             }
         }else{
             $this->group_id = $this->from_user->id.'-'.time().'-'.rand(1000, 9999);
+            $this->app->result['data']['group_id'] = $this->group_id;
             $this->app->sendtext($this->group_id , ErrCode::CALL_MESSAGE_GROUP);   //给客户端一个打电话的唯一标志 用于中断呼叫
         }
         $this->app->result['data']['group_id'] = $this->group_id;

@@ -57,6 +57,7 @@ class swooleServer{
         $this->server->on('message', [$this, 'onMessage']);
         $this->server->on('close' ,[$this , 'onClose']);
         $this->server->on('open' ,[$this , 'onOpen']);
+        $this->server->on('connect' ,[$this , 'onConnect']);
         $this->server->start();
     }
 
@@ -72,8 +73,9 @@ class swooleServer{
      * 只是呼叫消息处理  如果需要增加其他业务 请将业务层封装
      */
     public function onMessage($server,  $frame){
+        file_put_contents('/tmp/test-call.log' , var_export($frame->data , true).PHP_EOL , 8);
         $data = json_decode($frame->data);
-        if(empty($data) ){
+        if(empty($data)  || !isset($data->action)){
 
             $result = [
                 "data"=> [],
@@ -121,6 +123,12 @@ class swooleServer{
     }
 
 
+    public function onConnect( $server,  $fd,  $from_id){
+
+
+        file_put_contents('/tmp/test-call.log' , var_export($fd).PHP_EOL, 8);
+
+    }
 
 
 }

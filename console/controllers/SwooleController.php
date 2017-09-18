@@ -10,6 +10,7 @@
 namespace console\controllers;
 
 use common\services\socketService\swooleServer;
+use common\services\socketService\test;
 use yii\console\Controller;
 use yii\db\Exception;
 
