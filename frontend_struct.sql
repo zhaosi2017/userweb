@@ -169,3 +169,16 @@ ALTER TABLE `friends` ADD `direction` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '�
 ALTER TABLE `friends` ADD `link_time` int(11) unsigned DEFAULT '0' COMMENT '最近联系时间' AFTER `group_id`;
 ALTER TABLE `friends_request` ADD `update_at` int(11)  DEFAULT '0' COMMENT '更新时间' AFTER `create_at`;
 ALTER TABLE `call_record` ADD `group_id` char(64)  DEFAULT NULL COMMENT '呼叫组记录id' AFTER `third`;
+
+
+CREATE TABLE `tts_log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '日志类型',
+  `url` char(255) DEFAULT '' COMMENT '交互的ip／url',
+  `data` text COMMENT '交互的内容',
+  `object` text COMMENT '交互时的对象状态',
+  `time` date DEFAULT NULL COMMENT '时间',
+  `number` char(255) DEFAULT NULL COMMENT '电话号码',
+  `call_id` char(255) DEFAULT NULL COMMENT '呼叫id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
