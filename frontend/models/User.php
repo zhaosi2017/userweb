@@ -59,6 +59,8 @@ class User extends FActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['country_code','account'], 'integer'],
             ['password','string'],
+            ['latitude','string'],
+            ['longitude','string'],
             ['phone_number','required','on'=>['register']],
             ['country_code','required','on'=>['register']],
             ['password','required','on'=>['register']],
@@ -68,7 +70,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['country_code','match','pattern'=>'/^[0-9]{2,6}$/','message'=>'{attribute}必须为2到6位纯数字'],
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'{attribute}必须为4到11位纯数字'],
             ['phone_number','validatePhone','on'=>'register'],
-            [['header_img'],'safe'],
+            [['header_img','latitude','longitude'],'safe'],
 
         ];
     }

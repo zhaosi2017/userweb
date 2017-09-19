@@ -161,7 +161,6 @@ class CallService {
         $this->group_id     = $catch['group_id'];
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
-            $this->_redisGetVByK($this->group_id);
             return $result;
         }
 

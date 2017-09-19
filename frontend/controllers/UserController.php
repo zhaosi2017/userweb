@@ -135,6 +135,8 @@ class UserController extends AuthController
             $model->password = isset($postData['password']) ? $postData['password'] : '';
             $model->code = isset($postData['code']) ? $postData['code']:'';
             $model->address = isset($postData['address']) ? $postData['address']:'';
+            $model->longitude = isset($postData['longitude'])?$postData['longitude']:'';
+            $model->latitude = isset($postData['latitude'])?$postData['latitude']:'';
             return  $model->registerUser();
 
         }catch (\Exception $e)

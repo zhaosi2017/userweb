@@ -126,7 +126,6 @@ class swooleServer{
     public function onConnect( $server,  $fd,  $from_id){
 
 
-        file_put_contents('/tmp/test-call.log' , var_export($fd).PHP_EOL, 8);
 
     }
 

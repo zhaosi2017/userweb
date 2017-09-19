@@ -44,7 +44,7 @@ class EventController extends  AuthController {
     public function actionEventSinch(){
 
         $postData = @file_get_contents('php://input');
-        file_put_contents('/tmp/test-call.log' , var_export($postData , true),8);
+        //file_put_contents('/tmp/test_call.log' , var_export($postData , true),8);
         $callback_data = json_decode($postData ,true);
         $service = new CallService(Sinch::class);
         $rest = $service->Event($callback_data);
