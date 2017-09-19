@@ -13,8 +13,8 @@ use GuzzleHttp\Psr7\Request;
 
 class Sinch extends  AbstruactThird{
 
-    private $auth_id = '0221f92e-7fbf-4df2-9eb1-c4a965b14fc4';
-    private $auth_key = 'D64MIM3RJ0ijv1r5K7fcsQ==';
+    private $auth_id = 'e08a1b5b-f11c-4826-9ccb-650b3d8a1fcf';
+    private $auth_key = 'O86D17MS3kWDG/8hvLmZ4Q==';
 
     private $uri = 'https://callingapi.sinch.com/v1/callouts';
 
