@@ -70,15 +70,15 @@ class WhiteListController extends AuthController
 
 
     /**
-     * 添加某个好友到黑名单列表
+     * 添加某个好友到白名单列表
      */
     public function actionAdd()
     {
         try{
             $data = $this->getRequestContent();
-            $blackList = new WhiteListForm();
-            $blackList->account = isset($data['account']) ? $data['account'] : '';
-            return $blackList->addWhiteList();
+            $whiteList = new WhiteListForm();
+            $whiteList->account = isset($data['account']) ? $data['account'] : '';
+            return $whiteList->addWhiteList();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
@@ -92,9 +92,9 @@ class WhiteListController extends AuthController
     {
         try{
             $data = $this->getRequestContent();
-            $blackList = new WhiteListForm();
-            $blackList->account = isset($data['account']) ? $data['account'] : '';
-            return $blackList->remove();
+            $whiteList = new WhiteListForm();
+            $whiteList->account = isset($data['account']) ? $data['account'] : '';
+            return $whiteList->remove();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
@@ -107,8 +107,8 @@ class WhiteListController extends AuthController
     public function actionList()
     {
         try {
-            $blackList = new WhiteList();
-            return $blackList->lists();
+            $whiteList = new WhiteList();
+            return $whiteList->lists();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

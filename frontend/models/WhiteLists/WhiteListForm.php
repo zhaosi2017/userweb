@@ -97,7 +97,7 @@ class WhiteListForm extends WhiteList
                     return $this->jsonResponse([],$_white->getErrors(),1, ErrCode::FAILURE);
                 }
             }else{
-                return $this->jsonResponse([],'对方不在你的黑名单列表里',1,ErrCode::THE_FRIEND_NOT_IN_YOU_BLACKLIST);
+                return $this->jsonResponse([],'对方不在你的白名单列表里',1,ErrCode::THE_FRIEND_NOT_IN_YOU_BLACKLIST);
 
             }
 
