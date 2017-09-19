@@ -14,9 +14,9 @@ class smsConnection extends Component
 
     public static $smsArr = [
         'nexmo'=>'frontend\services\smsServers\nexmoSms',
-        'sinch',
+//        'sinch',
         'twilio'=>'frontend\services\smsServers\twilioSms',
-        'infobip',
+        'infobip'=>'frontend\services\smsServers\infobipSms',
     ];
 
 
@@ -27,7 +27,6 @@ class smsConnection extends Component
         if( !array_key_exists($this->server_name ,self::$smsArr))
         {
             throw new SmsException('Your config param has wrong',ErrCode::FAILURE,409);
-            return false;
         }
 
         if(substr($number,0,1) != '+')

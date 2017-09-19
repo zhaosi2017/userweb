@@ -37,6 +37,7 @@ class SmsService
                 if ($res === true) {
                     return $this->jsonResponse(['code' => $verifyCode], '操作成功', 0, ErrCode::SUCCESS);
                 } else {
+                    $redis->del($number);
                     return $this->jsonResponse([], '号码错误/网络错误', 1, ErrCode::NETWORK_OR_PHONE_ERROR);
                 }
             }catch (\Exception $e)

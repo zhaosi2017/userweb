@@ -14,4 +14,12 @@ return [
 //    'api_number'  => '+855965323063',
 //    'server_name'=>'nexmo',
     /* **********************nexmo end ************************* */
+
+    /* **********************infobip start ************************* */
+//    'api_key'     => '',
+//    'api_secret'  => '',
+//    'api_number'  => '+66668888', //infobip的api_number 可以自定义（free）
+//    'server_name'=>'infobip',
+    /* **********************infobip end ************************* */
+
 ];
