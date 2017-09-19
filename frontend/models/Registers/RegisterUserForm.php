@@ -37,12 +37,14 @@ class RegisterUserForm extends User
     public $phone_number;
     public $password;
     public $code;
+    public $address;
     public function rules()
     {
         return [
 
             ['country_code', 'integer'],
             ['password','string'],
+            ['address','string'],
             [['country_code','phone_number','password','code'],'required'],
             ['password', 'match', 'pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,}$/','message'=>'密码至少包含8个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['country_code','match','pattern'=>'/^[0-9]{2,6}$/','message'=>'{attribute}必须为2到6位纯数字'],
@@ -91,6 +93,7 @@ class RegisterUserForm extends User
             $user->reg_ip = Yii::$app->request->getUserIP();
             $user->country_code = $this->country_code;
             $user->phone_number = $this->phone_number;
+            $user->address = $this->address;
 
             Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
             $transaction = Yii::$app->db->getTransaction();

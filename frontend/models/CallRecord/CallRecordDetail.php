@@ -51,7 +51,7 @@ class CallRecordDetail extends CallRecord
                     $data[$key]['status'] = isset(self::$status_map[$call['status']]) ? self::$status_map[$call['status']] : '未知错误';
                     $_user = User::find()->select('account,header_img')->where(['id' => $call['to_user_id']])->one();
                     $data[$key]['account'] = isset($_user['account']) ? $_user['account'] : '';
-                    $data[$key]['header_url'] = isset($_user['header_img']) &&  $_user['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_user['header_img'] : '';
+                    $data[$key]['header_url'] = isset($_user['header_img']) &&  $_user['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_user['header_img'].'?v='.time() : '';
                 }
             }
 

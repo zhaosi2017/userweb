@@ -134,6 +134,7 @@ class UserController extends AuthController
             $model->phone_number = isset($postData['phone_number']) ? $postData['phone_number'] : '';
             $model->password = isset($postData['password']) ? $postData['password'] : '';
             $model->code = isset($postData['code']) ? $postData['code']:'';
+            $model->address = isset($postData['address']) ? $postData['address']:'';
             return  $model->registerUser();
 
         }catch (\Exception $e)
@@ -147,9 +148,7 @@ class UserController extends AuthController
      */
     public function actionLogin()
     {
-        $postData = file_get_contents('php://input');
-        $postData = json_decode($postData,true);
-
+        $postData = $this->getRequestContent();
 
         try {
 
@@ -157,6 +156,9 @@ class UserController extends AuthController
             $model->country_code = isset($postData['country_code'])?$postData['country_code']:'';
             $model->phone_number = isset($postData['phone_number'])?$postData['phone_number']:'';
             $model->password = isset($postData['password'])?$postData['password']:'';
+            $model->address = isset($postData['address'])?$postData['address']:'';
+            $model->longitude = isset($postData['longitude'])?$postData['longitude']:'';
+            $model->latitude = isset($postData['latitude'])?$postData['latitude']:'';
             return $model->login();
 
 

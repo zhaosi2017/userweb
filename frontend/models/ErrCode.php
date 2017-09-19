@@ -54,6 +54,7 @@ class ErrCode
     const CALL_MESSAGE_GROUP = '2038';  //返回给用户一个呼叫id 用于中断呼叫 连续呼叫紧急联系人
 
     const THE_FRIEND_NOT_IN_THE_GROUP = '2039';//该好友不在该分组下
+    const USER_LOGIN_LOG_SAVE_ERROR = '2040';//用户登录时,记录日志错误
 
 
 

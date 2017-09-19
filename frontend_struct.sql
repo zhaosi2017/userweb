@@ -169,3 +169,22 @@ ALTER TABLE `friends` ADD `direction` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '�
 ALTER TABLE `friends` ADD `link_time` int(11) unsigned DEFAULT '0' COMMENT '最近联系时间' AFTER `group_id`;
 ALTER TABLE `friends_request` ADD `update_at` int(11)  DEFAULT '0' COMMENT '更新时间' AFTER `create_at`;
 ALTER TABLE `call_record` ADD `group_id` char(64)  DEFAULT NULL COMMENT '呼叫组记录id' AFTER `third`;
+
+
+
+/********************好友请求表***************************/
+CREATE TABLE `user_login_log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '登录用户id',
+  `address` varchar(255) DEFAULT NULL COMMENT '登录地址',
+  `longitude` varchar(64) DEFAULT NULL COMMENT '经度',
+  `latitude` varchar(64) DEFAULT NULL COMMENT '纬度',
+  `login_ip` varchar(64) DEFAULT NULL COMMENT '登录IP',
+  `login_time` int(11) NOT NULL DEFAULT '0' COMMENT '登录时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `user` ADD `address` VARCHAR (255)   DEFAULT NULL  COMMENT '注册地址' AFTER `balance`;
+ALTER TABLE `user` ADD `longitude` VARCHAR (255)   DEFAULT NULL  COMMENT '经度' AFTER `address`;
+ALTER TABLE `user` ADD `latitude` VARCHAR (255)   DEFAULT NULL  COMMENT '纬度' AFTER `longitude`;

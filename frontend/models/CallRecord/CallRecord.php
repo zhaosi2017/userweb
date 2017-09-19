@@ -87,7 +87,7 @@ use frontend\models\User;
                   }
                   $_v['nickname'] = $_name;
                   $_v['account'] = isset($_tmp['account']) ?$_tmp['account']:'';
-                  $_v['header_url'] = isset($_tmp['header_img'])  && $_tmp['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_tmp['header_img']:'';
+                  $_v['header_url'] = isset($_tmp['header_img'])  && $_tmp['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_tmp['header_img'].'?v='.time():'';
                   $tmp[$k]=$_v;
               }
           }
