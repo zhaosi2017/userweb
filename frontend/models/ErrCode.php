@@ -31,7 +31,7 @@ class ErrCode
     const ACCOUNT_EMPTY ='2017';//优码不能为空
     const USER_NO_ADD_SELF = '2018';//用户不能添加自己为好友
     const USER_ADD_FRIEND_REQUEST_EXIST = '2019';//用户已经向某优客发送拉请求，不能重复发送
-    const PARAM_NOT_INCOMPLETE = '6000';//参数不完整
+    const PARAM_NOT_INCOMPLETE = '5000';//参数不完整
     const LOGIN_UPDATE_TOKEN_ERROR = '2020';//登录时候，修改稿token错误
     const DO_NOT_YOURSELF = '2021'; //不能操作自己
     const YOU_ARE_NOT_FRIENDS = '2022';//你们不是好友
@@ -56,6 +56,12 @@ class ErrCode
     const THE_FRIEND_NOT_IN_THE_GROUP = '2039';//该好友不在该分组下
     const USER_LOGIN_LOG_SAVE_ERROR = '2040';//用户登录时,记录日志错误
     const REQUEST_DATA_ERROR = '4002';//请求数据有误
+
+    const WEB_SOCKET_LOGIN = '6000';//建立websocket成功
+    const WEB_SOCKET_INVITE_FRIEND = '6001'; //某个优客申请添加你为好友
+    const WEB_SOCKET_AGREE_INVITE = '6002';//同意好友的邀请
+    const WEB_SOCKET_HEART_CHECK = '6003';//websoct心跳检测
+
 
 
 

@@ -69,7 +69,7 @@ class HeartCheckNotice extends  AbstruactClerk{
         {
             $this->result['data'] = ['account'=>$_user->account,'type'=>3];
             $this->result['status'] = 0;
-            $this->result['code'] = ErrCode::SUCCESS;
+            $this->result['code'] = ErrCode::WEB_SOCKET_HEART_CHECK;
             $this->result['message'] = '心跳正常';
             $server->push($_fd, json_encode($this->result));
         }else {

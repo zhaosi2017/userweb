@@ -44,7 +44,7 @@ class UidConn extends  AbstruactClerk{
                 $redis->set(self::UID_CONN_FD . $frame->fd, $data->account);
                 $this->result['status'] = 0;
                 $this->result['message'] = '连接成功';
-                $this->result['code']= ErrCode::SUCCESS;
+                $this->result['code']= ErrCode::WEB_SOCKET_LOGIN;
                 $this->result['data'] = ['type'=>0];
                 $server->push($frame->fd,json_encode($this->result));
                 return ;

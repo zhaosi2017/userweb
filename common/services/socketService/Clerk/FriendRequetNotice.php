@@ -69,7 +69,7 @@ class FriendRequetNotice extends  AbstruactClerk{
             if($_fd)
             {
                 $this->result['data'] = ['account'=>$_user->account,'type'=>1];
-                $this->result['code'] = ErrCode::SUCCESS;
+                $this->result['code'] = ErrCode::WEB_SOCKET_INVITE_FRIEND;
                 $this->result['status'] = 0;
                 $this->result['message'] = $_user->account .'向你发送了好友请求';
 
