@@ -17,7 +17,7 @@ class infobipSms extends AbstractSmsServic
         $this->api_secret = $api_secret;
         $this->api_number = $api_number;
         //$this->authorization = base64_encode( 'Basic '.$api_key.':'.$api_secret);
-        $this->authorization = 'Basic Y2FsbHVvbmxpbmU6dHhjLC4vMTIz';
+        $this->authorization = 'Basic Y2FsbHVvbmxpbmU6Q2FsbHVPbmxpbmUxMjM=';
 
     }
 
@@ -52,7 +52,7 @@ class infobipSms extends AbstractSmsServic
             return $err;
         } else {
             $response = json_decode($response,true);
-            return $response['messages']['0']['status']['groupName'] === 'PENDING' ? true : false;
+            return isset($response['messages']['0']['status']['groupName']) && ($response['messages']['0']['status']['groupName'] == 'PENDING') ? true : false;
         }
     }
 }

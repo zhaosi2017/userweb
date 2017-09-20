@@ -79,12 +79,13 @@ use frontend\models\User;
                   $_v['call_type']= $v['call_type'];
                   $_v['status'] = $v['status'];
                   $_v['group_id'] = $v['group_id'];
-                  $_tmp =  User::find()->where(['id'=>$v['to_user_id']])->select(['nickname','account','header_img'])->one();
+                  $_tmp =  User::find()->where(['id'=>$v['to_user_id']])->select(['nickname','account','header_img','channel'])->one();
                   $friend = Friends::find()->select('remark')->where(['friend_id'=>$v['to_user_id'],'user_id'=>$userId])->one();
                   $_name =isset($friend['remark']) && $friend['remark'] ? $friend['remark'] :'';
                   if(empty($_name)){
                       $_name = isset($_tmp['nickname']) ?$_tmp['nickname']:'';
                   }
+                  $_v['channel'] = isset($_tmp['channel']) ? $_tmp['channel']: '';
                   $_v['nickname'] = $_name;
                   $_v['account'] = isset($_tmp['account']) ?$_tmp['account']:'';
                   $_v['header_url'] = isset($_tmp['header_img'])  && $_tmp['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_tmp['header_img'].'?v='.time():'';
