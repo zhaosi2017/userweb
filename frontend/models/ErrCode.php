@@ -55,7 +55,7 @@ class ErrCode
 
     const THE_FRIEND_NOT_IN_THE_GROUP = '2039';//该好友不在该分组下
     const USER_LOGIN_LOG_SAVE_ERROR = '2040';//用户登录时,记录日志错误
-
+    const REQUEST_DATA_ERROR = '4002';//请求数据有误
 
 
 

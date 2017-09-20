@@ -12,6 +12,8 @@ use frontend\models\ResetPasswords\ResetPasswordMessageForm;
 use frontend\models\ResetPasswords\ResetPasswordForm;
 use frontend\models\Question;
 use frontend\models\SecurityQuestion;
+use frontend\models\UserForm\PhoneSortForm;
+use frontend\models\UserForm\UrgentContactSortForm;
 use frontend\models\UserForm\UserImageForm;
 use frontend\models\UserPhone;
 use frontend\models\UserPhones\UserPhoneAddForm;
@@ -53,7 +55,7 @@ class UserController extends AuthController
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['nickname','channel-list','update-channel','update-question',
+                        'actions' => ['nickname','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
                             'delete-user-phone','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
@@ -605,6 +607,42 @@ class UserController extends AuthController
         return $model;
     }
 
+
+
+    public function actionPhoneSort()
+    {
+        $data = $this->getRequestContent();
+
+        try {
+            $model = new PhoneSortForm();
+            $model->id = isset($data['id']) ? $data['id'] : '';
+            $model->sort = isset($data['sort']) ? $data['sort'] : '';
+            return $model->sort();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionUrgentContactSort()
+    {
+        $data = $this->getRequestContent();
+        try {
+            $model = new UrgentContactSortForm();
+            $model->id = isset($data['id']) ? $data['id'] : '';
+            $model->sort = isset($data['sort']) ? $data['sort'] : '';
+            return $model->sort();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
 
 
 
