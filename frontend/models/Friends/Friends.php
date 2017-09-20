@@ -63,9 +63,14 @@ class Friends extends FActiveRecord {
             foreach ($recent_frinds as $k => $v)
             {
                 $_user = User::findOne($v->friend_id);
+                if(empty($_user))
+                {
+                    continue;
+                }
                 $_recent[$k]['nickname'] = $v['remark'] ? $v['remark'] : $_user['nickname'];
                 $_recent[$k]['account']  = $_user['account'];
                 $_recent[$k]['msg'] ='';
+                $_recent[$k]['channel'] =$_user['channel'];
                 $_recent[$k]['header_url'] = $_user['header_img']? \Yii::$app->params['frontendBaseDomain'].$_user['header_img'].'?v='.time(): '';
                 if($v->link_time == 0)
                 {
@@ -87,7 +92,10 @@ class Friends extends FActiveRecord {
             foreach ($friends as $k => $sett) {
                 $_name = $sett['remark'];
                 $_u = User::findOne($sett->friend_id);
-
+                if(empty($_u))
+                {
+                    continue;
+                }
                 if (empty($_name)) {
                     $_name = isset($_u->nickname) ? $_u->nickname : '';
                 }
@@ -95,7 +103,8 @@ class Friends extends FActiveRecord {
                     $_other = [
                         "nickname"=>'',
                         'account'=>isset($_u->account) ? $_u->account :'',
-                        'header_url'=>isset($_u->header_img) && $_u->header_img ? \Yii::$app->params['frontendBaseDomain'].$_u->header_img.'?v='.time() :''
+                        'header_url'=>isset($_u->header_img) && $_u->header_img ? \Yii::$app->params['frontendBaseDomain'].$_u->header_img.'?v='.time() :'',
+                        'channel'=>isset($_u->channel) ? $_u->channel :'',
                     ];
                     $settlesRes['other'][]= $_other;
                     continue;
@@ -106,7 +115,8 @@ class Friends extends FActiveRecord {
                 $_tmp = [
                     "nickname"=>$sett['remark'],
                     'account'=>isset($_u->account) ? $_u->account :'',
-                    'header_url'=>isset($_u->header_img) && $_u->header_img? \Yii::$app->params['frontendBaseDomain'].$_u->header_img .'?v='.time():''
+                    'header_url'=>isset($_u->header_img) && $_u->header_img? \Yii::$app->params['frontendBaseDomain'].$_u->header_img .'?v='.time():'',
+                    'channel'=>isset($_u->channel) ? $_u->channel :'',
                 ];
                 $settlesRes[$snameFirstChar][] = $_tmp;
             }

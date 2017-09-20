@@ -64,7 +64,7 @@ class AgreeFriendNotice extends  AbstruactClerk{
 
             if($_fd)
             {
-                $this->result['data'] = ['account'=>$_user->account,'type'=>2];
+                $this->result['data'] = ['account'=>$_user->account,'type'=>2,'num'=>1];
                 $this->result['status'] = 0;
                 $this->result['code'] = ErrCode::WEB_SOCKET_AGREE_INVITE;
                 $this->result['message'] = $_user->account .'同意了你的好友请求';
