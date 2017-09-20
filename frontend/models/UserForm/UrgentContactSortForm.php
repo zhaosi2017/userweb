@@ -9,19 +9,16 @@ namespace frontend\models\UserForm;
 
 use frontend\models\UrgentContact;
 use frontend\models\ErrCode;
+use yii\db\Transaction;
 
 class UrgentContactSortForm extends UrgentContact
 {
 
-    public $sort;
-
+    public $data;
     public function rules()
     {
         return [
-            [['sort','id'],'integer'],
-            [['id','sort'],'required'],
-            [['sort','id'],'integer'],
-
+            ['data','required'],
         ];
     }
 
@@ -32,21 +29,35 @@ class UrgentContactSortForm extends UrgentContact
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
 
+        if(!is_array($this->data))
+        {
+            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::REQUEST_DATA_ERROR);
+        }
+
         $userId = \Yii::$app->user->id;
-        $_urgentContact = UrgentContact::findOne(['user_id'=>$userId,'id'=>$this->id]);
-        if(empty($_urgentContact))
+        \Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
+        $transaction = \Yii::$app->db->getTransaction();
+        foreach ($this->data as $k => $v)
         {
-            return $this->jsonResponse([],'数据不存在','1',ErrCode::REQUEST_DATA_ERROR);
-        }
+            $_userPhone = UrgentContact::findOne(['user_id'=>$userId,'id'=>$k]);
+            if(!empty($_userPhone)){
+                $_userPhone->contact_sort = (int) $v;
 
-        $_urgentContact->contact_sort = (int)$this->sort;
+                if(!$_userPhone->save())
+                {
+                    $transaction->rollBack();
+                    return $this->jsonResponse([],$_userPhone->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);
+                }
+            }else{
+                $transaction->rollBack();
+                return $this->jsonResponse([],'参数有误','1',ErrCode::REQUEST_DATA_ERROR);
 
-        if($_urgentContact->save())
-        {
-            return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
-        }else{
-            return $this->jsonResponse([],$_urgentContact->getErrors(),'1',ErrCode::DATA_SAVE_ERROR);
+            }
+
         }
+        $transaction->commit();
+        return $this->jsonResponse([],'操作成功','0',ErrCode::SUCCESS);
+
 
 
     }

@@ -618,8 +618,9 @@ class UserController extends AuthController
 
         try {
             $model = new PhoneSortForm();
-            $model->id = isset($data['id']) ? $data['id'] : '';
-            $model->sort = isset($data['sort']) ? $data['sort'] : '';
+//            $model->id = isset($data['id']) ? $data['id'] : '';
+//            $model->sort = isset($data['sort']) ? $data['sort'] : '';
+            $model->data = $data;
             return $model->sort();
         }catch (Exception $e)
         {
@@ -635,8 +636,9 @@ class UserController extends AuthController
         $data = $this->getRequestContent();
         try {
             $model = new UrgentContactSortForm();
-            $model->id = isset($data['id']) ? $data['id'] : '';
-            $model->sort = isset($data['sort']) ? $data['sort'] : '';
+//            $model->id = isset($data['id']) ? $data['id'] : '';
+//            $model->sort = isset($data['sort']) ? $data['sort'] : '';
+            $model->data = $data;
             return $model->sort();
         }catch (Exception $e)
         {
