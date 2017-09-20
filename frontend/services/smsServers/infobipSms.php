@@ -16,8 +16,7 @@ class infobipSms extends AbstractSmsServic
         $this->api_key = $api_key;
         $this->api_secret = $api_secret;
         $this->api_number = $api_number;
-        //$this->authorization = base64_encode( 'Basic '.$api_key.':'.$api_secret);
-        $this->authorization = 'Basic Y2FsbHVvbmxpbmU6Q2FsbHVPbmxpbmUxMjM=';
+        $this->authorization = 'Basic '.base64_encode( $api_key.':'.$api_secret);
 
     }
 
