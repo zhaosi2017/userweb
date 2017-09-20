@@ -89,6 +89,9 @@ class UserController extends AuthController
                     'set-urgent-contact'=>['post'],
                     'logout'=>['post'],
                     'update-image'=>['post'],
+                    'phone-sort'=>['post'],
+                    'urgent-contact-sort'=>['post'],
+
                 ],
             ],
         ];
