@@ -202,3 +202,15 @@ CREATE TABLE `tts_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+/********************版本控制***************************/
+CREATE TABLE `version` (
+  `id` mediumint(9) unsigned  NOT NULL AUTO_INCREMENT,
+  `platform` varchar(64) NOT NULL COMMENT '平台:android,ios',
+  `version` varchar(64) NOT NULL COMMENT '版本号',
+  `info` text NOT NULL COMMENT '版本更新内容',
+  `url` varchar(255) NOT NULL COMMENT '版本的地址',
+  `create_at` int(11) DEFAULT '0' COMMENT '创建时间',
+  `update_at` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

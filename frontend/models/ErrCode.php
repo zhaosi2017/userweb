@@ -62,6 +62,8 @@ class ErrCode
     const WEB_SOCKET_AGREE_INVITE = '6002';//同意好友的邀请
     const WEB_SOCKET_HEART_CHECK = '6003';//websoct心跳检测
 
+    const THE_PLATFORM_VERSION_NO_DATA = '4003'; // 该平台没有版本信息
+
 
 
 
