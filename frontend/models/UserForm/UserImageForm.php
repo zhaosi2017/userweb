@@ -57,7 +57,7 @@ class UserImageForm extends User
         if ($this->validate()) {
             $identity = Yii::$app->user->identity;
             $account = $identity->account;
-            $path = 'uploads/headerImage/' . md5($account) . '.' . $this->file->extension;
+            $path = 'uploads/headerImage/' . md5($account.time()) . '.' . $this->file->extension;
 
             $identity->header_img = $path;
             Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);

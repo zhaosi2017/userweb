@@ -49,7 +49,7 @@ class FriendsSearch extends User
                     $tmp[$k]['id'] = $v['id'];
                     $tmp[$k]['nickname'] = $v['nickname'];
                     $tmp[$k]['account'] = $v['account'];
-                    $tmp[$k]['header_url'] = $v['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$v['header_img'].'?v='.time(): '';
+                    $tmp[$k]['header_url'] = $v['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$v['header_img'] : '';
 
                 }
            }
@@ -81,7 +81,7 @@ class FriendsSearch extends User
             $data['nickname']=$user['nickname'];
             $data['account']=$user['account'];
             $data['channel']=$user['channel'];
-            $data['header_url']= $user['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$user['header_img'].'?v='.time() :'';
+            $data['header_url']= $user['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] :'';
             $data['userPhoneNum']=$userPhoneNum;
             $data['urgentContactNum']=$urgentContactNum;
 

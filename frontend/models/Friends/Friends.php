@@ -71,7 +71,7 @@ class Friends extends FActiveRecord {
                 $_recent[$k]['account']  = $_user['account'];
                 $_recent[$k]['msg'] ='';
                 $_recent[$k]['channel'] =$_user['channel'];
-                $_recent[$k]['header_url'] = $_user['header_img']? \Yii::$app->params['frontendBaseDomain'].$_user['header_img'].'?v='.time(): '';
+                $_recent[$k]['header_url'] = $_user['header_img']? \Yii::$app->params['frontendBaseDomain'].$_user['header_img'] : '';
                 if($v->link_time == 0)
                 {
                     $newFriend += 1;
@@ -103,7 +103,7 @@ class Friends extends FActiveRecord {
                     $_other = [
                         "nickname"=>'',
                         'account'=>isset($_u->account) ? $_u->account :'',
-                        'header_url'=>isset($_u->header_img) && $_u->header_img ? \Yii::$app->params['frontendBaseDomain'].$_u->header_img.'?v='.time() :'',
+                        'header_url'=>isset($_u->header_img) && $_u->header_img ? \Yii::$app->params['frontendBaseDomain'].$_u->header_img :'',
                         'channel'=>isset($_u->channel) ? $_u->channel :'',
                     ];
                     $settlesRes['other'][]= $_other;
@@ -115,7 +115,7 @@ class Friends extends FActiveRecord {
                 $_tmp = [
                     "nickname"=>$sett['remark'],
                     'account'=>isset($_u->account) ? $_u->account :'',
-                    'header_url'=>isset($_u->header_img) && $_u->header_img? \Yii::$app->params['frontendBaseDomain'].$_u->header_img .'?v='.time():'',
+                    'header_url'=>isset($_u->header_img) && $_u->header_img? \Yii::$app->params['frontendBaseDomain'].$_u->header_img :'',
                     'channel'=>isset($_u->channel) ? $_u->channel :'',
                 ];
                 $settlesRes[$snameFirstChar][] = $_tmp;
@@ -270,7 +270,7 @@ class Friends extends FActiveRecord {
                         }
                         $_f[$i]['account']  = $_user->account;
                         $_f[$i]['nickname'] = !empty($f->remark)?  $f->remark : $_user->nickname;
-                        $_f[$i]['header_url'] = $_user->header_img? \Yii::$app->params['frontendBaseDomain'].$_user->header_img.'?v='.time(): '';
+                        $_f[$i]['header_url'] = $_user->header_img? \Yii::$app->params['frontendBaseDomain'].$_user->header_img : '';
                     }
                 }
 
@@ -294,7 +294,7 @@ class Friends extends FActiveRecord {
                 }
                 $_other[$j]['account'] = $_user->account;
                 $_other[$j]['nickname'] = !empty($o->remark) ? $o->remark : $_user->nickname;
-                $_other[$j]['header_url'] = $_user->header_img? \Yii::$app->params['frontendBaseDomain'].$_user->header_img .'?v='.time(): '';;
+                $_other[$j]['header_url'] = $_user->header_img? \Yii::$app->params['frontendBaseDomain'].$_user->header_img : '';;
             }
 
         }

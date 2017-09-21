@@ -101,7 +101,7 @@ class LoginForm extends User
                     if(isset($data['header_img']))
                     {
                         if(  !empty($data['header_img'])) {
-                            $data['header_url'] = Yii::$app->params['frontendBaseDomain'] . $data['header_img'].'?v='.time();
+                            $data['header_url'] = Yii::$app->params['frontendBaseDomain'] . $data['header_img'];
                         }
                         unset($data['header_img']);
                     }
