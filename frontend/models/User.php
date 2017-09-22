@@ -190,7 +190,7 @@ class User extends FActiveRecord implements IdentityInterface
 
     public function logout()
     {
-
+        //客户端用户-手动关闭websocket 如果不手动关闭，swoole 会定期检查不活动的fd 会触发关闭
         Yii::$app->user->logout();
         return  $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
     }
