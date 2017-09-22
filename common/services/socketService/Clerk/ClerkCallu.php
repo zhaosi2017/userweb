@@ -39,6 +39,9 @@ class ClerkCallu extends  AbstruactClerk{
             $this->_stop_call($server,  $frame);
 
         } else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
+            if(!Yii::$app->redis->exists(UidConn::UID_CONN_FD.$data->app_fd)) {
+                $server->push($frame->fd , json_encode( ['status'=>false] , true));
+            }
             $resl = $server->push($data->app_fd , $data->text);
             $data_ = ['status'=>$resl];
             $server->push($frame->fd , json_encode($data_ , true));
