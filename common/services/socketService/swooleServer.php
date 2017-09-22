@@ -22,6 +22,8 @@ use frontend\models\Channel;
 use common\services\socketService\Clerk\UidConn;
 use frontend\models\ErrCode;
 use common\services\socketService\Clerk\HeartCheckNotice;
+use common\services\socketService\Clerk\WebSocketReload;
+
 class swooleServer{
 
     public $server;
@@ -34,6 +36,7 @@ class swooleServer{
         5=>'同意好友的添加请求',
         6=>'中断电话呼叫',
         7=>'心跳检查',
+        8=>'重启worker进程',
 
 
     ];
@@ -97,7 +100,10 @@ class swooleServer{
             $clerk = new AgreeFriendNotice();
         }elseif (isset($data->action) && $data->action == 7){
             $clerk = new HeartCheckNotice();
-        } else{
+        }elseif (isset($data->action) && $data->action == 8)
+        {
+            $clerk = new WebSocketReload();
+        }else{
             $result = [
                 "data"=> [],
                 "message"=>"请求类型错误",
