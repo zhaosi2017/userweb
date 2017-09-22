@@ -280,12 +280,12 @@ class CallService {
     private function _getToUserNumber(){
         $result = [];
         if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT ){
-            $numbers = UserPhone::findAll(['user_id'=>$this->to_user->id]);
+            $numbers = UserPhone::find()->where(['user_id'=>$this->to_user->id])->orderBy('user_phone_sort ASC')->all();
             foreach($numbers as $number){
                 array_push($result ,$number->phone_country_code.$number->user_phone_number);
             }
         }else{
-            $numbers = UrgentContact::findAll(['user_id'=>$this->to_user->id]);
+            $numbers = UrgentContact::find()->where(['user_id'=>$this->to_user->id])->orderBy('contact_sort ASC')->all();
             foreach($numbers as $number){
                 array_push($result ,$number->contact_country_code.$number->contact_phone_number);
             }
