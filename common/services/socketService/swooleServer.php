@@ -49,8 +49,8 @@ class swooleServer{
             'dispatch_mode' => 2,
             'log_file'=>'/tmp/swooles.log',
             'debug_mode'=> 1,
-//            'heartbeat_check_interval' => 5,
-//            'heartbeat_idle_time' => 15,
+            'heartbeat_check_interval' => 60,//每60秒 遍历所有连接
+            'heartbeat_idle_time' => 360,//与heartbeat_check_interval配合使用。表示连接最大允许空闲的时间（6分钟）
         ]);
 
 
