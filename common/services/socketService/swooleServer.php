@@ -23,6 +23,7 @@ use common\services\socketService\Clerk\UidConn;
 use frontend\models\ErrCode;
 use common\services\socketService\Clerk\HeartCheckNotice;
 use common\services\socketService\Clerk\WebSocketReload;
+use common\services\socketService\Clerk\CloseWebSocketMaster;
 
 class swooleServer{
 
@@ -36,7 +37,8 @@ class swooleServer{
         5=>'同意好友的添加请求',
         6=>'中断电话呼叫',
         7=>'心跳检查',
-        8=>'重启worker进程',
+        8=>'重启websocket的worker进程',
+        9=>'终止websocket的master进程和worker进程'
 
 
     ];
@@ -52,7 +54,7 @@ class swooleServer{
             'dispatch_mode' => 2,
             'log_file'=>'/tmp/swooles.log',
             'debug_mode'=> 1,
-            'heartbeat_check_interval' => 60,//每60秒 遍历所有连接
+            'heartbeat_check_interval' => 180,//每180秒 遍历所有连接
             'heartbeat_idle_time' => 360,//与heartbeat_check_interval配合使用。表示连接最大允许空闲的时间（6分钟）
         ]);
 
@@ -103,7 +105,10 @@ class swooleServer{
         }elseif (isset($data->action) && $data->action == 8)
         {
             $clerk = new WebSocketReload();
-        }else{
+        }elseif (isset($data->action) && $data->action == 9)
+        {
+            $clerk = new CloseWebSocketMaster();
+        } else{
             $result = [
                 "data"=> [],
                 "message"=>"请求类型错误",

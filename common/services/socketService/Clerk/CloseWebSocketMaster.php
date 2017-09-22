@@ -12,7 +12,7 @@ use Yii;
 use common\services\socketService\AbstruactClerk;
 use frontend\models\ErrCode;
 
-class WebSocketReload extends  AbstruactClerk{
+class CloseWebSocketMaster extends  AbstruactClerk{
     /**
      * @var callu
      */
@@ -26,10 +26,13 @@ class WebSocketReload extends  AbstruactClerk{
     public function stratClerk($server,  $frame , $data){
         if(isset($data->key) && !empty($data->key) && $data->key == Yii::$app->params['web_socket_reload'])
         {
-            $server->reload();
-            $this->result['status'] = 0;
-            $this->result['code'] = ErrCode::SUCCESS;
-            $this->result['message'] = '重启成功';
+            foreach ($server->connections as $conn)
+            {
+               // $server->pause($conn);
+                $server->close($conn);
+            }
+            $server->shutdown();
+            return ;
 
         }else{
             $this->result['message'] = '非法操作';
