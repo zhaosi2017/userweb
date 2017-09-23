@@ -21,7 +21,7 @@ class AdminSearch extends Admin
     public function rules()
     {
         return [
-            [['id', 'role_id', 'status', 'create_id', 'update_id', 'create_at', 'update_at'], 'integer'],
+            [['id', 'status', 'create_id', 'update_id', 'create_at', 'update_at'], 'integer'],
             [['account', 'nickname', 'remark', 'login_ip', 'search_type', 'search_keywords'], 'safe'],
         ];
     }
@@ -74,7 +74,6 @@ class AdminSearch extends Admin
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'role_id' => $this->role_id,
             'status' => $this->status,
             'create_id' => $this->create_id,
             'update_id' => $this->update_id,

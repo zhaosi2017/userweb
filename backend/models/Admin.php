@@ -15,7 +15,6 @@ use backend\models\GActiveRecord;
  * @property string $password
  * @property string $account
  * @property string $nickname
- * @property integer $role_id
  * @property integer $status
  * @property string $remark
  * @property string $login_ip
@@ -44,12 +43,12 @@ class Admin extends GActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['account','nickname', 'role_id','password'], 'required'],
+            [['account','nickname','password'], 'required'],
             ['account', 'match', 'pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,}$/','message'=>'账号至少包含8个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['password', 'match', 'pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,}$/','message'=>'密码至少包含8个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             [['nickname'],'string','length'=>[2,20],'message'=>'昵称至少输入2个汉字'],
             [['account', 'nickname', 'remark', 'auth_key','password'], 'string'],
-            [['role_id', 'status', 'create_id', 'update_id', 'create_at', 'update_at'], 'integer'],
+            [['status', 'create_id', 'update_id', 'create_at', 'update_at'], 'integer'],
             [['login_ip'], 'string', 'max' => 64],
             ['account','validateExist','on'=>['addadmin']],
             ['account', 'updateValidateExist', 'on'=>['updateadmin']],
@@ -64,9 +63,9 @@ class Admin extends GActiveRecord implements IdentityInterface
         $res = [
             'passwordupdate' =>[ 'password' ] ,
 
-            'updateadmin' => [ 'account','password','nickname', 'role_id','password','status','remark'],
+            'updateadmin' => [ 'account','password','nickname','password','status','remark'],
 
-            'addadmin' =>[  'account','nickname', 'role_id','password'],
+            'addadmin' =>[  'account','nickname', 'password'],
 
         ];
         return array_merge($scenarios,$res);
@@ -118,7 +117,6 @@ class Admin extends GActiveRecord implements IdentityInterface
             'account' => '管理员账号',
             'password' => '密码',
             'nickname' => '管理员昵称',
-            'role_id' => '管理员角色',
             'roleName' => '角色',
             'status' => '管理员状态',
             'remark' => '备注',
