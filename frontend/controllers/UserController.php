@@ -210,7 +210,7 @@ class UserController extends AuthController
             $data = Channel::find()->select(['id', 'name', 'img_url'])->all();
             if (!empty($data)) {
                 foreach ($data as $k => $v) {
-                    $v['img_url'] = Yii::$app->params['fileBaseDomain'] . $v['img_url'];
+                    $v['img_url'] = $v['img_url']? Yii::$app->params['fileBaseDomain'] . $v['img_url']:'';
                     $data[$k] = $v;
                 }
             }

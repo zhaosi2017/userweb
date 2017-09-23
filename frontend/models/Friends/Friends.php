@@ -51,8 +51,6 @@ class Friends extends FActiveRecord {
     public function lists()
     {
         $userId = \Yii::$app->user->id;
-        $time = strtotime(date('Y-m-d',time()));
-
         $newFriend = self::find()->where(['user_id'=>$userId,'link_time'=>0])->count();
 
         $time = time();
