@@ -75,10 +75,12 @@ class FriendsSearch extends User
             {
                 return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
             }
+            $userId = \Yii::$app->user->id;
+            $_friend = Friends::find()->where(['user_id'=>$userId,'friend_id'=>$user->id])->one();
             $userPhoneNum =  UserPhone::find()->where(['user_id'=>$user->id])->count();
             $urgentContactNum =  UrgentContact::find()->where(['user_id'=>$user->id])->count();
             $data['id']=$user['id'];
-            $data['nickname']=$user['nickname'];
+            $data['nickname']=isset($_friend['remark']) && $_friend['remark'] ? $_friend['remark']:   $user['nickname'];
             $data['account']=$user['account'];
             $data['channel']=$user['channel'];
             $data['header_url']= $user['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] :'';
