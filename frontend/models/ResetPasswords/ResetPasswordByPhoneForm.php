@@ -66,6 +66,7 @@ class ResetPasswordByPhoneForm extends User
             }
             $res = self::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone])->one();
             if ($res){
+                $redis->exists($key) && $redis->del($key);
                 $_tmp = md5($key.time());
                 $_key = $key.self::REDIS_TOKEN;
                 $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
