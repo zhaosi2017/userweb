@@ -53,8 +53,13 @@ class Friends extends FActiveRecord {
         $userId = \Yii::$app->user->id;
         $time = strtotime(date('Y-m-d',time()));
 
-        $newFriend = 0;
+        $newFriend = self::find()->where(['user_id'=>$userId,'link_time'=>0])->count();
 
+        $time = time();
+        if($newFriend)
+        {
+            self::updateAll(['link_time'=> $time],['user_id'=>$userId,'link_time'=>0]);
+        }
 
         $recent_frinds = self::find()->where(['user_id'=>$userId])->orderBy('link_time desc')->limit(SELF::FRIENDS_LIMIT)->all() ;
         $_recent = [];
@@ -72,13 +77,13 @@ class Friends extends FActiveRecord {
                 $_recent[$k]['msg'] ='';
                 $_recent[$k]['channel'] =$_user['channel'];
                 $_recent[$k]['header_url'] = $_user['header_img']? \Yii::$app->params['frontendBaseDomain'].$_user['header_img'] : '';
-                if($v->link_time == 0)
+                if($v->link_time == $time)
                 {
-                    $newFriend += 1;
                     $_recent[$k]['msg'] = $v->direction == 0 ? '已经接受你的请求':'已接受该用户的请求';
                 }
             }
         }
+
 
 
         $friends = self::find()->where(['user_id'=>$userId])->all();
@@ -136,12 +141,6 @@ class Friends extends FActiveRecord {
         if(!empty($new_friends)){
             $time = time();
             foreach ($new_friends as $k => $f){
-                $user = self::findOne($f['id']);
-                $user->link_time = $time;
-                if(!$user->save())
-                {
-                    return $this->jsonResponse([],$user->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
-                }
                 $_u = User::findOne([$f->friend_id]);
                 if($_u) {
                     $_friend[$k]['nickname'] = $f->remark ? $f->remark : $_u->nickname;
@@ -150,6 +149,8 @@ class Friends extends FActiveRecord {
 
                 }
             }
+            $time = time();
+            self::updateAll(['link_time'=>$time],['user_id'=>$userId,'link_time'=>0]);
 
         }
         return $this->jsonResponse($_friend,'操作成功',0,ErrCode::SUCCESS);
@@ -158,21 +159,13 @@ class Friends extends FActiveRecord {
     public function newFriendNum()
     {
         $userId = \Yii::$app->user->id;
-        $new_friends = self::find()->where(['user_id'=>$userId,'link_time'=>0])->all();
-        $_friend = 0;
-        if(!empty($new_friends)){
+        $_friend = self::find()->where(['user_id'=>$userId,'link_time'=>0])->count();
+        if($_friend)
+        {
             $time = time();
-            foreach ($new_friends as $k => $f){
-                $user = self::findOne($f['id']);
-                $user->link_time = $time;
-                if(!$user->save())
-                {
-                    return $this->jsonResponse([],$user->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
-                }
-                $_friend +=1;
-            }
-
+            self::updateAll(['link_time'=> $time],['user_id'=>$userId,'link_time'=>0]);
         }
+
         return $this->jsonResponse(['new-friend-num'=>$_friend],'操作成功',0,ErrCode::SUCCESS);
     }
 
