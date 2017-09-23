@@ -47,6 +47,11 @@ class FriendsRequestForm extends FriendsRequest
                 return $this->jsonResponse([],'用户不能添加自己为好友','1',ErrCode::USER_NO_ADD_SELF);
             }
 
+            $_f = Friends::find()->where(['user_id'=>$identity->id,'friend_id'=>$user->id])->one();
+            if(!empty($_f))
+            {
+                return $this->jsonResponse([],'你们已经是好友了，不能重复邀请','1',ErrCode::YOU_ARE_ALREADY_FRIENDS);
+            }
             $_friends = FriendsRequest::findOne(['from_id'=>$from_id,'to_id'=>$user->id]);
             if(!empty($_friends))
             {

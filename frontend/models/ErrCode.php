@@ -63,6 +63,7 @@ class ErrCode
     const WEB_SOCKET_HEART_CHECK = '7000';//websoct心跳检测
 
     const THE_PLATFORM_VERSION_NO_DATA = '4003'; // 该平台没有版本信息
+    const YOU_ARE_ALREADY_FRIENDS = '2041';//你们已经是好友，不能在发送邀请
 
 
 
