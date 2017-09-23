@@ -18,9 +18,13 @@ use yii\widgets\ActiveForm;
 
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($model,'role_id')->dropDownList($model['roles'],['prompt'=>'全部','onchange'=>'
-                $("#search_hide").click();
-            '])->label('角色：') ?>
+            <?php
+            /*
+                echo $form->field($model,'role_id')->dropDownList($model['roles'],['prompt'=>'全部','onchange'=>'
+                    $("#search_hide").click();
+                '])->label('角色：')
+            */
+            ?>
 
             <?= $form->field($model,'status')->dropDownList( Yii::$app->requestedAction->id == 'index' ?$model['statuses']:['1'=>'作废'],['prompt'=>'全部','onchange'=>'
                 $("#search_hide").click();
