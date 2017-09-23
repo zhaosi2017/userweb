@@ -56,43 +56,53 @@ use frontend\models\User;
           $limit =  $p == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
           $offset = $p == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($p-1);
 
-          $data  = self::find()->select('min(id) as id,group_id')->where(['from_user_id'=>$userId])->groupBy('group_id')
+          $data  = self::find()->select('min(id) as id')->where(['from_user_id'=>$userId])->groupBy('group_id')
               ->offset($offset)->limit($limit)->orderBy('id desc') ->all();//createCommand()->getRawSql() ;
+
+
           $_res = [];
           if(!empty($data))
-          {
+          {    $ids = [];
               foreach ($data as $i => $r)
               {
-                  $_res[] = CallRecord::findOne($r->id);
+                  $ids[] = $r->id;
+              }
+              if(!empty($ids)) {
+                  $_res = CallRecord::find()->where(['in', 'id', $ids])->all();
               }
           }
 
           $tmp = [];
           if(!empty($_res))
           {
+              $_friends = Friends::find()->select('remark,friend_id')->where(['user_id'=>$userId])->indexBy('friend_id')->all();
               foreach ($_res as $k=>$v)
               {
-
                   $_v['id'] = $v['id'];
                   $_v['to_user_id'] = $v['to_user_id'];
                   $_v['time'] = date('Y-m-d H:i',$v['time']);
                   $_v['call_type']= $v['call_type'];
                   $_v['status'] = $v['status'];
                   $_v['group_id'] = $v['group_id'];
-                  $_tmp =  User::find()->where(['id'=>$v['to_user_id']])->select(['nickname','account','header_img','channel'])->one();
-                  $friend = Friends::find()->select('remark')->where(['friend_id'=>$v['to_user_id'],'user_id'=>$userId])->one();
-                  $_name =isset($friend['remark']) && $friend['remark'] ? $friend['remark'] :'';
+
+                  $_name =  isset($_friends[$v['to_user_id']]['remark'])  && $_friends[$v['to_user_id']]['remark'] ?  $_friends[$v['to_user_id']]['remark']  :'';
                   if(empty($_name)){
-                      $_name = isset($_tmp['nickname']) ?$_tmp['nickname']:'';
+                      $_name = isset($v->user->nickname) ?$v->user->nickname:'';
                   }
-                  $_v['channel'] = isset($_tmp['channel']) ? $_tmp['channel']: '';
+                  $_v['channel'] = isset($v->user->channel) ? $v->user->channel: '';
                   $_v['nickname'] = $_name;
-                  $_v['account'] = isset($_tmp['account']) ?$_tmp['account']:'';
-                  $_v['header_url'] = isset($_tmp['header_img'])  && $_tmp['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_tmp['header_img']:'';
+                  $_v['account'] = isset($v->user->account) ? $v->user->account:'';
+                  $_v['header_url'] = isset($v->user->header_img)  && $v->user->header_img ? Yii::$app->params['frontendBaseDomain'].$v->user->header_img:'';
                   $tmp[$k]=$_v;
               }
           }
           return $this->jsonResponse($tmp,'操作成功',0,ErrCode::SUCCESS);
+      }
+
+
+      public function getUser()
+      {
+          return $this->hasOne(User::className(), ['id' => 'to_user_id']);
       }
 
 
