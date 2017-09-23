@@ -52,7 +52,7 @@ class FriendsRequestForm extends FriendsRequest
             {
                 return $this->jsonResponse([],'你们已经是好友了，不能重复邀请','1',ErrCode::YOU_ARE_ALREADY_FRIENDS);
             }
-            $_friends = FriendsRequest::findOne(['from_id'=>$from_id,'to_id'=>$user->id]);
+            $_friends = FriendsRequest::findOne(['from_id'=>$from_id,'to_id'=>$user->id,'status'=>FriendsRequest::NORMAL_STATUS]);
             if(!empty($_friends))
             {
                 return $this->jsonResponse([],'已发送添加请求，不能重复发送','1',ErrCode::USER_ADD_FRIEND_REQUEST_EXIST);
