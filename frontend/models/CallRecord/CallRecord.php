@@ -68,7 +68,7 @@ use frontend\models\User;
                   $ids[] = $r->id;
               }
               if(!empty($ids)) {
-                  $_res = CallRecord::find()->where(['in', 'id', $ids])->all();
+                  $_res = CallRecord::find()->where(['in', 'id', $ids])->orderBy('id desc')->all();
               }
           }
 
