@@ -54,6 +54,11 @@ class AuthController extends Controller
 
     public function beforeAction($action)
     {
+        if(defined('YII_ENV') && YII_ENV == 'dev') {
+            file_put_contents('/tmp/userweb.log', 'request-url---------'.PHP_EOL.var_export(\Yii::$app->request->getPathInfo(), true) . PHP_EOL, 8);
+            file_put_contents('/tmp/userweb.log', 'request---------'.PHP_EOL.var_export(\Yii::$app->request->getHeaders(), true) . PHP_EOL, 8);
+            file_put_contents('/tmp/userweb.log', var_export(\Yii::$app->request->getRawBody(), true) . PHP_EOL, 8);
+        }
         $arr = ['login', 'register', 'register-user','user-question','reset-message','forget-password','reset-password','reset-pass-phone','reset-pass-question'];
         $_action = \Yii::$app->controller->action->id;
         if(in_array($_action , ['event-sinch' , 'test'])){    //三方的回调数据校验不再这里
@@ -69,10 +74,7 @@ class AuthController extends Controller
              }
         }
 
-        if(defined('YII_ENV') && YII_ENV == 'dev') {
-            file_put_contents('/tmp/userweb.log', 'request---------'.PHP_EOL.var_export(\Yii::$app->request->getHeaders(), true) . PHP_EOL, 8);
-            file_put_contents('/tmp/userweb.log', var_export(\Yii::$app->request->getRawBody(), true) . PHP_EOL, 8);
-        }
+
         return parent::beforeAction($action);
     }
 
