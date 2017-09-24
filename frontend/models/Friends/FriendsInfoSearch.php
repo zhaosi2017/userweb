@@ -57,7 +57,7 @@ class FriendsInfoSearch extends Friends {
             }
 
             $userId = \Yii::$app->user->id;
-//            $_friend = Friends::findOne(['user_id'=>$userId,'friend_id'=>$user->id]);
+            $_friend = Friends::findOne(['user_id'=>$userId,'friend_id'=>$user->id]);
 //            if(empty($_friend))
 //            {
 //                return $this->jsonResponse([],'你们还不是好友','1',ErrCode::YOU_ARE_NOT_FRIENDS);
@@ -69,7 +69,7 @@ class FriendsInfoSearch extends Friends {
 
             $black =  BlackList::findOne(['black_uid'=>$user->id,'uid'=>\Yii::$app->user->id]);
             $data['account'] = $user['account'];
-            $data['nickname'] = $user['nickname'];
+            $data['nickname'] = isset($_friend->remark) && $_friend->remark ?  $_friend->remark: $user['nickname'];
             $data['channel'] = $user['channel'];
             $data['header_url'] = $user['header_img']? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] : '';
             $data['userPhoneNum'] =$userPhoneNum;
