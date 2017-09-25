@@ -49,7 +49,7 @@ class FriendRequetNotice extends  AbstruactClerk{
         $redis = Yii::$app->redis;
         $_data = User::find()->select(['id','account'])->where(['account'=>$data->account])->one();
 
-        $_friendRequest = FriendsRequest::findOne(['from_id'=>$_user->id,'to_id'=>$_data->id]);
+        $_friendRequest = FriendsRequest::findOne(['from_id'=>$_user->id,'to_id'=>$_data->id,'status'=>0]);
         if(empty($_friendRequest) || ($_friendRequest && $_friendRequest['status'] !=0 ))
         {
             $this->result['message'] = '参数非法';
