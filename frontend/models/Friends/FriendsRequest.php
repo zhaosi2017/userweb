@@ -11,6 +11,7 @@ use Yii;
 use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;
 use yii\db\Transaction;
+use frontend\models\Friends\Friends;
 
 /**
  * Class FriendsRequest
@@ -59,14 +60,13 @@ class FriendsRequest extends FActiveRecord {
         $limit =  $page == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
         $offset = $page == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($page-1);
 
-      // $time = time();
-//
-//        Friends::updateAll(['link_time'=>$time],['user_id'=>$userId,'link_time'=>0] );
 
+        Friends::updateAll(['is_new_friend'=> Friends::NOT_IS_NEW_FRIEND],['user_id'=>$userId,'is_new_friend'=>Friends::IS_NEW_FRIEND]);
+//
         $data  = self::find()->where(['to_id'=>$userId])
             ->orWhere(['from_id'=>$userId])
             ->select(['id','note','from_id','status','to_id','update_at'])
-        ->offset($offset)->limit($limit)->orderBy('update_at desc,id desc')->distinct()->all();
+        ->offset($offset)->limit($limit)->orderBy('update_at desc')->distinct()->all();
         $tmp = [];
         if(!empty($data))
         {

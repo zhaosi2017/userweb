@@ -60,7 +60,7 @@ class FriendsRequestForm extends FriendsRequest
             $friendsRequest = new FriendsRequest();
             $friendsRequest->from_id = $from_id;
             $friendsRequest->to_id = $user->id;
-            $friendsRequest->create_at = time();
+            $friendsRequest->create_at = $friendsRequest->update_at = time();
             $friendsRequest->note = $this->note;
 
             if($friendsRequest->save())

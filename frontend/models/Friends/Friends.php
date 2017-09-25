@@ -55,14 +55,10 @@ class Friends extends FActiveRecord {
     public function lists()
     {
         $userId = \Yii::$app->user->id;
-        $newFriend = self::find()->where(['user_id'=>$userId,'is_new_friend'=>0])->count();
+        $newFriend = self::find()->where(['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND])->count();
 
-        if($newFriend)
-        {
-            self::updateAll(['is_new_friend'=> self::NOT_IS_NEW_FRIEND],['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND]);
-        }
 
-        $recent_friends = self::find()->where(['user_id'=>$userId])->andWhere(['>','link_time',0])->orderBy('link_time desc')->limit(SELF::FRIENDS_LIMIT)->all() ;
+        $recent_friends = self::find()->where(['user_id'=>$userId])->orderBy('link_time desc,id desc')->limit(SELF::FRIENDS_LIMIT)->all() ;
         $_recent = [];
         if(!empty($recent_friends))
         {
