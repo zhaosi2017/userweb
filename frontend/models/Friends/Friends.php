@@ -169,11 +169,18 @@ class Friends extends FActiveRecord {
 
     private function _getMyFirstCharter($str,$pydic){
         //简体 繁体 等
-        if(empty($str)){return 'other';}
+        if(empty($str) ){return 'other';}
+
+        if(preg_match('/^[a-zA-Z]$/',$str{0}))
+        {
+            return strtoupper($str{0});
+        }
         $_char=ord($str{0});
-        if($_char>=ord('A')&&$_char<=ord('z')) return strtoupper($str{0});
+
+//        if($_char>=ord('A')&&$_char<=ord('z')) return strtoupper($str{0});
 
         $_str=mb_substr($str,0,1,'UTF-8');//获取第一个字符
+
         if(is_numeric($_str))
         {
             return 'other';
