@@ -31,6 +31,7 @@ class FriendRequetNotice extends  AbstruactClerk{
 
         if(!isset($data->token)  || empty($data->token) || !isset($data->account) || empty($data->account))
         {
+            file_put_contents('/tmp/myswoole.log','start00'.PHP_EOL,8);
             $this->result['message'] = '参数非法';
             $server->push($frame->fd, json_encode($this->result));
             return ;
@@ -60,6 +61,7 @@ class FriendRequetNotice extends  AbstruactClerk{
         {
             if($_user->account == $data->account)
             {
+                file_put_contents('/tmp/myswoole.log','start99'.PHP_EOL,8);
                 $this->result['message'] = '参数非法';
                 $server->push($frame->fd, json_encode($this->result));
                 return ;
