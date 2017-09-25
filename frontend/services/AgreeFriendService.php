@@ -20,6 +20,7 @@ class AgreeFriendService
             'token' =>$token,
             'action'=>5,
         ];
+        file_put_contents('/tmp/myswoole.log',var_export($data,true).PHP_EOL,8);
         $client->send_data(json_encode($data ,JSON_UNESCAPED_UNICODE));
         $data = $client->recv_data();
         $json = json_decode($data);

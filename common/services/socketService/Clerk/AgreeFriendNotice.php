@@ -68,7 +68,7 @@ class AgreeFriendNotice extends  AbstruactClerk{
                 $this->result['status'] = 0;
                 $this->result['code'] = ErrCode::WEB_SOCKET_AGREE_INVITE;
                 $this->result['message'] = $_user->account .'同意了你的好友请求';
-
+                file_put_contents('/tmp/myswoole.log','同意'.var_export($this->result,true).PHP_EOL,8);
                 $server->push($_fd, json_encode($this->result));
             }else {
                 $this->result['message'] = $_data['account'] . '通知的好友不在线';
