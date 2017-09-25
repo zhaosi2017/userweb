@@ -172,8 +172,14 @@ class Friends extends FActiveRecord {
         if(empty($str)){return 'other';}
         $_char=ord($str{0});
         if($_char>=ord('A')&&$_char<=ord('z')) return strtoupper($str{0});
+
         $_str=mb_substr($str,0,1,'UTF-8');//获取第一个字符
+        if(is_numeric($_str))
+        {
+            return 'other';
+        }
         $postion =  strripos($pydic,$_str);
+
         if($postion)
         {
             $t = substr($pydic,$postion+3,1);
