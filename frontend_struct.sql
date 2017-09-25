@@ -214,3 +214,6 @@ CREATE TABLE `version` (
   `update_at` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `friends` ADD `is_new_friend` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否是新朋友：0是，1否' AFTER `direction`;

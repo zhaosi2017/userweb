@@ -28,6 +28,10 @@ class Friends extends FActiveRecord {
 
     const FRIENDS_LIMIT = 20;
     const GROUP_EMPTY = 0; //表示好友没有被分到自己的建立的分组里面
+
+
+    const IS_NEW_FRIEND = 0; //新朋友
+    const NOT_IS_NEW_FRIEND = 1;//不是新朋友
     /**
      * @inheritdoc
      */
@@ -51,19 +55,18 @@ class Friends extends FActiveRecord {
     public function lists()
     {
         $userId = \Yii::$app->user->id;
-        $newFriend = self::find()->where(['user_id'=>$userId,'link_time'=>0])->count();
+        $newFriend = self::find()->where(['user_id'=>$userId,'is_new_friend'=>0])->count();
 
-        $time = time();
         if($newFriend)
         {
-            self::updateAll(['link_time'=> $time],['user_id'=>$userId,'link_time'=>0]);
+            self::updateAll(['is_new_friend'=> self::NOT_IS_NEW_FRIEND],['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND]);
         }
 
-        $recent_frinds = self::find()->where(['user_id'=>$userId])->orderBy('link_time desc')->limit(SELF::FRIENDS_LIMIT)->all() ;
+        $recent_friends = self::find()->where(['user_id'=>$userId])->andWhere(['>','link_time',0])->orderBy('link_time desc')->limit(SELF::FRIENDS_LIMIT)->all() ;
         $_recent = [];
-        if(!empty($recent_frinds))
+        if(!empty($recent_friends))
         {
-            foreach ($recent_frinds as $k => $v)
+            foreach ($recent_friends as $k => $v)
             {
                 $_user = User::findOne($v->friend_id);
                 if(empty($_user))
@@ -75,7 +78,7 @@ class Friends extends FActiveRecord {
                 $_recent[$k]['msg'] ='';
                 $_recent[$k]['channel'] =$_user['channel'];
                 $_recent[$k]['header_url'] = $_user['header_img']? \Yii::$app->params['frontendBaseDomain'].$_user['header_img'] : '';
-                if($v->link_time == $time)
+                if($v->link_time == 0)
                 {
                     $_recent[$k]['msg'] = $v->direction == 0 ? '已经接受你的请求':'已接受该用户的请求';
                 }
@@ -134,21 +137,20 @@ class Friends extends FActiveRecord {
     public function newFriendList()
     {
         $userId = \Yii::$app->user->id;
-        $new_friends = self::find()->where(['user_id'=>$userId,'link_time'=>0])->all();
+        $new_friends = self::find()->where(['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND])->all();
         $_friend = [];
         if(!empty($new_friends)){
-            $time = time();
             foreach ($new_friends as $k => $f){
                 $_u = User::findOne([$f->friend_id]);
-                if($_u) {
+                if(!empty($_u)) {
                     $_friend[$k]['nickname'] = $f->remark ? $f->remark : $_u->nickname;
                     $_friend[$k]['account'] = $_u->account;
                     $_friend[$k]['header_url'] = $_u->header_img;
 
                 }
             }
-            $time = time();
-            self::updateAll(['link_time'=>$time],['user_id'=>$userId,'link_time'=>0]);
+
+            self::updateAll(['is_new_friend'=>self::NOT_IS_NEW_FRIEND],['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND]);
 
         }
         return $this->jsonResponse($_friend,'操作成功',0,ErrCode::SUCCESS);
@@ -157,11 +159,11 @@ class Friends extends FActiveRecord {
     public function newFriendNum()
     {
         $userId = \Yii::$app->user->id;
-        $_friend = self::find()->where(['user_id'=>$userId,'link_time'=>0])->count();
+        $_friend = self::find()->where(['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND])->count();
         if($_friend)
         {
-            $time = time();
-            self::updateAll(['link_time'=> $time],['user_id'=>$userId,'link_time'=>0]);
+
+            self::updateAll(['is_new_friend'=> self::NOT_IS_NEW_FRIEND],['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND]);
         }
 
         return $this->jsonResponse(['new-friend-num'=>$_friend],'操作成功',0,ErrCode::SUCCESS);

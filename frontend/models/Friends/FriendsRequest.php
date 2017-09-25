@@ -59,9 +59,9 @@ class FriendsRequest extends FActiveRecord {
         $limit =  $page == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
         $offset = $page == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($page-1);
 
-        $time = time();
-
-        Friends::updateAll(['link_time'=>$time],['user_id'=>$userId,'link_time'=>0] );
+      // $time = time();
+//
+//        Friends::updateAll(['link_time'=>$time],['user_id'=>$userId,'link_time'=>0] );
 
         $data  = self::find()->where(['to_id'=>$userId])
             ->orWhere(['from_id'=>$userId])
