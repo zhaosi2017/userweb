@@ -35,7 +35,7 @@ class FriendRequetNotice extends  AbstruactClerk{
             $server->push($frame->fd, json_encode($this->result));
             return ;
         }
-
+        file_put_contents('/tmp/myswoole.log','start11'.PHP_EOL,8);
         $_user = User::findOne(['token'=>$data->token]);
         if(empty($_user))
         {
@@ -44,7 +44,7 @@ class FriendRequetNotice extends  AbstruactClerk{
             return;
         }
 
-
+        file_put_contents('/tmp/myswoole.log','start22'.PHP_EOL,8);
         $redis = Yii::$app->redis;
         $_data = User::find()->select(['id','account'])->where(['account'=>$data->account])->one();
 
@@ -55,7 +55,7 @@ class FriendRequetNotice extends  AbstruactClerk{
             $server->push($frame->fd, json_encode($this->result));
             return ;
         }
-
+        file_put_contents('/tmp/myswoole.log','start33'.PHP_EOL,8);
         if(!empty($_data))
         {
             if($_user->account == $data->account)
@@ -77,12 +77,14 @@ class FriendRequetNotice extends  AbstruactClerk{
                 file_put_contents('/tmp/myswoole.log','推送成功'.var_export($this->result,true).PHP_EOL,8);
                 $server->push($_fd,  json_encode($this->result));
             }else {
+                file_put_contents('/tmp/myswoole.log','start44'.PHP_EOL,8);
                 $this->result['message'] = $_data['account'] . '通知的好友不在线' ;
                 $server->push($frame->fd, json_encode($this->result));
 
             }
 
         }else{
+            file_put_contents('/tmp/myswoole.log','start33'.PHP_EOL,8);
             $this->result['message'] = '通知的好友不存在' ;
             $server->push($frame->fd, json_encode($this->result));
         }
