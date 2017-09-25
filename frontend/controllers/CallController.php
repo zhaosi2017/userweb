@@ -67,7 +67,7 @@ class CallController extends  AuthController{
             $service->to_user   = $to_user;
             $ret  = $service->check();
             if($ret !== true){
-                return $this->jsonResponse('',$ret,0, ErrCode::CODE_ERROR);
+                return $this->jsonResponse('',$ret,1, ErrCode::CODE_ERROR);
             }
 
             return $this->jsonResponse('','检测成功',0, ErrCode::SUCCESS);
