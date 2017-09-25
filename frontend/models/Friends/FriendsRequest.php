@@ -72,6 +72,11 @@ class FriendsRequest extends FActiveRecord {
         {
             foreach ($data as $k=>$v)
             {
+                if($v['from_id'] == $userId && $v['status'] == 0  )
+                {
+                    continue;
+                }
+
                 $_v['id'] = $v['id'];
                 $_v['note'] = $v['note'];
                 $_v['from_id'] = $v['from_id'];
