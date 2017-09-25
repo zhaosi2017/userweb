@@ -29,7 +29,7 @@ class NicknameForm extends User
     {
         return [
             ['nickname','required'],
-            ['nickname','match','pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{4,12}$/','message'=>'昵称至少包含4-12个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
+            ['nickname','match','pattern' => '/^[\x{4e00}-\x{9fa5}A-Za-z0-9_]{4,12}$/u','message'=>'昵称至少包含4-12个字符，仅中英文、数字、下划线'],
             ['nickname','ValidateNickname'],
         ];
     }
