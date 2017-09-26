@@ -19,6 +19,7 @@ use  frontend\services\SmsService;
 use Yii;
 use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
+use frontend\models\SecurityQuestion;
 /**
  * Class Friends
  * @package frontend\models\Friends
@@ -98,6 +99,7 @@ class LoginForm extends User
                     $data = [];
                     $data = $identity->toArray();
                     $data['header_url'] = '';
+                    $isSetQuestion = SecurityQuestion::find()->where(['userid'=>$identity->id])->count();
                     if(isset($data['header_img']))
                     {
                         if(  !empty($data['header_img'])) {
@@ -108,7 +110,7 @@ class LoginForm extends User
 
                     $data['userPhoneNum'] = $userPhoneNum;
                     $data['urgentContactNum'] = $urgentContactNum;
-
+                    $data['isSetQuestion'] = $isSetQuestion > 0 ? true :false;
                     return $this->jsonResponse($data,'登录成功',0,ErrCode::SUCCESS);
                 }else{
                     return $this->jsonResponse($identity,'登录失败',1,ErrCode::LOGIN_UPDATE_TOKEN_ERROR);
