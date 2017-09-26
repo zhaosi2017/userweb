@@ -472,7 +472,7 @@ class UserController extends AuthController
     public function actionUserPhoneList()
     {
         try {
-            $data = UserPhone::find()->where(['user_id' => Yii::$app->user->id])->all();
+            $data = UserPhone::find()->where(['user_id' => Yii::$app->user->id])->orderBy('user_phone_sort desc,id asc')->all();
             return $this->jsonResponse($data, '操作成功', 0, ErrCode::SUCCESS);
         }catch (Exception $e)
         {
@@ -513,7 +513,7 @@ class UserController extends AuthController
     public function actionUrgentContactList()
     {
         try {
-            $data = UrgentContact::find()->where(['user_id' => Yii::$app->user->id])->all();
+            $data = UrgentContact::find()->where(['user_id' => Yii::$app->user->id])->orderBy('contact_sort desc,id asc')->all();
             return $this->jsonResponse($data, '操作成功', 0, ErrCode::SUCCESS);
         }catch (Exception $e)
         {

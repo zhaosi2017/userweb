@@ -68,6 +68,7 @@ class UserImageForm extends User
                 if($this->file->saveAs($path))
                 {
                     $transaction->commit();
+                    $path = Yii::$app->params['frontendBaseDomain'].$path;
                     return $this->jsonResponse(['header_url'=>$path],'操作成功','0',ErrCode::SUCCESS);
                 }else{
                     $transaction->rollBack();
