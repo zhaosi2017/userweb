@@ -33,7 +33,7 @@ class SecurityQuestion extends FActiveRecord
         return [
             [['q_one','q_two','q_three','a_one','a_two','a_three'],'required'],
             [['q_one','q_two','q_three'],'integer'],
-            [['a_one','a_two','a_three'],'string'],
+            [['a_one','a_two','a_three'],'string','length' => [1, 20]],
             ['q_one','validateOne'],
             ['q_two','validateTwo'],
             ['q_three','validateThree'],
@@ -88,7 +88,7 @@ class SecurityQuestion extends FActiveRecord
         $a1 = isset($data['a1']) ? $data['a1']: '';
         $a2 = isset($data['a2']) ? $data['a2']: '';
         $a3 = isset($data['a3']) ? $data['a3']: '';
-        $model = self::findOne($userId);
+        $model = self::findOne(['userid'=>$userId]);
         if(empty($model))
         {
             $model = new SecurityQuestion();
