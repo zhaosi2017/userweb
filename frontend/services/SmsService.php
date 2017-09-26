@@ -1,6 +1,7 @@
 <?php
 namespace frontend\services;
 
+use frontend\services\Translates\TranslateService;
 use yii;
 use frontend\models\FActiveRecord;
 use frontend\models\ErrCode;
@@ -59,7 +60,10 @@ class SmsService
             }catch (\Exception $e)
             {
                 $redis->del($number);
-                return $this->jsonResponse([], $e->getMessage(), 1, ErrCode::NETWORK_OR_PHONE_ERROR);
+                $target =  ($res = Yii::$app->user->identity) ? $res->language : 'zh-CN';
+                $translate = new  TranslateService($e->getMessage(),$target);
+                $_message = $translate->translate();
+                return $this->jsonResponse([], $_message, 1, ErrCode::NETWORK_OR_PHONE_ERROR);
             }
         }else{
             return $this->jsonResponse([],'国码,号码不能为空',1,ErrCode::COUNTRY_CODE_OR_PHONE_EMPTY);
