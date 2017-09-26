@@ -97,7 +97,7 @@ class FriendsRequest extends FActiveRecord {
                 }
                 $_v['nickname'] = isset($_tmp['nickname']) ?$_tmp['nickname']:'';
                 $_v['account'] = isset($_tmp['account']) ?$_tmp['account']:'';
-                $tmp[$k]=$_v;
+                $tmp[]=$_v;
             }
         }
 
