@@ -92,7 +92,7 @@ class CallService {
         if($this->to_user->whitelist_switch  == User::WHITE_SWITCH_OFF){
             $white = WhiteList::findOne(['uid'=>$this->to_user->id , 'white_uid'=>$this->from_user->id]);
             if(empty($white)){
-                return '对方开启白名单模式，您不再其中';
+                return '对方开启白名单模式，您不在其中';
             }
         }
         return true;
