@@ -51,7 +51,7 @@ class swooleServer{
             'worker_num' => 3,
             'daemonize' => false,
             'max_request' => 10000,
-            'dispatch_mode' => 5,
+            'dispatch_mode' => 2,
             'log_file'=>'/tmp/swooles.log',
             'debug_mode'=> 1,
             'heartbeat_check_interval' => 180,//每180秒 遍历所有连接
