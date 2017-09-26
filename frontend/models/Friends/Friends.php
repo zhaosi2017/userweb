@@ -69,7 +69,8 @@ class Friends extends FActiveRecord {
                 {
                     continue;
                 }
-                $_recent[$k]['nickname'] = $v['remark'] ? $v['remark'] : $_user['nickname'];
+                $_recent[$k]['remark'] = $v['remark'];
+                $_recent[$k]['nickname'] = $_user['nickname'];
                 $_recent[$k]['account']  = $_user['account'];
                 $_recent[$k]['msg'] ='';
                 $_recent[$k]['channel'] =$_user['channel'];
@@ -103,6 +104,7 @@ class Friends extends FActiveRecord {
                 }
                 if (empty($_name)) {
                     $_other = [
+                        "remark"=>'',
                         "nickname"=>'',
                         'account'=>isset($_u->account) ? $_u->account :'',
                         'header_url'=>isset($_u->header_img) && $_u->header_img ? \Yii::$app->params['frontendBaseDomain'].$_u->header_img :'',
@@ -112,10 +114,11 @@ class Friends extends FActiveRecord {
                     continue;
                 }
 
-                $sett['remark'] = $_name;
+                //$sett['remark'] = $_name;
                 $snameFirstChar = $this->_getMyFirstCharter($_name,$pydic); //取出门店的第一个汉字的首字母
                 $_tmp = [
-                    "nickname"=>$sett['remark'],
+                    "remark"=> $sett['remark'],
+                    "nickname"=>$_u->nickname,
                     'account'=>isset($_u->account) ? $_u->account :'',
                     'header_url'=>isset($_u->header_img) && $_u->header_img? \Yii::$app->params['frontendBaseDomain'].$_u->header_img :'',
                     'channel'=>isset($_u->channel) ? $_u->channel :'',
