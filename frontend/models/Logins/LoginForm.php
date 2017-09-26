@@ -65,11 +65,16 @@ class LoginForm extends User
 
         if($this->validate())
         {
+            $_user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+            if(empty($_user))
+            {
+                return $this->jsonResponse([],'手机号还没注册，请先注册',1,ErrCode::USER_NOT_EXIST);
+            }
             $identity = $this->getUserIdentity();
 
             if(empty($identity))
             {
-                return $this->jsonResponse([],'用户不存在/密码错误',1,ErrCode::USER_NOT_EXIST);
+                return $this->jsonResponse([],'密码错误',1,ErrCode::USER_NOT_EXIST);
             }
             if(Yii::$app->user->login($identity))
             {
