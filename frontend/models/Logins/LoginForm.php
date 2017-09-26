@@ -74,7 +74,7 @@ class LoginForm extends User
 
             if(empty($identity))
             {
-                return $this->jsonResponse([],'密码错误',1,ErrCode::USER_NOT_EXIST);
+                return $this->jsonResponse([],'密码错误，请重新输入',1,ErrCode::USER_NOT_EXIST);
             }
             if(Yii::$app->user->login($identity))
             {
