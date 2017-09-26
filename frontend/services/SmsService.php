@@ -22,10 +22,17 @@ class SmsService
             if($redis->exists($number))
             {
                 $verifyCode = $redis->get($number);
+
                 if($verifyCode && $switch===false)
                 {
                     return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
                 }
+                if($verifyCode)
+                {
+                    $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
+                    $redis->EXPIRE($number,$expire);
+                }
+
             }
 
             if(empty($verifyCode))
@@ -35,10 +42,11 @@ class SmsService
                 $redis->setex($number,$expire,$verifyCode);
             }
 
+
             if($switch === false){
                 return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
             }
-            $msg = 'Your Verification Code '.$verifyCode;
+            $msg = '您注册客优的验证码为：'.$verifyCode.'，有效期5分钟。';
             try {
                 $_sms = Yii::$app->sms;
                 $res = $_sms->sendSms($number, $msg);
