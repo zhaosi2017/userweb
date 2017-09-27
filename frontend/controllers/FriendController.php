@@ -160,7 +160,8 @@ class FriendController extends AuthController
         try{
             $data = $this->getRequestContent();
             $friendsSearch = new FriendsRefuseForm();
-            return $friendsSearch->refuseFriendsRequest($data);
+            $friendsSearch->account = isset($data['account']) ? $data['account'] : '';
+            return $friendsSearch->refuseFriendsRequest();
         }catch (Exception $e) {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
         }catch (\Exception $e) {
