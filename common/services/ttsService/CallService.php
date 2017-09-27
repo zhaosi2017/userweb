@@ -164,7 +164,7 @@ class CallService {
             return $result;
         }
 
-        if(!$this->_Event_ActionResult()){
+        if(!$this->_Event_ActionResult($catch)){
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
                 $this->app->sendtext("呼叫结束" , ErrCode::CALL_END);
@@ -207,25 +207,27 @@ class CallService {
     /**
      * 处理回调 结果
      */
-    private function _Event_ActionResult(){
+    private function _Event_ActionResult($arr){
         $this->_saveRecord();                   //保存通话记录
+        $serial =  $arr['serial'];  //电话顺序
+        $count  =  $arr['count'];   //电话总量
         switch ($this->third->Event_Status){
             case CallRecord::CALLRECORD_STATUS_SUCCESS:
-                $this->app->sendText('呼叫成功！' , ErrCode::CALL_SUCCESS);
+                $this->app->sendText('第'.$serial.'部电话接通成功' , ErrCode::CALL_SUCCESS);
                 $this->_redisGetVByK($this->group_id ,true);
                 return true;
                 break;
             case CallRecord::CALLRECORD_STATUS_FILED:
-                $this->app->sendText('呼叫失败，请稍后再试！', ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部电话搜索不到信号(共'.$count.'部)', ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_BUSY:
-                $this->app->sendText('呼叫的用户忙！',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部电话被挂断或占线(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_NOANWSER:
-                $this->app->sendText('呼叫用户暂时无人接听！',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部电话无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             default:
-                $this->app->sendText('呼叫失败，请稍后再试！',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部电话搜索不到信号(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
         }
         return false;
