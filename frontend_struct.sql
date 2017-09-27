@@ -77,6 +77,7 @@ CREATE TABLE `channel` (
   `name` VARCHAR(255) NOT NULL COMMENT '渠道名称',
   `img_url` VARCHAR(255) NOT NULL COMMENT '渠道对应图片的URL地址',
   `create_at` int(11) NOT NULL DEFAULT '0',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '图片类型:0正常图片，1:灰色图片',
   `update_at` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

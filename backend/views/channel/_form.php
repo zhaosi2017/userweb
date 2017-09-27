@@ -37,6 +37,7 @@ use yii\widgets\ActiveForm;
             }
         ?>
     </div>
+    <?=$form->field($model, 'type')->dropDownList($model['typelist']);?>
     <?= $form->field($upload , 'imageFile')->widget(\kartik\file\FileInput::className(),[
         'options'   => [
             'accept'  => 'images/*',
