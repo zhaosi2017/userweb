@@ -227,7 +227,7 @@ class CallService {
                 $this->app->sendText('第'.$serial.'部电话无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             default:
-                $this->app->sendText('第'.$serial.'部电话搜索不到信号(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部电话无信号(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
         }
         return false;
