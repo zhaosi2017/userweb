@@ -138,7 +138,6 @@ class ChannelController extends PController
         if(Yii::$app->request->isPost){
             $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
             if($imageUrl = $uploadForm->upload()){
-                file_put_contents('/tmp/aaa.txt', var_export($imageUrl, true).PHP_EOL, 8);
                 echo Json::encode([
                     'imageUrl'    => $imageUrl,
                     // 上传的error字段，如果没有错误就返回空字符串，否则返回错误信息，客户端会自动判定该字段来认定是否有错.
