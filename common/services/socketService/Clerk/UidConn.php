@@ -36,6 +36,14 @@ class UidConn extends  AbstruactClerk{
                    $_fd = $redis->get(self::UID_CONN_ACCOUNT . $data->account);
                    if($_fd)
                    {
+                       $this->result['status'] = 0;
+                       $this->result['message'] = '您的账号在其他地方登录！';
+                       $this->result['code'] = ErrCode::YOU_ACCOUNT_LOGIN_IN_OTHER_DEVICE;
+                       if($server->exist($_fd))
+                       {
+                           $server->push($_fd,json_encode($this->result));
+                           $server->close($_fd);
+                       }
                        $redis->del(self::UID_CONN_ACCOUNT . $data->account);
                        $redis->del(self::UID_CONN_FD.$_fd);
                    }

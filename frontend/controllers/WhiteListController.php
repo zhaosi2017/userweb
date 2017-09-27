@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use frontend\models\WhiteLists\WhiteListForm;
 use frontend\models\UserForm\WhiteListSwitchForm;
 use frontend\models\WhiteLists\WhiteList;
+use frontend\models\WhiteLists\WhiteListSearchForm;
 use Yii;
 use yii\db\Exception;
 use yii\filters\AccessControl;
@@ -107,8 +108,10 @@ class WhiteListController extends AuthController
     public function actionList()
     {
         try {
-            $whiteList = new WhiteList();
-            return $whiteList->lists();
+            $data = $this->getRequestContent();
+            $whiteList = new WhiteListSearchForm();
+            $p = isset($data['p']) ? (int)$data['p'] : 0;
+            return $whiteList->lists($p);
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

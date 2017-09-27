@@ -71,7 +71,10 @@ class HeartCheckNotice extends  AbstruactClerk{
             $this->result['status'] = 0;
             $this->result['code'] = ErrCode::WEB_SOCKET_HEART_CHECK;
             $this->result['message'] = '心跳正常';
-            $server->push($_fd, json_encode($this->result));
+            if($server->exist($_fd)){
+                $server->push($_fd, json_encode($this->result));
+            }
+
         }else {
             $this->result['message'] = '心跳检测失败';
             $server->push($frame->fd, json_encode($this->result));

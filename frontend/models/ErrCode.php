@@ -65,6 +65,8 @@ class ErrCode
     const THE_PLATFORM_VERSION_NO_DATA = '4003'; // 该平台没有版本信息
     const YOU_ARE_ALREADY_FRIENDS = '2041';//你们已经是好友，不能在发送邀请
 
+    const YOU_ACCOUNT_LOGIN_IN_OTHER_DEVICE = '6003';//你的账号在其他设备上登录
+
 
 
 

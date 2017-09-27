@@ -20,6 +20,7 @@ use frontend\models\UrgentContact;
 use frontend\models\Friends\Friends;
 use frontend\models\Friends\FriendsRequest;
 use frontend\models\Friends\FriendsGroup;
+use frontend\models\BlackLists\BlackListSearchForm;
 
 class BlackListController extends AuthController
 {
@@ -93,8 +94,11 @@ class BlackListController extends AuthController
     public function actionList()
     {
         try {
-            $blackList = new BlackList();
-            return $blackList->lists();
+            $data = $this->getRequestContent();
+            $p = isset($data['p']) ? (int)$data['p'] : '0';
+            $blackList = new BlackListSearchForm();
+
+            return $blackList->lists($p);
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

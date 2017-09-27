@@ -45,26 +45,26 @@ class BlackList extends FActiveRecord
     }
 
 
-    public function lists()
-    {
-        $userId = Yii::$app->user->id ;
-        $res = self::find()->select('black_uid')->where(['uid'=>$userId])->all();
-        $data = [];
-        if(!empty($res))
-        {
-            foreach ($res as $k => $v)
-            {
-                $_friends = Friends::find()->select('remark')->where(['user_id'=>$userId,'friend_id'=>$v['black_uid']])->one();
-                $_user = User::find()->select(['nickname','account','header_img'])->where(['id'=>$v['black_uid']])->one();
-                if(!empty($_friends) && !empty($_user)) {
-                    $data[$k]['account'] = $_user->account;
-                    $data[$k]['remark'] = $_friends['remark'] ? $_friends['remark'] : $_user['nickname'];
-                    $data[$k]['header_url'] = $_user['header_img'] ?  Yii::$app->params['frontendBaseDomain'].$_user['header_img']:'';
-                }
-            }
-        }
-        return  $this->jsonResponse($data,'操作成功',0, ErrCode::SUCCESS);
-
-    }
+//    public function lists()
+//    {
+//        $userId = Yii::$app->user->id ;
+//        $res = self::find()->select('black_uid')->where(['uid'=>$userId])->all();
+//        $data = [];
+//        if(!empty($res))
+//        {
+//            foreach ($res as $k => $v)
+//            {
+//                $_friends = Friends::find()->select('remark')->where(['user_id'=>$userId,'friend_id'=>$v['black_uid']])->one();
+//                $_user = User::find()->select(['nickname','account','header_img'])->where(['id'=>$v['black_uid']])->one();
+//                if(!empty($_friends) && !empty($_user)) {
+//                    $data[$k]['account'] = $_user->account;
+//                    $data[$k]['remark'] = $_friends['remark'] ? $_friends['remark'] : $_user['nickname'];
+//                    $data[$k]['header_url'] = $_user['header_img'] ?  Yii::$app->params['frontendBaseDomain'].$_user['header_img']:'';
+//                }
+//            }
+//        }
+//        return  $this->jsonResponse($data,'操作成功',0, ErrCode::SUCCESS);
+//
+//    }
 
 }

@@ -77,7 +77,10 @@ class FriendRequetNotice extends  AbstruactClerk{
                 $this->result['status'] = 0;
                 $this->result['message'] = $_user->account .'向你发送了好友请求';
                 file_put_contents('/tmp/myswoole.log','推送成功'.var_export($this->result,true).PHP_EOL,8);
-                $server->push($_fd,  json_encode($this->result));
+                if($server->exist($_fd))
+                {
+                    $server->push($_fd,  json_encode($this->result));
+                }
             }else {
                 file_put_contents('/tmp/myswoole.log','start44'.PHP_EOL,8);
                 $this->result['message'] = $_data['account'] . '通知的好友不在线' ;
