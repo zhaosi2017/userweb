@@ -55,14 +55,20 @@ class SmsService
                     return $this->jsonResponse(['code' => $verifyCode], '操作成功', 0, ErrCode::SUCCESS);
                 } else {
                     $redis->exists($number) && $redis->del($number);
-                    return $this->jsonResponse([], '号码错误/网络错误', 1, ErrCode::NETWORK_OR_PHONE_ERROR);
+                    return $this->jsonResponse([], '网络错误', 1, ErrCode::NETWORK_OR_PHONE_ERROR);
                 }
             }catch (\Exception $e)
             {
-                $redis->del($number);
+                $text = '';
+                if($e->getCode() == '21211'){
+                    $text = $number.'不是有效的电话号码';
+                }else{
+                    $text = $e->getMessage();
+                }
                 $target =  ($res = Yii::$app->user->identity) ? $res->language : 'zh-CN';
-                $translate = new  TranslateService($e->getMessage(),$target);
+                $translate = new  TranslateService($text,$target);
                 $_message = $translate->translate();
+                $redis->del($number);
                 return $this->jsonResponse([], $_message, 1, ErrCode::NETWORK_OR_PHONE_ERROR);
             }
         }else{
