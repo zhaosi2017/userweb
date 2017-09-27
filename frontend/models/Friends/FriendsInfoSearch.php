@@ -69,7 +69,8 @@ class FriendsInfoSearch extends Friends {
 
             $black =  BlackList::findOne(['black_uid'=>$user->id,'uid'=>\Yii::$app->user->id]);
             $data['account'] = $user['account'];
-            $data['nickname'] = isset($_friend->remark) && $_friend->remark ?  $_friend->remark: $user['nickname'];
+            $data['nickname'] = $user['nickname'];
+            $data['remark'] = isset($_friend->remark)?  $_friend->remark: '';
             $data['channel'] = $user['channel'];
             $data['header_url'] = $user['header_img']? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] : '';
             $data['userPhoneNum'] =$userPhoneNum;
