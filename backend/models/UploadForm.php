@@ -18,6 +18,7 @@ class UploadForm extends Model
      * @var $imageFile UploadedFile[];
      */
     public $imageFile;
+    public $imageGrayFile;
 
     public function rules()
     {

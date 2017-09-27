@@ -17,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'typeName',
             [
                 "format" => [
                     "image",
@@ -29,6 +28,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'img_url',
                 'value' => function($data) {
                     return  Yii::$app->params['fileBaseDomain'].$data->img_url;
+                }
+            ],
+            [
+                "format" => [
+                    "image",
+                    [
+                        "width"=>"100",
+                        "height"=>"100"
+                    ]
+                ],
+                'attribute' => 'gray_img_url',
+                'value' => function($data) {
+                    return  Yii::$app->params['fileBaseDomain'].$data->gray_img_url;
                 }
             ],
             [

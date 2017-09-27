@@ -30,7 +30,7 @@ class ChannelSearch extends Channel
     {
         return [
             [['id', 'create_at', 'update_at'], 'integer'],
-            [['name', 'img_url'], 'safe'],
+            [['name', 'img_url', 'gray_img_url'], 'safe'],
         ];
     }
 

@@ -34,7 +34,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     return  Yii::$app->params['fileBaseDomain'].$data->img_url;
                 }
             ],
-            'typeName',
+            [
+                "format" => [
+                    "image",
+                    [
+                        "width"=>"100",
+                        "height"=>"100"
+                    ]
+                ],
+                'attribute' => 'gray_img_url',
+                'value' => function($data) {
+                    return  Yii::$app->params['fileBaseDomain'].$data->gray_img_url;
+                }
+            ],
             [
                 'attribute' => 'create_at',
                 'format'=>['date', 'php:Y-m-d H:i:s'],
