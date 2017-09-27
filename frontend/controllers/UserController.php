@@ -207,10 +207,11 @@ class UserController extends AuthController
     public function actionChannelList()
     {
         try {
-            $data = Channel::find()->select(['id', 'name', 'img_url'])->all();
+            $data = Channel::find()->select(['id', 'name', 'img_url','gray_img_url'])->all();
             if (!empty($data)) {
                 foreach ($data as $k => $v) {
                     $v['img_url'] = $v['img_url']? Yii::$app->params['fileBaseDomain'] . $v['img_url']:'';
+                    $v['gray_img_url'] = $v['gray_img_url']? Yii::$app->params['fileBaseDomain'] . $v['gray_img_url']: '';
                     $data[$k] = $v;
                 }
             }
