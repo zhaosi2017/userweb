@@ -19,6 +19,7 @@ use Yii;
 use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
 use frontend\models\SecurityQuestion;
+use frontend\models\Question;
 /**
  * Class Friends
  * @package frontend\models\Friends
@@ -54,9 +55,55 @@ class ResetPasswordByQuestionForm extends User
             [['a1','a2','a3'],'string','length' => [1, 20]],
             ['country_code', 'match', 'pattern' => '/^[0-9]{2,6}$/', 'message' => '{attribute}必须为2到6位纯数字'],
             ['phone', 'match', 'pattern' => '/^[0-9]{4,11}$/', 'message' => '{attribute}必须为4到11位纯数字'],
+            ['q1','validateOne'],
+            ['q2','validateTwo'],
+            ['q3','validateThree'],
 
 
         ];
+    }
+
+
+    public function validateOne()
+    {
+        $model = Question::find()->where(['id'=>$this->q1])->one();
+        if(empty($model))
+        {
+            $this->addError('q1','题库1非法');
+        }
+    }
+
+    public function validateTwo()
+    {
+        $model = Question::find()->where(['id'=>$this->q2])->one();
+        if(empty($model))
+        {
+            $this->addError('q2','题库2非法');
+        }
+        if($this->q2 == $this->q1)
+        {
+            $this->addError('q2','题2与题1相同');
+        }
+
+    }
+
+    public function validateThree()
+    {
+        $model = Question::find()->where(['id'=>$this->q3])->one();
+        if(empty($model))
+        {
+            $this->addError('q3','题库3非法');
+        }
+        if($this->q2 == $this->q3)
+        {
+            $this->addError('q3','题3与题2相同');
+        }
+        if($this->q3 == $this->q1)
+        {
+            $this->addError('q3','题3与题1相同');
+        }
+
+
     }
 
 
@@ -68,6 +115,8 @@ class ResetPasswordByQuestionForm extends User
             if (empty($user)) {
                 return $this->jsonResponse([], '用户不存在', '1', ErrCode::USER_NOT_EXIST);
             }
+
+
             $data['q1']= $this->q1;
             $data['q2']= $this->q2;
             $data['q3']= $this->q3;
@@ -75,10 +124,7 @@ class ResetPasswordByQuestionForm extends User
             $data['a2']= $this->a2;
             $data['a3']= $this->a3;
             $securityQuestion = new SecurityQuestion();
-            $res = $securityQuestion->checkSecurityQuestion($data);
-            if ($res !== true) {
-                return $res;
-            }
+
             $model = SecurityQuestion::find()->where([
                 'userid' => $user->id,
 //                'q_one' => $this->q1,
@@ -88,8 +134,24 @@ class ResetPasswordByQuestionForm extends User
 //                'a_two' => $this->a2,
 //                'a_three' => $this->a3,
             ])->one();
+
             if (empty($model)) {
                 return $this->jsonResponse([], '安全问题没有设置', '1', ErrCode::SECURITY_QUESTION_NOT_SET);
+            }
+            if($model->q_one != $this->q1)
+            {
+                return $this->jsonResponse([], '题1和您设置的题1不匹配', '1', ErrCode::FAILURE);
+
+            }
+            if($model->q_two != $this->q2)
+            {
+                return $this->jsonResponse([], '题2和您设置的题2不匹配', '1', ErrCode::FAILURE);
+
+            }
+            if($model->q_three != $this->q3)
+            {
+                return $this->jsonResponse([], '题3和您设置的题3不匹配', '1', ErrCode::FAILURE);
+
             }
             if($model->a_one != $this->a1)
             {

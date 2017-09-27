@@ -54,7 +54,7 @@ class SecurityQuestion extends FActiveRecord
 
     public function validateOne()
     {
-        $model = Question::find()->where(['id'=>$this->q_one,'type'=>Question::GROUP_ONE])->one();
+        $model = Question::find()->where(['id'=>$this->q_one])->one();
         if(empty($model))
         {
             $this->addError('q_one','题库1非法');
@@ -63,20 +63,35 @@ class SecurityQuestion extends FActiveRecord
 
     public function validateTwo()
     {
-        $model = Question::find()->where(['id'=>$this->q_two,'type'=>Question::GROUP_TWO])->one();
+        $model = Question::find()->where(['id'=>$this->q_two])->one();
         if(empty($model))
         {
             $this->addError('q_two','题库2非法');
         }
+        if($this->q_two == $this->q_one)
+        {
+            $this->addError('q_two','题2与题1相同');
+        }
+
     }
 
     public function validateThree()
     {
-        $model = Question::find()->where(['id'=>$this->q_three,'type'=>Question::GROUP_THREE])->one();
+        $model = Question::find()->where(['id'=>$this->q_three])->one();
         if(empty($model))
         {
             $this->addError('q_three','题库3非法');
         }
+        if($this->q_two == $this->q_three)
+        {
+            $this->addError('q_three','题3与题2相同');
+        }
+        if($this->q_three == $this->q_one)
+        {
+            $this->addError('q_three','题3与题1相同');
+        }
+
+
     }
 
     public function updateSecurityQuestion($data)
@@ -101,6 +116,7 @@ class SecurityQuestion extends FActiveRecord
         $model->a_two = $a2;
         $model->a_three = $a3;
         if($model->validate()) {
+
             if ($model->save()) {
                 return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
             } else {

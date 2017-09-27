@@ -41,7 +41,7 @@ class CallRecordDetail extends CallRecord
         {
             $userId = Yii::$app->user->id;
             $callRecord = CallRecord::find()->select(['id','to_user_id','time','status','call_type'])
-                ->where(['group_id'=>$this->cid,'from_user_id'=>$userId])
+                ->where(['group_id'=>$this->cid,'from_user_id'=>$userId])->orderBy('time desc')
                 ->all();
             $data = [];
             if(!empty($callRecord))
