@@ -11,6 +11,7 @@ use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;
 use frontend\models\User;
 use yii\db\Transaction;
+use frontend\models\Friends\FriendsRequest;
 
 /**
  * Class Friends
@@ -56,7 +57,8 @@ class Friends extends FActiveRecord {
     {
         $userId = \Yii::$app->user->id;
         $newFriend = self::find()->where(['user_id'=>$userId,'is_new_friend'=>self::IS_NEW_FRIEND])->count();
-
+        $_count = FriendsRequest::find()->where(['to_id'=>$userId,'status'=>FriendsRequest::NORMAL_STATUS,'is_new_invite'=>0])->count();
+        $newFriend = $newFriend + $_count;
 
         $recent_friends = self::find()->where(['user_id'=>$userId])->orderBy('link_time desc,id desc')->limit(SELF::FRIENDS_LIMIT)->all() ;
         $_recent = [];
