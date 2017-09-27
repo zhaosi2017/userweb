@@ -99,7 +99,7 @@ use yii\widgets\ActiveForm;
                 $('.channel-image-gray').find('input').val(data.response.imageUrl);
                 var tmp = $('#old-images-gray').attr('baseUrl');
                 if (typeof(tmp) != 'undefined') {
-                    $('#old-images').find('img').attr('src', tmp+data.response.imageUrl);
+                    $('#old-images-gray').find('img').attr('src', tmp+data.response.imageUrl);
                 }
 		    }",
             // 错误的冗余机制.
