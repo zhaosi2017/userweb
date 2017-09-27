@@ -45,7 +45,7 @@ class ResetPasswordByPhoneForm extends User
 
             ['country_code', 'integer'],
             [['country_code', 'phone','code'], 'required'],
-            ['country_code', 'match', 'pattern' => '/^[0-9]{2,6}$/', 'message' => '{attribute}必须为2到6位纯数字'],
+            ['country_code', 'match', 'pattern' => '/^[1-9]{1}[0-9]{0,5}$/', 'message' => '{attribute}必须为1到6位纯数字'],
             ['phone', 'match', 'pattern' => '/^[0-9]{4,11}$/', 'message' => '{attribute}必须为4到11位纯数字'],
 
         ];
