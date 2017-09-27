@@ -128,13 +128,11 @@ class WebSocket
     {
         if($this->_connected === false)
         {
-            trigger_error("Not connected", E_USER_WARNING);
             return false;
         }
 
         if( !is_string($data))
         {
-            trigger_error("Not a string data was given.", E_USER_WARNING);
             return false;
         }
 
