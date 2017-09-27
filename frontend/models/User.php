@@ -2,6 +2,7 @@
 namespace frontend\models;
 
 use frontend\services\SmsService;
+use frontend\services\UcodeService;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -64,7 +65,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['phone_number','required','on'=>['register']],
             ['country_code','required','on'=>['register']],
             ['password','required','on'=>['register']],
-            ['account','match','pattern'=>'/^[0-9]{7}$/','message'=>'{attribute}必须为7位纯数字'],
+            ['account','match','pattern'=>'/^[0-9]{7,11}$/','message'=>'{attribute}必须9位纯数字'],
             ['password', 'match', 'pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,}$/','message'=>'密码至少包含8个字符，至少包括以下2种字符：大写字母、小写字母、数字、符号'],
             ['country_code','integer'],
             ['country_code','match','pattern'=>'/^[0-9]{2,6}$/','message'=>'{attribute}必须为2到6位纯数字'],
@@ -321,30 +322,24 @@ class User extends FActiveRecord implements IdentityInterface
 
     }
 
+    /**
+     * @return array|bool
+     * 生成u码
+     */
     protected function updateYouCode()
     {
-        try{
 
             $model = User::findOne($this->id);
-            Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
-            $transaction = Yii::$app->db->getTransaction();
 
-            $model->account = $this->makeYouCode();
+            $model->account =UcodeService::makeCode();
+
             if($model->save())
             {
-                $transaction->commit();
                 $this->account = $model->account;
-                return true;
             }else{
-                $transaction->rollBack();
-                return $this->jsonResponse([],$model->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
+                return false;
             }
-        }catch (Exception $e)
-        {
-            $transaction->rollBack();
-            return $this->jsonResponse([],$e->getMessage(),1,ErrCode::UNKNOWN_ERROR);
-        }
-
+        return true;
     }
 
     protected function makeToken()
