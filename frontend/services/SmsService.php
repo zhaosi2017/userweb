@@ -60,7 +60,7 @@ class SmsService
             }catch (\Exception $e)
             {
                 $text = '';
-                if($e->getCode() == '21211'){
+                if($e->getCode() == '21211' || $e->getCode() =='21614'){
                     $text = $number.'不是有效的电话号码';
                 }else{
                     $text = $e->getMessage();
