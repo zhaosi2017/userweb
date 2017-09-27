@@ -58,14 +58,21 @@ class callu {
         $this->result['message'] = $string;
         $this->result['code']    = $code;
         $client = new WebSocket();
-        $client->connect('103.235.171.146' , '9803');
+        $b = $client->connect('103.235.171.146' , '9803');
+        if(!$b){ // 链接失败
+            return false;
+        }
         $data = [
             'action'=>2,
             'app_fd'=>$this->socket_fd,
             'text'=>json_encode($this->result , JSON_UNESCAPED_UNICODE)
         ];
-        $client->send_data(json_encode($data ,JSON_UNESCAPED_UNICODE));
+        $b = $client->send_data(json_encode($data ,JSON_UNESCAPED_UNICODE));
+        if($b){ //发送消息失败
+            return false;
+        }
         $data = $client->recv_data();
+        $client->disconnect();
         $json = json_decode($data);
         return $json->status;
     }

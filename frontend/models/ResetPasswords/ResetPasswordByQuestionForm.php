@@ -81,15 +81,30 @@ class ResetPasswordByQuestionForm extends User
             }
             $model = SecurityQuestion::find()->where([
                 'userid' => $user->id,
-                'q_one' => $this->q1,
-                'q_two' => $this->q2,
-                'q_three' => $this->q3,
-                'a_one' => $this->a1,
-                'a_two' => $this->a2,
-                'a_three' => $this->a3,
+//                'q_one' => $this->q1,
+//                'q_two' => $this->q2,
+//                'q_three' => $this->q3,
+//                'a_one' => $this->a1,
+//                'a_two' => $this->a2,
+//                'a_three' => $this->a3,
             ])->one();
             if (empty($model)) {
-                return $this->jsonResponse([], '安全问题不正确／安全问题没有设置', '1', ErrCode::SECURITY_QUESTION_NOT_SET);
+                return $this->jsonResponse([], '安全问题没有设置', '1', ErrCode::SECURITY_QUESTION_NOT_SET);
+            }
+            if($model->a_one != $this->a1)
+            {
+                return $this->jsonResponse([], '第一个问题没有答对，请重试', '1', ErrCode::FAILURE);
+
+            }
+            if($model->a_two != $this->a2)
+            {
+                return $this->jsonResponse([], '第二个问题没有答对，请重试', '1', ErrCode::FAILURE);
+
+            }
+            if($model->a_three != $this->a3)
+            {
+                return $this->jsonResponse([], '第三个问题没有答对，请重试', '1', ErrCode::FAILURE);
+
             }
             $redis = Yii::$app->redis;
             $key = $this->country_code . $this->phone . self::REDIS_TOKEN;

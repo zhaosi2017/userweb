@@ -62,6 +62,8 @@ class FriendsRequest extends FActiveRecord {
 
 
         Friends::updateAll(['is_new_friend'=> Friends::NOT_IS_NEW_FRIEND],['user_id'=>$userId,'is_new_friend'=>Friends::IS_NEW_FRIEND]);
+        FriendsRequest::updateAll(['is_new_invite'=>1],['to_id'=>$userId,'status'=>FriendsRequest::NORMAL_STATUS,'is_new_invite'=>0]);
+
 //
         $data  = self::find()->where(['to_id'=>$userId])
             ->orWhere(['from_id'=>$userId])
