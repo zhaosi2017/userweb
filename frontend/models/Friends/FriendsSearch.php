@@ -21,7 +21,7 @@ class FriendsSearch extends User
         return [
           ['search_word','string'],
             ['search_word','safe'],
-            ['account','match','pattern'=>'/^[0-9]{7}$/','message'=>'{attribute}必须为7位纯数字'],
+            ['account','match','pattern'=>'/^[0-9]{7,9}$/','message'=>'{attribute}必须为9位纯数字'],
         ];
     }
 
