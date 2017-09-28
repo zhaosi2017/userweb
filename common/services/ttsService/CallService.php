@@ -62,7 +62,7 @@ class CallService {
 
     private static $call_type_map = [
         CallRecord::CALLRECORD_TYPE_URGENT =>'个紧急联系人',
-        CallRecord::CALLRECORD_TYPE_UNURGENT=>'部联系电话'
+        CallRecord::CALLRECORD_TYPE_UNURGENT=>'部电话'
     ];
 
 
