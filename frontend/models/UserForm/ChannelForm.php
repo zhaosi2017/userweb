@@ -30,7 +30,7 @@ class ChannelForm extends User
     {
         return
         [
-            ['channel','required'],
+            ['channel','required','message'=>'请选择您使用的联系渠道。'],
             ['channel','ValidateChannel'],
         ];
     }
