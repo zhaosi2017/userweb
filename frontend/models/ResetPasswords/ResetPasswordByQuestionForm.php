@@ -141,7 +141,6 @@ class ResetPasswordByQuestionForm extends User
             if($model->q_one != $this->q1)
             {
                 return $this->jsonResponse([], '题1和您设置的题1不匹配', '1', ErrCode::FAILURE);
-
             }
             if($model->q_two != $this->q2)
             {
@@ -153,19 +152,26 @@ class ResetPasswordByQuestionForm extends User
                 return $this->jsonResponse([], '题3和您设置的题3不匹配', '1', ErrCode::FAILURE);
 
             }
+            $text = '';
             if($model->a_one != $this->a1)
             {
-                return $this->jsonResponse([], '第一个问题没有答对，请重试', '1', ErrCode::FAILURE);
+                $text = '1';
 
             }
             if($model->a_two != $this->a2)
             {
-                return $this->jsonResponse([], '第二个问题没有答对，请重试', '1', ErrCode::FAILURE);
 
+                $text = !empty($text)?$text.','.'2':'2';
             }
             if($model->a_three != $this->a3)
             {
-                return $this->jsonResponse([], '第三个问题没有答对，请重试', '1', ErrCode::FAILURE);
+
+                $text = !empty($text)? $text . ',3' :'3';
+
+            }
+            if(!empty($text))
+            {
+                return $this->jsonResponse([], '第{'.$text.'}个问题没有答对，请重试', '1', ErrCode::FAILURE);
 
             }
             $redis = Yii::$app->redis;
