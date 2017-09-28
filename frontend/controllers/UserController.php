@@ -57,7 +57,7 @@ class UserController extends AuthController
                         'allow' => true,
                         'actions' => ['nickname','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
-                            'delete-user-phone','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
+                            'delete-user-phone','user-question-list','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -91,6 +91,7 @@ class UserController extends AuthController
                     'update-image'=>['post'],
                     'phone-sort'=>['post'],
                     'urgent-contact-sort'=>['post'],
+                    'user-question-list'=>['get'],
 
                 ],
             ],
@@ -274,6 +275,28 @@ class UserController extends AuthController
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
         }
+
+    }
+
+    /**
+     *
+     */
+    public function actionUserQuestionList()
+    {
+        $data = Question::find()->select(['id','title'])->all();
+        $userId = Yii::$app->user->id;
+        $_qustion = SecurityQuestion::findOne(['userid'=>$userId]);
+        $user_qustion = [];
+        if(!empty($_qustion))
+        {
+            $user_qustion['q1']= $_qustion->q_one;
+            $user_qustion['q2']= $_qustion->q_two;
+            $user_qustion['q3']= $_qustion->q_three;
+            $user_qustion['a1']= $_qustion->a_one;
+            $user_qustion['a2']= $_qustion->a_two;
+            $user_qustion['a3']= $_qustion->a_three;
+        }
+        return $this->jsonResponse(['questionList'=>$data,'userQuestion'=>$user_qustion] ,'操作成功',0,ErrCode::SUCCESS);
 
     }
 
