@@ -42,12 +42,12 @@ class ClerkCallu extends  AbstruactClerk{
 
         } else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
             if(!$server->exist($data->app_fd)){   //如果fd不存在了  直接返回不做操作了
-                $server->push($this->fd , json_encode( ['status'=>false] , true));
+                //$server->push($this->fd , json_encode( ['status'=>false] , true));
             }
             $resl = $server->push($data->app_fd , $data->text);
             $data_ = ['status'=>$resl];
-            $server->push($this->fd , json_encode($data_ , true));
-            $server->close($this->fd);
+//            $server->push($this->fd , json_encode($data_ , true));
+//            $server->close($this->fd);
         }
     }
 
