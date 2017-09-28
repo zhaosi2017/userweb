@@ -48,7 +48,7 @@ class swooleServer{
         }
 
         $this->server->set([
-            'worker_num' => 3,
+            'worker_num' => 4,
             'daemonize' => false,
             'max_request' => 10000,
             'dispatch_mode' => 2,
@@ -56,6 +56,7 @@ class swooleServer{
             'debug_mode'=> 1,
             'heartbeat_check_interval' => 180,//每180秒 遍历所有连接
             'heartbeat_idle_time' => 360,//与heartbeat_check_interval配合使用。表示连接最大允许空闲的时间（6分钟）
+            'task_worker_num'=>100,
         ]);
 
 
@@ -63,6 +64,8 @@ class swooleServer{
         $this->server->on('close' ,[$this , 'onClose']);
         $this->server->on('open' ,[$this , 'onOpen']);
         $this->server->on('connect' ,[$this , 'onConnect']);
+        $this->server->on('task' , [$this, 'onTask']);
+        $this->server->on('finish' , [$this, 'onFinish']);
         $this->server->start();
     }
 
@@ -93,7 +96,13 @@ class swooleServer{
             return;
         }
         if($data->action == 1 || $data->action == 2 || $data->action == 6){    //电话相关
+            $temp  = ['frame'=>$frame ];
+            if($data->action == 1){
+                $task_id = $server->task($temp);  //投递任务
+                return;
+            }
             $clerk = new ClerkCallu();
+            $clerk->fd = $frame->fd;
         }elseif (isset($data->action) && $data->action == 3){
             $clerk = new FriendRequetNotice();
         }elseif(isset($data->action) && $data->action === 0){
@@ -140,5 +149,18 @@ class swooleServer{
 
     }
 
+
+    public function onTask($server, $task_id, $from_id, $data){
+        $frame = $data['frame'];
+        $data = json_decode($frame->data);
+        $clerk = new ClerkCallu();
+        $clerk->fd = $frame->fd;
+        return   $clerk->stratClerk($server,  $frame , $data);
+    }
+
+    public function onFinish($server, $task_id, $data){
+
+
+    }
 
 }

@@ -24,12 +24,13 @@ class ClerkCallu extends  AbstruactClerk{
 
         $this->app = new callu();
         $this->app->socket_fd = $frame->fd;
-        $this->app->socket_server = $server;
+        //$this->app->socket_server = $server;
         $this->app->call($frame->data);
 
     }
 
     public function stratClerk($server,  $frame , $data){
+
 
         if($data->action == 1){   //打电话
 
@@ -41,14 +42,13 @@ class ClerkCallu extends  AbstruactClerk{
 
         } else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
             if(!$server->exist($data->app_fd)){   //如果fd不存在了  直接返回不做操作了
-                $server->push($frame->fd , json_encode( ['status'=>false] , true));
+                $server->push($this->fd , json_encode( ['status'=>false] , true));
             }
             $resl = $server->push($data->app_fd , $data->text);
             $data_ = ['status'=>$resl];
-            $server->push($frame->fd , json_encode($data_ , true));
+            $server->push($this->fd , json_encode($data_ , true));
+            $server->close($this->fd);
         }
-
-
     }
 
 
