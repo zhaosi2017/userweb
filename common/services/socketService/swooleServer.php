@@ -24,6 +24,7 @@ use frontend\models\ErrCode;
 use common\services\socketService\Clerk\HeartCheckNotice;
 use common\services\socketService\Clerk\WebSocketReload;
 use common\services\socketService\Clerk\CloseWebSocketMaster;
+use common\services\socketService\Clerk\RefuseFriendNotice;
 
 class swooleServer{
 
@@ -38,7 +39,8 @@ class swooleServer{
         6=>'中断电话呼叫',
         7=>'心跳检查',
         8=>'重启websocket的worker进程',
-        9=>'终止websocket的master进程和worker进程'
+        9=>'终止websocket的master进程和worker进程',
+        10=>'拒绝好友',
 
 
     ];
@@ -108,7 +110,10 @@ class swooleServer{
         }elseif (isset($data->action) && $data->action == 9)
         {
             $clerk = new CloseWebSocketMaster();
-        } else{
+        }elseif (isset($data->action) && $data->action == 10)
+        {
+            $clerk = new RefuseFriendNotice();
+        }else{
             $result = [
                 "data"=> [],
                 "message"=>"请求类型错误",
