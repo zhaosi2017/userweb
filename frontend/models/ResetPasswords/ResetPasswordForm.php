@@ -67,7 +67,7 @@ class ResetPasswordForm extends User
             );
             if(empty($user))
             {
-                return  $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST );
+                return  $this->jsonResponse([],'手机号还没注册，请先注册','1',ErrCode::USER_NOT_EXIST );
             }
             $redis = Yii::$app->redis;
             $key = $this->country_code.$this->phone.self::REDIS_TOKEN;

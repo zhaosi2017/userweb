@@ -65,7 +65,7 @@ class ResetPasswordByPhoneForm extends User
                 return $this->jsonResponse([],'验证码过期/验证码错误','1',ErrCode::CODE_ERROR);
             }
             $res = self::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone])->one();
-            if ($res){
+            if (!empty($res)){
                 $redis->exists($key) && $redis->del($key);
                 $_tmp = md5($key.time());
                 $_key = $key.self::REDIS_TOKEN;
@@ -73,7 +73,7 @@ class ResetPasswordByPhoneForm extends User
                 $redis->setex($_key, $expire , $_tmp);
                 return $this->jsonResponse(['token'=>$_tmp],'操作成功','0',ErrCode::SUCCESS);
             }else{
-                return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+                return $this->jsonResponse([],'手机号还没注册，请先注册','1',ErrCode::USER_NOT_EXIST);
             }
         }else{
             return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);

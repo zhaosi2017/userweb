@@ -113,7 +113,7 @@ class ResetPasswordByQuestionForm extends User
         if($this->validate(['country_code','phone','a1','a2','a3','q1','q2','q3'])) {
             $user = User::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone])->one();
             if (empty($user)) {
-                return $this->jsonResponse([], '用户不存在', '1', ErrCode::USER_NOT_EXIST);
+                return $this->jsonResponse([], '手机号还没注册，请先注册', '1', ErrCode::USER_NOT_EXIST);
             }
 
 
