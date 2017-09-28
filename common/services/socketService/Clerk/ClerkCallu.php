@@ -45,7 +45,7 @@ class ClerkCallu extends  AbstruactClerk{
                 //$server->push($this->fd , json_encode( ['status'=>false] , true));
             }
             $resl = $server->push($data->app_fd , $data->text);
-            $data_ = ['status'=>$resl];
+//            $data_ = ['status'=>$resl];
 //            $server->push($this->fd , json_encode($data_ , true));
 //            $server->close($this->fd);
         }
