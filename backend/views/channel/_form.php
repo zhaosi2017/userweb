@@ -20,6 +20,7 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
     <div class="channel-image">
         <?= $form->field($model, 'img_url')->hiddenInput()->label(false);?>
         <?php
