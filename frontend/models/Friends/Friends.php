@@ -79,7 +79,7 @@ class Friends extends FActiveRecord {
                 $_recent[$k]['header_url'] = $_user['header_img']? \Yii::$app->params['frontendBaseDomain'].$_user['header_img'] : '';
                 if($v->link_time == 0)
                 {
-                    $_recent[$k]['msg'] = $v->direction == 0 ? '已经接受你的请求':'已接受该用户的请求';
+                    $_recent[$k]['msg'] = $v->direction == 0 ? '已接受该用户的请求':'已经接受你的请求';
                 }
             }
         }

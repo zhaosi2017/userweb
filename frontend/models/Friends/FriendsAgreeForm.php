@@ -68,7 +68,7 @@ class FriendsAgreeForm extends FriendsRequest
                     $fromFriend->user_id = $userId;
                     $fromFriend->friend_id = $_friend->id;
                     $fromFriend->create_at = $time;
-                    $fromFriend->direction = 0;
+                    $fromFriend->direction = 0;//被邀请
                     $fromFriend->link_time = 0;
 
 
@@ -84,7 +84,7 @@ class FriendsAgreeForm extends FriendsRequest
                     $toFriend->user_id = $_friend->id;
                     $toFriend->friend_id = $userId;
                     $toFriend->create_at = $time;
-                    $toFriend->direction = 1;
+                    $toFriend->direction = 1;//邀请者
                     $toFriend->link_time = 0;
 
                     if (!$toFriend->save()) {
