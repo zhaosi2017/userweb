@@ -41,8 +41,9 @@ class RegisterForm extends User
 
             ['country_code', 'integer'],
             ['password','string'],
-            [['country_code','password'],'required'],
+            [['country_code'],'required'],
             [['phone_number'],'required','message'=>'请输入4-11位手机号码'],
+            [['password'],'required','message'=>'请输入8位以上包括数字与字母的密码。'],
             ['password', 'match', 'pattern' => '/(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{8,}$/','message'=>'请输入8位以上包括数字与字母的密码。'],
             ['country_code','match','pattern'=>'/^[1-9]{1}[0-9]{0,5}$/','message'=>'{attribute}必须为1到6位纯数字'],
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'请输入4-11位手机号码'],
