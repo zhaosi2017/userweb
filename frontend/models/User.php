@@ -469,7 +469,7 @@ class User extends FActiveRecord implements IdentityInterface
         $user = User::find()->where(['country_code'=>$this->country_code,'phone_number'=>$this->phone_number])->one();
         if(empty($user))
         {
-            return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+            return $this->jsonResponse([],'手机号还没注册，请先注册','1',ErrCode::USER_NOT_EXIST);
         }
         $model = SecurityQuestion::find()->where(['userid'=>$user->id])->one();
         if(empty($model)){

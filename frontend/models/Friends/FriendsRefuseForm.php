@@ -5,6 +5,7 @@ use frontend\models\BlackLists\BlackList;
 use frontend\models\ErrCode;
 use frontend\models\User;
 use frontend\models\WhiteLists\WhiteList;
+use frontend\services\RefuseFriendService;
 use yii\base\Model;
 use frontend\models\Friends\Friends;
 use frontend\models\Friends\FriendsRequest;
@@ -54,6 +55,8 @@ class FriendsRefuseForm extends FriendsRequest
             $_friendRequest->status = self::REFUSE_STATUS;
             $_friendRequest->update_at = time();
             if ($_friendRequest->save()) {
+                $refuseFriendService = new RefuseFriendService();
+                @$refuseFriendService->notice($this->account,$identity->token);
                 return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
             } else {
                 return $this->jsonResponse([], $_friendRequest->getErrors(), 1, ErrCode::DATA_SAVE_ERROR);

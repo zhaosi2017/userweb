@@ -27,7 +27,7 @@ use frontend\models\Friends\FriendsRequest;
  */
 class Friends extends FActiveRecord {
 
-    const FRIENDS_LIMIT = 20;
+    const FRIENDS_LIMIT = 10;
     const GROUP_EMPTY = 0; //表示好友没有被分到自己的建立的分组里面
 
 

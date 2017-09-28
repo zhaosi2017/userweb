@@ -12,7 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $name
  * @property string $img_url
  * @property string $gray_img_url
- * @property integer $type
+ * @property integer $sort
  * @property integer $create_at
  * @property integer $update_at
  */
@@ -32,8 +32,9 @@ class Channel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'img_url', 'gray_img_url'], 'required'],
-            [['create_at', 'update_at'], 'integer'],
+            [['name', 'img_url', 'gray_img_url', 'sort'], 'required'],
+            [['create_at', 'update_at', 'sort'], 'integer'],
+            ['sort','unique'],
             [['name', 'img_url', 'gray_img_url'], 'string', 'max' => 255],
         ];
     }
@@ -64,6 +65,7 @@ class Channel extends \yii\db\ActiveRecord
             'name' => '渠道名称',
             'img_url' => '渠道图片',
             'gray_img_url' => '灰色图片',
+            'sort' => '排序',
             'create_at' => '创建时间',
             'update_at' => '修改时间',
         ];

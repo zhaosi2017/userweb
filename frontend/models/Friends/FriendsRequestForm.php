@@ -23,7 +23,7 @@ class FriendsRequestForm extends FriendsRequest
     {
         return [
             ['account','required'],
-            ['account', 'match', 'pattern' => '/^[0-9]{7}$/', 'message' => '{attribute}必须为7位纯数字'],
+            ['account', 'match', 'pattern' => '/^[0-9]{7,9}$/', 'message' => '{attribute}必须为9位纯数字'],
             ['account', 'safe'],
 //            [['note'],'string','length'=>[0,20],'message' => '验证信息最多20个字符'],
             ['note', 'string', 'max'=>20, 'tooLong'=>'验证信息最多20个字符'],

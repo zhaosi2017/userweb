@@ -76,6 +76,7 @@ CREATE TABLE `channel` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL COMMENT '渠道名称',
   `img_url` VARCHAR(255) NOT NULL COMMENT '渠道对应图片的URL地址',
+  `sort` tinyint(4) NOT NULL COMMENT '排序',
   `create_at` int(11) NOT NULL DEFAULT '0',
   `gray_img_url` varchar(150) NOT NULL COMMENT '灰色图片',
   `update_at` int(11) NOT NULL DEFAULT '0',

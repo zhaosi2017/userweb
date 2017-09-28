@@ -55,14 +55,14 @@ class ResetPasswordFristForm extends User
         if($this->validate(['country_code','phone']))
         {
             $res = self::find()->where(['country_code'=>$this->country_code,'phone_number'=>$this->phone ])->one();
-            if($res)
+            if(!empty($res))
             {
                 $question = SecurityQuestion::find()->select(['id'])->where(['userid'=>$res->id])->one();
                 $bool = empty($question) ? false: true;
                 return $this->jsonResponse(['set-question'=> $bool],'操作成功','0',ErrCode::SUCCESS);
 
             }else{
-                return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+                return $this->jsonResponse([],'手机号还没注册，请先注册','1',ErrCode::USER_NOT_EXIST);
             }
         }else{
             return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
