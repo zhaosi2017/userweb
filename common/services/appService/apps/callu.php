@@ -76,6 +76,7 @@ class callu {
         if($b){ //发送消息失败
             return false;
         }
+        sleep(1);
         $data = $this->socket->recv_data();
         $json = json_decode($data);
         return $json->status;
