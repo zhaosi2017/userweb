@@ -21,7 +21,7 @@ class CallRecordDetail extends CallRecord
     {
         return [
             ['cid', 'required','message'=>'优码不能为空'],//优码
-            ['cid', 'string'],
+            ['cid', 'integer','message'=>'优码必须是整数'],
             ['p','integer'],
         ];
     }
