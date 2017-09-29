@@ -168,7 +168,7 @@ class CallService {
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
                 if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT ){   //校验有没有紧急联系人
-                    $this->call_type == CallRecord::CALLRECORD_TYPE_URGENT;
+                    $this->call_type = CallRecord::CALLRECORD_TYPE_URGENT;
                     $t = $this->_getToUserNumber();
                     if(!empty($t)){
                         $this->app->result['data']['urgent'] = count($t);
