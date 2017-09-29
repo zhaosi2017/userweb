@@ -56,7 +56,7 @@ use frontend\models\User;
           $limit =  $p == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
           $offset = $p == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($p-1);
 
-          $data  = self::find()->select('min(id) as id')->where(['from_user_id'=>$userId])->groupBy('group_id')
+          $data  = self::find()->select('max(id) as id')->where(['from_user_id'=>$userId])->groupBy('to_user_id')
               ->offset($offset)->limit($limit)->orderBy('id desc') ->all();//createCommand()->getRawSql() ;
 
 
@@ -78,22 +78,24 @@ use frontend\models\User;
               $_friends = Friends::find()->select('remark,friend_id')->where(['user_id'=>$userId])->indexBy('friend_id')->all();
               foreach ($_res as $k=>$v)
               {
-                  $_v['id'] = $v['id'];
-                  $_v['to_user_id'] = $v['to_user_id'];
-                  $_v['time'] = date('y-m-d H:i',$v['time']);
-                  $_v['call_type']= $v['call_type'];
-                  $_v['status'] = $v['status'];
-                  $_v['group_id'] = $v['group_id'];
+                  if(isset($v->user->account) &&  $v->user->account) {
+                      $_v['id'] = $v['id'];
+                      $_v['to_user_id'] = $v['to_user_id'];
+                      $_v['time'] = date('y-m-d H:i', $v['time']);
+                      $_v['call_type'] = $v['call_type'];
+                      $_v['status'] = $v['status'];
+                      $_v['group_id'] = $v['group_id'];
 
-                  $_name =  isset($_friends[$v['to_user_id']]['remark'])  && $_friends[$v['to_user_id']]['remark'] ?  $_friends[$v['to_user_id']]['remark']  :'';
-                  if(empty($_name)){
-                      $_name = isset($v->user->nickname) ?$v->user->nickname:'';
+                      $_name = isset($_friends[$v['to_user_id']]['remark']) && $_friends[$v['to_user_id']]['remark'] ? $_friends[$v['to_user_id']]['remark'] : '';
+                      if (empty($_name)) {
+                          $_name = isset($v->user->nickname) ? $v->user->nickname : '';
+                      }
+                      $_v['channel'] = isset($v->user->channel) ? $v->user->channel : '';
+                      $_v['nickname'] = $_name;
+                      $_v['account'] = isset($v->user->account) ? $v->user->account : '';
+                      $_v['header_url'] = isset($v->user->header_img) && $v->user->header_img ? Yii::$app->params['frontendBaseDomain'] . $v->user->header_img : '';
+                      $tmp[] = $_v;
                   }
-                  $_v['channel'] = isset($v->user->channel) ? $v->user->channel: '';
-                  $_v['nickname'] = $_name;
-                  $_v['account'] = isset($v->user->account) ? $v->user->account:'';
-                  $_v['header_url'] = isset($v->user->header_img)  && $v->user->header_img ? Yii::$app->params['frontendBaseDomain'].$v->user->header_img:'';
-                  $tmp[$k]=$_v;
               }
           }
           return $this->jsonResponse($tmp,'操作成功',0,ErrCode::SUCCESS);

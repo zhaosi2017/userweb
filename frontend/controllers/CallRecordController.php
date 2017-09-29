@@ -73,7 +73,8 @@ class CallRecordController extends AuthController
         try{
             $data = $this->getRequestContent();
             $callRecord = new CallRecordDetail() ;
-            $callRecord->cid = isset($data['cid']) ? $data['cid'] :'';
+            $callRecord->cid = isset($data['account']) ? $data['account'] :'';
+            $callRecord->p =  isset($data['p']) ? (int)$data['p'] :0;
             return $callRecord->detail();
         }catch (Exception $e)
         {

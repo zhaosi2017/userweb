@@ -15,34 +15,42 @@ use yii;
 class CallRecordDetail extends CallRecord
 {
     public $cid;
-
+    public $p;
+    const PAGE_NUM = 10;// 每次获取10个
     public function rules()
     {
         return [
-            ['cid', 'required'],
+            ['cid', 'required'],//优码
             ['cid', 'string'],
-            ['cid', 'ValidateCall'],
+            ['p','integer'],
         ];
     }
 
-    public function ValidateCall()
-    {
-        $userId = Yii::$app->user->id;
-        $callRecord = CallRecord::findOne(['group_id'=>$this->cid,'from_user_id'=>$userId]);
-        if(empty($callRecord))
-        {
-            $this->addError('cid','没有对应的呼叫记录');
-        }
-    }
+
 
     public function detail()
     {
         if($this->validate('cid'))
         {
+            $user = User::findOne(['account'=>$this->cid]);
+            if(empty($user))
+            {
+                return $this->jsonResponse([],'用户不存在','1',ErrCode::USER_NOT_EXIST);
+            }
+
             $userId = Yii::$app->user->id;
+            if($user->id == $userId)
+            {
+                return $this->jsonResponse([],'数据非法','1',ErrCode::USER_NOT_EXIST);
+            }
+            $offset = $this->p == 0 ? 0: self::PAGE_NUM*($this->p-1);
+
             $callRecord = CallRecord::find()->select(['id','to_user_id','time','status','call_type'])
-                ->where(['group_id'=>$this->cid,'from_user_id'=>$userId])->orderBy('time desc')
+                ->where(['to_user_id'=>$user->id,'from_user_id'=>$userId])->orderBy('time desc')
+                ->limit(self::PAGE_NUM)
+                ->offset($offset)
                 ->all();
+
             $data = [];
             if(!empty($callRecord))
             {
