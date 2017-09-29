@@ -20,7 +20,7 @@ class CallRecordDetail extends CallRecord
     public function rules()
     {
         return [
-            ['cid', 'required'],//优码
+            ['cid', 'required','message'=>'优码不能为空'],//优码
             ['cid', 'string'],
             ['p','integer'],
         ];
