@@ -171,9 +171,9 @@ class CallService {
                     $this->call_type == CallRecord::CALLRECORD_TYPE_URGENT;
                     $t = $this->_getToUserNumber();
                     if(!empty($t)){
-                        $this->app->result['data']['urgent'] = true;
+                        $this->app->result['data']['urgent'] = count($t);
                     }else{
-                        $this->app->result['data']['urgent'] = false;
+                        $this->app->result['data']['urgent'] = 0;
                         $this->_redisGetVByK($this->group_id ,true);
                     }
                 }
