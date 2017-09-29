@@ -31,12 +31,16 @@ class SecurityQuestion extends FActiveRecord
     public function rules()
     {
         return [
-            [['q_one','q_two','q_three','a_one','a_two','a_three'],'required'],
+            [['q_one','q_two','q_three'],'required','message'=>'请选择{attribute}'],
+            [['a_one','a_two','a_three'],'required','message'=>'请回答{attribute}'],
             [['q_one','q_two','q_three'],'integer'],
             [['a_one','a_two','a_three'],'string','length' => [1, 20]],
             ['q_one','validateOne'],
             ['q_two','validateTwo'],
             ['q_three','validateThree'],
+           ['a_one','validateAOne'],
+//            ['a_two','validateATwo'],
+//            ['a_three','validateAThree'],
         ];
     }
 
@@ -46,9 +50,9 @@ class SecurityQuestion extends FActiveRecord
             'q_one'=>'题1',
             'q_two'=>'题2',
             'q_three'=>'题3',
-            'a_one' =>'密保答案1',
-            'a_two' =>'密保答案2',
-            'a_three' =>'密保答案3',
+            'a_one' =>'密保问题1',
+            'a_two' =>'密保问题2',
+            'a_three' =>'密保问题3',
         ];
     }
 
@@ -93,6 +97,36 @@ class SecurityQuestion extends FActiveRecord
 
 
     }
+
+
+    public function validateAOne()
+    {
+
+        if( preg_match("/\/|\`|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\（|\）|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\\' | \`|\-|\=|\\\|\||\s+/",$this->a_one))
+        {
+            $this->addError('a_one','答案1应不允许输入标点、空格、特殊字符');
+        }
+    }
+
+    public function validateATwo()
+    {
+        if( preg_match("/\/|\`|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\（|\）|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\\' | \`|\-|\=|\\\|\||\s+/",$this->a_two))
+        {
+            $this->addError('a_two','答案2应不允许输入标点、空格、特殊字符');
+        }
+
+    }
+
+    public function validateAThree()
+    {
+        if( preg_match("/\/|\`|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\（|\）|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\\' | \`|\-|\=|\\\|\||\s+/",$this->a_three))
+        {
+            $this->addError('a_three','答案3应不允许输入标点、空格、特殊字符');
+        }
+
+
+    }
+
 
     public function updateSecurityQuestion($data)
     {

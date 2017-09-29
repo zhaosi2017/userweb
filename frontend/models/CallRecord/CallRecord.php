@@ -80,7 +80,7 @@ use frontend\models\User;
               {
                   $_v['id'] = $v['id'];
                   $_v['to_user_id'] = $v['to_user_id'];
-                  $_v['time'] = date('Y-m-d H:i',$v['time']);
+                  $_v['time'] = date('yy-m-d H:i',$v['time']);
                   $_v['call_type']= $v['call_type'];
                   $_v['status'] = $v['status'];
                   $_v['group_id'] = $v['group_id'];

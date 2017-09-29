@@ -77,6 +77,7 @@ class FriendsInfoSearch extends Friends {
             $data['urgentContactNum'] = $urgentContactNum;
             $data['white_status'] =empty($white)? 0 : 1;
             $data['black_status'] = empty($black)? 0 :1;
+            $data['is_friend'] = empty($_friend) ? false : true;//判断是否已经是好友
             return $this->jsonResponse($data,'操作成功',0,ErrCode::SUCCESS);
         }else{
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);

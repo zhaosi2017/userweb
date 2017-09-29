@@ -86,6 +86,7 @@ class FriendsSearch extends User
             $data['header_url']= $user['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] :'';
             $data['userPhoneNum']=$userPhoneNum;
             $data['urgentContactNum']=$urgentContactNum;
+            $data['is_friend'] = empty($_friend) ? false : true;
 
             return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
         }else{

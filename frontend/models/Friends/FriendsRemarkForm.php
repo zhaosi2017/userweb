@@ -14,10 +14,11 @@ class FriendsRemarkForm extends Friends
     {
           return [
                 [ 'account','required'],
-                [ 'remark','required'],
+//                [ 'remark','required'],
                 [ 'account' ,'integer'],
                 ['account','ValidateAccount'],
                 ['remark','string','max'=>20],
+                ['remark','ValidateRemark'],
               ];
     }
 
@@ -28,6 +29,14 @@ class FriendsRemarkForm extends Friends
         {
             $this->addError('account','优码不存在');
         }
+    }
+    public function ValidateRemark()
+    {
+        if( preg_match("/\/|\`|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\（|\）|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\\' | \`|\-|\=|\\\|\||\s+/",$this->remark))
+        {
+            $this->addError('remark','备注应不允许输入标点、空格、特殊字符');
+        }
+
     }
     /**
      * 修改联系好友的备注
