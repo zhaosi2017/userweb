@@ -176,6 +176,7 @@ class CallService {
                         $this->app->result['data']['urgent'] = 0;
                         $this->_redisGetVByK($this->group_id ,true);
                     }
+                    $this->call_type = CallRecord::CALLRECORD_TYPE_UNURGENT;
                 }
                 $this->app->sendtext("呼叫结束" , ErrCode::CALL_END);
                 if($this->call_type == CallRecord::CALLRECORD_TYPE_URGENT){  //紧急联系人呼叫结束时 删除这个group呼叫id
