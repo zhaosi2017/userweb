@@ -167,6 +167,16 @@ class CallService {
         if(!$this->_Event_ActionResult($catch)){
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
+                if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT ){   //校验有没有紧急联系人
+                    $this->call_type == CallRecord::CALLRECORD_TYPE_URGENT;
+                    $t = $this->_getToUserNumber();
+                    if(!empty($t)){
+                        $this->app->result['data']['urgent'] = true;
+                    }else{
+                        $this->app->result['data']['urgent'] = false;
+                        $this->_redisGetVByK($this->group_id ,true);
+                    }
+                }
                 $this->app->sendtext("呼叫结束" , ErrCode::CALL_END);
                 if($this->call_type == CallRecord::CALLRECORD_TYPE_URGENT){  //紧急联系人呼叫结束时 删除这个group呼叫id
                     $this->_redisGetVByK($this->group_id ,true);
