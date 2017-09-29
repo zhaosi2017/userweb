@@ -47,7 +47,7 @@ class CallRecordDetail extends CallRecord
             if(!empty($callRecord))
             {
                 foreach ($callRecord as $key => $call) {
-                    $data[$key]['time'] = date('yy-m-d H:i', $call['time']);
+                    $data[$key]['time'] = date('y-m-d H:i', $call['time']);
                     $data[$key]['msg'] = isset(self::$status_map[$call['status']]) ? self::$status_map[$call['status']] : '未知错误';
                     $data[$key]['status'] = $call['status'];
                     $_user = User::find()->select('account,header_img')->where(['id' => $call['to_user_id']])->one();
