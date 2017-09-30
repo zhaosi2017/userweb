@@ -89,10 +89,16 @@ class RegisterUserForm extends User
         $number = $this->country_code.$this->phone_number;
         if($this->validate([ 'country_code', 'phone_number','password','code']))
         {
-            if(!$this->checkVeryCode($number,$this->code))
+//            if(!$this->checkVeryCode($number,$this->code))
+//            {
+//                return $this->jsonResponse($this,'验证码错误',1,ErrCode::CODE_ERROR);
+//            }
+            $smsService = new SmsService();
+            if($_sms = $smsService->checkSms($number,$this->code))
             {
-                return $this->jsonResponse($this,'验证码错误',1,ErrCode::CODE_ERROR);
+                return $this->jsonResponse([],$_sms,1,ErrCode::CODE_ERROR);
             }
+
             $user = new User();
 
             $user->auth_key = Yii::$app->security->generateRandomString();
@@ -125,6 +131,7 @@ class RegisterUserForm extends User
                     if(isset($user->password)){ unset($user->password);}
                     if(isset($user->auth_key)){ unset($user->auth_key);}
                     $data = $user;
+                    $smsService->delCode($number);
                     return $this->jsonResponse($data,'注册成功',0,ErrCode::SUCCESS);
 
                 }else{

@@ -11,6 +11,7 @@ use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;
 use frontend\models\Friends\Friends;
 use frontend\models\User;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 use yii\base\Model;
 use yii\db\Transaction;
 use frontend\models\Friends\FriendsGroup;
@@ -19,6 +20,7 @@ use Yii;
 use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
 use frontend\models\SecurityQuestion;
+
 /**
  * Class Friends
  * @package frontend\models\Friends
@@ -59,22 +61,28 @@ class ResetPasswordByPhoneForm extends User
         if($this->validate(['country_code','phone','code'])) {
             $redis = Yii::$app->redis;
             $key = $this->country_code.$this->phone;
-            $_code = $redis->get($key);
-            if(empty($_code) ||  $_code != $this->code)
-            {
-                return $this->jsonResponse([],'验证码过期/验证码错误','1',ErrCode::CODE_ERROR);
-            }
+//            $_code = $redis->get($key);
             $res = self::find()->where(['country_code' => $this->country_code, 'phone_number' => $this->phone])->one();
-            if (!empty($res)){
-                $redis->exists($key) && $redis->del($key);
-                $_tmp = md5($key.time());
-                $_key = $key.self::REDIS_TOKEN;
-                $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
-                $redis->setex($_key, $expire , $_tmp);
-                return $this->jsonResponse(['token'=>$_tmp],'操作成功','0',ErrCode::SUCCESS);
-            }else{
+            if (empty($res)) {
                 return $this->jsonResponse([],'手机号还没注册，请先注册','1',ErrCode::USER_NOT_EXIST);
             }
+//            if(empty($_code) ||  $_code != $this->code)
+//            {
+//                return $this->jsonResponse([],'验证码过期/验证码错误','1',ErrCode::CODE_ERROR);
+//            }
+            $smsService = new SmsService();
+            if($_sms = $smsService->checkSms($key,$this->code))
+            {
+                return $this->jsonResponse([],$_sms,1,ErrCode::CODE_ERROR);
+            }
+            $smsService->delCode($key);
+//            $redis->exists($key) && $redis->del($key);
+            $_tmp = md5($key.time());
+            $_key = $key.self::REDIS_TOKEN;
+            $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
+            $redis->setex($_key, $expire , $_tmp);
+            return $this->jsonResponse(['token'=>$_tmp],'操作成功','0',ErrCode::SUCCESS);
+
         }else{
             return $this->jsonResponse([],$this->getErrors(),'1',ErrCode::VALIDATION_NOT_PASS);
         }
