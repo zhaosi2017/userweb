@@ -62,27 +62,34 @@ class RefuseFriendNotice extends  AbstruactClerk{
                 $server->push($frame->fd, json_encode($this->result));
                 return ;
             }
-            $redis = Yii::$app->redis;
-            $redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_data['account']);
-            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_data['account']);
-            file_put_contents('/tmp/myswoole.log','444'.PHP_EOL,8);
-            if($_fd)
-            {
-                $this->result['data'] = ['account'=>$_user->account,'type'=>4,'num'=>1];
-                $this->result['status'] = 0;
-                $this->result['code'] = ErrCode::WEB_SOCKET_REFUSE_INVITE;
-                $this->result['message'] = $_user->account .'拒绝了你的好友请求';
-                file_put_contents('/tmp/myswoole.log','拒绝'.var_export($this->result,true).PHP_EOL,8);
-                if($server->exist($_fd))
-                {
-                    $server->push($_fd, json_encode($this->result));
-                }
 
-            } else {
-                file_put_contents('/tmp/myswoole.log','666'.PHP_EOL,8);
-                $this->result['message'] = $_data['account'] . '通知的好友不在线';
-                $server->push($frame->fd, json_encode($this->result));
-            }
+            $this->result['data'] = ['account'=>$_user->account,'type'=>4,'num'=>1];
+            $this->result['status'] = 0;
+            $this->result['code'] = ErrCode::WEB_SOCKET_REFUSE_INVITE;
+            $this->result['message'] = $_user->account .'拒绝了你的好友请求';
+            $this->sendMessage($server , $_data['account'], json_encode($this->result , JSON_UNESCAPED_UNICODE)  ) ;
+
+//            $redis = Yii::$app->redis;
+//            $redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_data['account']);
+//            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_data['account']);
+//            file_put_contents('/tmp/myswoole.log','444'.PHP_EOL,8);
+//            if($_fd)
+//            {
+//                $this->result['data'] = ['account'=>$_user->account,'type'=>4,'num'=>1];
+//                $this->result['status'] = 0;
+//                $this->result['code'] = ErrCode::WEB_SOCKET_REFUSE_INVITE;
+//                $this->result['message'] = $_user->account .'拒绝了你的好友请求';
+//                file_put_contents('/tmp/myswoole.log','拒绝'.var_export($this->result,true).PHP_EOL,8);
+//                if($server->exist($_fd))
+//                {
+//                    $server->push($_fd, json_encode($this->result));
+//                }
+//
+//            } else {
+//                file_put_contents('/tmp/myswoole.log','666'.PHP_EOL,8);
+//                $this->result['message'] = $_data['account'] . '通知的好友不在线';
+//                $server->push($frame->fd, json_encode($this->result));
+//            }
 
         }else{
             file_put_contents('/tmp/myswoole.log','777'.PHP_EOL,8);

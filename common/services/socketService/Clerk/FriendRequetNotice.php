@@ -66,27 +66,35 @@ class FriendRequetNotice extends  AbstruactClerk{
                 $server->push($frame->fd, json_encode($this->result));
                 return ;
             }
-            $redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_data['account']);
-            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_data['account']);
 
 
-            if($_fd)
-            {
-                $this->result['data'] = ['account'=>$_user->account,'type'=>1,'num'=>1];
-                $this->result['code'] = ErrCode::WEB_SOCKET_INVITE_FRIEND;
-                $this->result['status'] = 0;
-                $this->result['message'] = $_user->account .'向你发送了好友请求';
-                file_put_contents('/tmp/myswoole.log','推送成功'.var_export($this->result,true).PHP_EOL,8);
-                if($server->exist($_fd))
-                {
-                    $server->push($_fd,  json_encode($this->result));
-                }
-            }else {
-                file_put_contents('/tmp/myswoole.log','start44'.PHP_EOL,8);
-                $this->result['message'] = $_data['account'] . '通知的好友不在线' ;
-                $server->push($frame->fd, json_encode($this->result));
+            $this->result['data'] = ['account'=>$_user->account,'type'=>1,'num'=>1];
+            $this->result['code'] = ErrCode::WEB_SOCKET_INVITE_FRIEND;
+            $this->result['status'] = 0;
+            $this->result['message'] = $_user->account .'向你发送了好友请求';
+            $this->sendMessage($server ,$_data['account'] , json_encode($this->result , JSON_UNESCAPED_UNICODE),self::TCP_MESSAGE_CATCH_LONG );
 
-            }
+//            $redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_data['account']);
+//            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_data['account']);
+//
+//
+//            if($_fd)
+//            {
+//                $this->result['data'] = ['account'=>$_user->account,'type'=>1,'num'=>1];
+//                $this->result['code'] = ErrCode::WEB_SOCKET_INVITE_FRIEND;
+//                $this->result['status'] = 0;
+//                $this->result['message'] = $_user->account .'向你发送了好友请求';
+//                file_put_contents('/tmp/myswoole.log','推送成功'.var_export($this->result,true).PHP_EOL,8);
+//                if($server->exist($_fd))
+//                {
+//                    $server->push($_fd,  json_encode($this->result));
+//                }
+//            }else {
+//                file_put_contents('/tmp/myswoole.log','start44'.PHP_EOL,8);
+//                $this->result['message'] = $_data['account'] . '通知的好友不在线' ;
+//                $server->push($frame->fd, json_encode($this->result));
+//
+//            }
 
         }else{
             file_put_contents('/tmp/myswoole.log','start33'.PHP_EOL,8);

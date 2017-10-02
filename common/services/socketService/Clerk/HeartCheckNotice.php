@@ -56,29 +56,34 @@ class HeartCheckNotice extends  AbstruactClerk{
             $server->push($frame->fd, json_encode($this->result));
             return ;
         }
-        $redis = Yii::$app->redis;
-        $_fd = '';
-        if($redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_user['account']))
-        {
-            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_user['account']);
-
-        }
-
-
-        if($_fd)
-        {
-            $this->result['data'] = ['account'=>$_user->account,'type'=>3];
-            $this->result['status'] = 0;
-            $this->result['code'] = ErrCode::WEB_SOCKET_HEART_CHECK;
-            $this->result['message'] = '心跳正常';
-            if($server->exist($_fd)){
-                $server->push($_fd, json_encode($this->result));
-            }
-
-        }else {
-            $this->result['message'] = '心跳检测失败';
-            $server->push($frame->fd, json_encode($this->result));
-        }
+        $this->result['data'] = ['account'=>$_user->account,'type'=>3];
+        $this->result['status'] = 0;
+        $this->result['code'] = ErrCode::WEB_SOCKET_HEART_CHECK;
+        $this->result['message'] = '心跳正常';
+        $this->sendMessage($server , $_user->account , json_encode($this->result , JSON_UNESCAPED_UNICODE) );
+//        $redis = Yii::$app->redis;
+//        $_fd = '';
+//        if($redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_user['account']))
+//        {
+//            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_user['account']);
+//
+//        }
+//
+//
+//        if($_fd)
+//        {
+//            $this->result['data'] = ['account'=>$_user->account,'type'=>3];
+//            $this->result['status'] = 0;
+//            $this->result['code'] = ErrCode::WEB_SOCKET_HEART_CHECK;
+//            $this->result['message'] = '心跳正常';
+//            if($server->exist($_fd)){
+//                $server->push($_fd, json_encode($this->result));
+//            }
+//
+//        }else {
+//            $this->result['message'] = '心跳检测失败';
+//            $server->push($frame->fd, json_encode($this->result));
+//        }
 
 
         return ;

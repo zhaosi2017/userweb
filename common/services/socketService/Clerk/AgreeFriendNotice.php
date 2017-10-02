@@ -58,26 +58,33 @@ class AgreeFriendNotice extends  AbstruactClerk{
                 $server->push($frame->fd, json_encode($this->result));
                 return ;
             }
-            $redis = Yii::$app->redis;
-            $redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_data['account']);
-            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_data['account']);
+            $this->result['data'] = ['account'=>$_user->account,'type'=>2,'num'=>1];
+            $this->result['status'] = 0;
+            $this->result['code'] = ErrCode::WEB_SOCKET_AGREE_INVITE;
+            $this->result['message'] = $_user->account .'同意了你的好友请求';
+            $this->sendMessage($server , $data->account , json_encode($this->result, JSON_UNESCAPED_UNICODE) );
 
-            if($_fd)
-            {
-                $this->result['data'] = ['account'=>$_user->account,'type'=>2,'num'=>1];
-                $this->result['status'] = 0;
-                $this->result['code'] = ErrCode::WEB_SOCKET_AGREE_INVITE;
-                $this->result['message'] = $_user->account .'同意了你的好友请求';
-                file_put_contents('/tmp/myswoole.log','同意'.var_export($this->result,true).PHP_EOL,8);
-                if($server->exist($_fd))
-                {
-                    $server->push($_fd, json_encode($this->result));
-                }
 
-            }else {
-                $this->result['message'] = $_data['account'] . '通知的好友不在线';
-                $server->push($frame->fd, json_encode($this->result));
-            }
+//            $redis = Yii::$app->redis;
+//            $redis->EXISTS(UidConn::UID_CONN_ACCOUNT.$_data['account']);
+//            $_fd = $redis->get(UidConn::UID_CONN_ACCOUNT.$_data['account']);
+//
+//            if($_fd)
+//            {
+//                $this->result['data'] = ['account'=>$_user->account,'type'=>2,'num'=>1];
+//                $this->result['status'] = 0;
+//                $this->result['code'] = ErrCode::WEB_SOCKET_AGREE_INVITE;
+//                $this->result['message'] = $_user->account .'同意了你的好友请求';
+//                file_put_contents('/tmp/myswoole.log','同意'.var_export($this->result,true).PHP_EOL,8);
+//                if($server->exist($_fd))
+//                {
+//                    $server->push($_fd, json_encode($this->result));
+//                }
+//
+//            }else {
+//                $this->result['message'] = $_data['account'] . '通知的好友不在线';
+//                $server->push($frame->fd, json_encode($this->result));
+//            }
 
         }else{
             $this->result['message'] = '通知的好友不存在';
