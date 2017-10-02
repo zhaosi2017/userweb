@@ -115,6 +115,7 @@ class callu {
             $this->sendText('token错误' , ErrCode::CODE_ERROR);
             return false;
         }
+        $this->from_user = $user;
         $this->result['status'] = 0;
         $service = new  CallService();
         $service->app = $this;
