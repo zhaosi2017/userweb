@@ -61,6 +61,7 @@ class CallRecordDetail extends CallRecord
                     $_user = User::find()->select('account,header_img')->where(['id' => $call['to_user_id']])->one();
                     $data[$key]['account'] = isset($_user['account']) ? $_user['account'] : '';
                     $data[$key]['header_url'] = isset($_user['header_img']) &&  $_user['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_user['header_img'] : '';
+                    $data[$key]['id'] = $call['id'];
                 }
             }
 
