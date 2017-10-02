@@ -53,7 +53,7 @@ class swooleServer{
             'worker_num' => 4,
             'daemonize' => false,
             'max_request' => 10000,
-            'dispatch_mode' => 2,
+            'dispatch_mode' => 5,
             'log_file'=>'/tmp/swooles.log',
             'debug_mode'=> 1,
             'heartbeat_check_interval' => 350,//每180秒 遍历所有连接
@@ -153,6 +153,7 @@ class swooleServer{
 
 
     }
+
 
 
     public function onTask($server, $task_id, $from_id, $data){

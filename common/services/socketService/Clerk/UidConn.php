@@ -31,6 +31,9 @@ class UidConn extends  AbstruactClerk{
         if(isset($data->account) && $data->account && isset($data->token)) {
             $_data = User::find()->select(['id', 'token'])->where(['account' => $data->account])->one();
             if (!empty($_data) && $_data['token'] == $data->token) {
+                /**********************************************************/
+                    $this->bindUcode($server, $frame->fd , $data->account); //绑定优码和fd的对应关系
+                /**********************************************************/
                 if($redis->exists(self::UID_CONN_ACCOUNT . $data->account))
                 {
                    $_fd = $redis->get(self::UID_CONN_ACCOUNT . $data->account);

@@ -31,10 +31,6 @@ class callu {
      */
     public $to_user;
     /**
-     * @var socket fd
-     */
-    public $socket_fd;
-    /**
      * @var socket 服务
      */
     //public $socket_server;
@@ -69,8 +65,8 @@ class callu {
         }
         $data = [
             'action'=>2,
-            'app_fd'=>$this->socket_fd,
-            'text'=>json_encode($this->result , JSON_UNESCAPED_UNICODE)
+            'text'=>json_encode($this->result , JSON_UNESCAPED_UNICODE),
+            'uCode'=>$this->from_user->account
         ];
         $b = $this->socket->send_data(json_encode($data ,JSON_UNESCAPED_UNICODE));
         if($b){ //发送消息失败
