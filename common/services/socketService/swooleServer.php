@@ -83,7 +83,7 @@ class swooleServer{
      * 只是呼叫消息处理  如果需要增加其他业务 请将业务层封装
      */
     public function onMessage($server,  $frame){
-        file_put_contents('/tmp/test-call'.date('Y-m-d').'log' , var_export($frame->data , true).PHP_EOL , 8);
+        file_put_contents('/tmp/test-call'.date('Y-m-d').'.log' , var_export($frame->data , true).PHP_EOL , 8);
         $data = json_decode($frame->data);
         if(empty($data)  || !isset($data->action)){
 
