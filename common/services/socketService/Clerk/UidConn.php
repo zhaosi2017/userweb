@@ -57,7 +57,7 @@ class UidConn extends  AbstruactClerk{
                 $this->result['message'] = '连接成功';
                 $this->result['code']= ErrCode::WEB_SOCKET_LOGIN;
                 $this->result['data'] = ['type'=>0];
-                $server->push($frame->fd,json_encode($this->result));
+                $server->push($frame->fd,json_encode($this->result , JSON_UNESCAPED_UNICODE));
                 return ;
             }
 

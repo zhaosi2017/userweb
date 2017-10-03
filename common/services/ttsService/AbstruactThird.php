@@ -11,6 +11,7 @@
 
 namespace  common\services\ttsService;
 
+use frontend\models\TtsLog\TtsLog;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
@@ -111,10 +112,15 @@ abstract  class AbstruactThird{
      * 写发送日志
      */
     private function _send_data_log(Array $log){
-        $log['interface'] = get_class($this);
-        $log['object']    = serialize($this);
-        $log['time']      = date('Y-m-d H:i:s');
-        $log['number']    = $this->To;
+
+        $model = new TtsLog();
+        $model->type = TtsLog::LOG_TTS_TYPE_CALL_REQUEST;
+        $model->object = get_class($this);
+        $model->number = $this->To;
+        $model->time = date('Y-m-d H:i:s');
+        $model->data = $log['data'];
+        $model->save();
+
 
     }
 
@@ -123,10 +129,13 @@ abstract  class AbstruactThird{
      */
     private function _event_data_log(Array $log){
 
-        $log['interface'] = get_class($this);
-        $log['object']    = serialize($this);
-        $log['time']      = date('Y-m-d H:i:s');
-        $log['call_id']   = $this->callId;
+        $model = new TtsLog();
+        $model->type = TtsLog::LOG_TTS_TYPE_EVENT_REQUEST;
+        $model->object = get_class($this);
+        $model->time = date('Y-m-d H:i:s');
+        $model->url = $log['url'];
+        $model->data = $log['data'];
+        $model->save();
 
     }
 

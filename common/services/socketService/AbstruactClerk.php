@@ -17,7 +17,7 @@ abstract  class AbstruactClerk{
     const TCP_MESSAGE_CATCH_NO     = 0;  //发送失败的消息不缓存
     const TCP_MESSAGE_CATCH_SHORT  = 1;  //发送失败的消息缓存短时间  时间5分钟
     const TCP_MESSAGE_CATCH_LONG   = 2;  //发送失败消息 长时间缓存直到发送成功
-    
+
 
 
   public $result =
@@ -136,6 +136,11 @@ abstract  class AbstruactClerk{
        return $messages;
   }
 
+    /**
+     * @param $id
+     * @return bool
+     * 更新缓存的状态
+     */
   private function updateCatch($id){
 
       $model = MessageCatch::findOne($id);

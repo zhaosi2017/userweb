@@ -40,7 +40,7 @@ class ClerkCallu extends  AbstruactClerk{
             $this->_stop_call($server,  $frame);
 
         } else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
-            $this->sendMessage($server, $data->uCode , $data->text);
+            $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_NO);
         }
     }
 
