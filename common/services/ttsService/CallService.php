@@ -185,10 +185,8 @@ class CallService {
                 }
                 return  $result;
             }
-            sleep(2);
             $tmp = $this->_redisGetVByK($this->group_id , false);
-            file_put_contents('/tmp/test-call2017-10-03.log' , var_export($tmp , true).PHP_EOL , 8);
-            if(!empty($tmp) && !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
+            if(isset($tmp['call_type']) && !empty($tmp['call_type']) && !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
                 $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
                 $this->_redisGetVByK($this->group_id);
             }
@@ -208,9 +206,6 @@ class CallService {
 
 
     private function _redisGetVByK($cacheKey , $flag = true){
-        if(!Yii::$app->redis->exists($cacheKey)){
-            return [];
-        }
         $cache_keys = Yii::$app->redis->hkeys($cacheKey);
         $catch_vals = Yii::$app->redis->hvals($cacheKey);
         if($flag){
