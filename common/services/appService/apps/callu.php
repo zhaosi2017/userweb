@@ -127,7 +127,7 @@ class callu {
         $service = new  CallService();
         $service->app = $this;
         $service->group_id = $data->group_id;
-        $this->_union_check($this->from_user->account , $this->from_user->token);
+        $this->_union_check($this->from_user->account , $this->from_user->token , true);
         $service->stop_call();
 
     }
@@ -192,8 +192,8 @@ class callu {
      * @param $token
      * 管理唯一呼叫标志
      */
-    private function _union_check($ucode , $token){
-        if(in_array($this->result['code'] ,[ErrCode::CALL_EXCEPTION , ErrCode::CALL_SUCCESS , ErrCode::CALL_END])){
+    private function _union_check($ucode , $token , $flag = false){
+        if(in_array($this->result['code'] ,[ErrCode::CALL_EXCEPTION , ErrCode::CALL_SUCCESS , ErrCode::CALL_END]) || $flag){
             $key = $ucode.'-'.$token;
             if(Yii::$app->redis->exists($key)){
                 Yii::$app->redis->del($key);
