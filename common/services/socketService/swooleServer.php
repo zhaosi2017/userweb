@@ -138,13 +138,6 @@ class swooleServer{
 
     public function onClose( $server,  $fd){
 
-        $redis = \Yii::$app->redis;
-        if($redis->exists(UidConn::UID_CONN_FD.$fd))
-        {
-            $uid = $redis->get(UidConn::UID_CONN_FD.$fd);
-            $redis->del(UidConn::UID_CONN_ACCOUNT.$uid);
-            $redis->del(UidConn::UID_CONN_FD.$fd);
-        }
     }
 
 

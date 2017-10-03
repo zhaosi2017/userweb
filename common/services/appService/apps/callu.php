@@ -182,7 +182,7 @@ class callu {
             return false;
         }
         Yii::$app->redis->hset($key , 'status' , 1);
-        Yii::$app->redis->expire($key , 10*60);
+        Yii::$app->redis->expire($key , 2*60);
         return true;
     }
 
