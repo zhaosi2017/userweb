@@ -164,7 +164,10 @@ class CallService {
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return $result;
         }
-
+        $tmp = $this->_redisGetVByK($this->group_id , false);
+        if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
+            return $result;
+        }
         if(!$this->_Event_ActionResult($catch)){
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
@@ -186,7 +189,7 @@ class CallService {
                 return  $result;
             }
             $tmp = $this->_redisGetVByK($this->group_id , false);
-            if(isset($tmp['call_type']) && !empty($tmp['call_type']) && !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
+            if( !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
                 $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
                 $this->_redisGetVByK($this->group_id);
             }
