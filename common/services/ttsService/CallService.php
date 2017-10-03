@@ -148,6 +148,7 @@ class CallService {
      * @param array $event_data
      * @return mixed
      * 回调事件
+     * 1 如果停止呼叫之后
      */
     public function Event(Array $event_data){
 
@@ -224,21 +225,21 @@ class CallService {
         $count  =  $arr['count'];   //电话总量
         switch ($this->third->Event_Status){
             case CallRecord::CALLRECORD_STATUS_SUCCESS:
-                $this->app->sendText('第'.$serial.'部电话接通成功' , ErrCode::CALL_SUCCESS);
+                $this->app->sendText('第'.$serial.'部'.$this->call_type.'电话接通成功' , ErrCode::CALL_SUCCESS);
                 $this->_redisGetVByK($this->group_id ,true);
                 return true;
                 break;
             case CallRecord::CALLRECORD_STATUS_FILED:
-                $this->app->sendText('第'.$serial.'部电话搜索不到信号(共'.$count.'部)', ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'搜索不到信号(共'.$count.'部)', ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_BUSY:
-                $this->app->sendText('第'.$serial.'部电话被挂断或占线(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'被挂断或占线(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_NOANWSER:
-                $this->app->sendText('第'.$serial.'部电话无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             default:
-                $this->app->sendText('第'.$serial.'部电话无信号(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'无信号(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
         }
         return false;
