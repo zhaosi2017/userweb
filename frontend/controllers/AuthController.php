@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use frontend\models\ErrCode;
+use frontend\services\LimitRate\LimitRateService;
 use yii\web\Controller;
 use yii\helpers\ArrayHelper;
 use yii\filters\auth\HttpBearerAuth;
@@ -75,12 +76,22 @@ class AuthController extends Controller
         }
 
 
+
         return parent::beforeAction($action);
     }
 
 
     public function afterAction($action, $result)
     {
+//        if(!\Yii::$app->user->isGuest)
+//        {
+//            $limitRateService = new LimitRateService();
+//            if ($ms = $limitRateService->limit(\Yii::$app->request->getPathInfo()))
+//            {
+//                return $this->jsonResponse([],$ms,'1',ErrCode::LIMIT_RATE_ERROR);
+//            }
+//        }
+
         if(defined('YII_ENV') && YII_ENV == 'dev') {
             file_put_contents('/tmp/userweb.log', 'response ----------' .PHP_EOL. var_export($result, true) . PHP_EOL, 8);
         }

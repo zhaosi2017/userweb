@@ -67,7 +67,7 @@ class ErrCode
     const YOU_ARE_ALREADY_FRIENDS = '2041';//你们已经是好友，不能在发送邀请
 
     const YOU_ACCOUNT_LOGIN_IN_OTHER_DEVICE = '6003';//你的账号在其他设备上登录
-
+    const LIMIT_RATE_ERROR = '2042';//速率限制10分钟访问10次
 
 
 
