@@ -127,6 +127,7 @@ class callu {
         $service = new  CallService();
         $service->app = $this;
         $service->group_id = $data->group_id;
+        $this->_union_check($this->from_user->account , $this->from_user->token);
         $service->stop_call();
 
     }
