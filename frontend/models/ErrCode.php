@@ -68,6 +68,9 @@ class ErrCode
 
     const YOU_ACCOUNT_LOGIN_IN_OTHER_DEVICE = '6003';//你的账号在其他设备上登录
     const LIMIT_RATE_ERROR = '2042';//速率限制10分钟访问10次
+    const EMAIL_SEND_FAILURE = '2043';//邮件发送失败
+    const EMAIL_HAD_ALREADY_EXISTS = '2044';//邮件发送失败
+    const PASSWORD_ERROR = '2045';//密码错误
 
 
 

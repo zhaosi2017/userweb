@@ -219,3 +219,8 @@ CREATE TABLE `version` (
 
 
 ALTER TABLE `friends` ADD `is_new_friend` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否是新朋友：0是，1否' AFTER `direction`;
+
+
+/************************邮箱字段（目前暂时不加，只是做的预留，以后如果加邮箱注册等功能在添加）*******************************／
+ALTER TABLE `user` ADD `email` VARCHAR(64) NULL DEFAULT NULL COMMENT '邮箱' AFTER `account`;
+************************************************************************************************/

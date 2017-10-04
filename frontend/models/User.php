@@ -72,7 +72,7 @@ class User extends FActiveRecord implements IdentityInterface
             ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'{attribute}必须为4到11位纯数字'],
             ['phone_number','validatePhone','on'=>'register'],
             [['header_img','latitude','longitude'],'safe'],
-
+            ['email','required','on'=>'email'],
         ];
     }
 
@@ -99,6 +99,9 @@ class User extends FActiveRecord implements IdentityInterface
         $scenarios = parent::scenarios();
         $res = [
             'register' => [ 'password','country_code', 'phone_number'],
+            'update-account'=>['account'],
+            'email'=>['email'],
+            'token'=>['token'],
 
         ];
         return array_merge($scenarios,$res);
@@ -332,19 +335,23 @@ class User extends FActiveRecord implements IdentityInterface
             $model = User::findOne($this->id);
 
             $model->account =UcodeService::makeCode();
-
+            $model->setScenario('update-account') ;
             if($model->save())
             {
                 $this->account = $model->account;
             }else{
-                return false;
+                return $model->getErrors();
             }
-        return true;
+            return true;
     }
 
-    protected function makeToken()
+    /**
+     * @param $param  国码电话号码||邮箱
+     * @return string
+     */
+    protected function makeToken($param)
     {
-        return md5($this->phone_number.time().$this->country_code.$this->makeCode(7) );
+        return md5($param.time().$this->makeCode(7) );
     }
 
     protected function makeCode($len = 4)

@@ -2,6 +2,8 @@
 namespace frontend\controllers;
 
 use frontend\models\Channel;
+use frontend\models\EmailForm\UserEmail;
+use frontend\models\EmailForm\UserUpdateEmail;
 use frontend\models\Logins\LoginForm;
 use frontend\models\Registers\RegisterForm;
 use frontend\models\Registers\RegisterUserForm;
@@ -55,9 +57,9 @@ class UserController extends AuthController
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['nickname','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
+                        'actions' => ['nickname','send-email','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
-                            'delete-user-phone','user-question-list','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
+                            'delete-user-phone','update-email','user-question-list','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -92,6 +94,8 @@ class UserController extends AuthController
                     'phone-sort'=>['post'],
                     'urgent-contact-sort'=>['post'],
                     'user-question-list'=>['get'],
+                    'update-email'=>['post'],
+                    'send-email'=>['post'],
 
                 ],
             ],
@@ -192,6 +196,50 @@ class UserController extends AuthController
             $model = new NicknameForm();
             $model->nickname = $nickname;
             return $model->updateNickname();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+
+        }
+    }
+
+    /**邮箱发送消息（更新邮箱发送验证码）
+     * @return array
+     */
+    public function actionSendEmail()
+    {
+        $postData =$this->getRequestContent();
+        $email = isset($postData['email']) ? $postData['email'] :'';
+        try{
+            $model = new UserEmail();
+            $model->email = $email;
+            return $model->sendEmail();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+
+        }
+    }
+
+    /**更新邮箱
+     * @return array
+     */
+    public function actionUpdateEmail()
+    {
+        $postData =$this->getRequestContent();
+        $email = isset($postData['email']) ? $postData['email'] :'';
+        $code = isset($postData['code']) ? $postData['code'] :'';
+        try{
+            $model = new UserUpdateEmail();
+            $model->email = $email;
+            $model->code = $code;
+            return $model->updateEmail();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

@@ -31,6 +31,7 @@ class AuthController extends Controller
                         'login',
                         'register',
                         'register-user',
+                        'register-email',
                         'test',
                         'event-sinch',
                         'reset-password',
