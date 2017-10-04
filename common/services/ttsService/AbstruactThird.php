@@ -101,7 +101,7 @@ abstract  class AbstruactThird{
         $this->_send_data_log($log);
         $client =  new Client();
         try{
-              $response = $client->send($request , ['timeout' => 10]);
+              $response = $client->send($request , ['timeout' => 30]);
         }catch ( Exception $e){
               $response = new Response();
         }catch(\Error $e){
