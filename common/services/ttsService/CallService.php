@@ -202,6 +202,7 @@ class CallService {
      * 放弃呼叫
      */
     public function stop_call(){
+        file_put_contents('/tmp/test_test.log' ,$this->group_id.'============='.PHP_EOL , 8);
         if(!empty($this->group_id)){
             Yii::$app->redis->del($this->group_id);
         }
