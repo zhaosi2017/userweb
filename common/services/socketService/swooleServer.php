@@ -84,7 +84,6 @@ class swooleServer{
      */
     public function onMessage($server,  $frame){
         file_put_contents('/tmp/test-call'.date('Y-m-d').'.log' , var_export($frame->data , true).PHP_EOL , 8);
-        echo $server->worker_id;
         $data = json_decode($frame->data);
         if(empty($data)  || !isset($data->action)){
 
@@ -101,6 +100,7 @@ class swooleServer{
         if($data->action == 1 || $data->action == 2 || $data->action == 6){    //电话相关
             $temp  = ['frame'=>$frame ];
             if($data->action == 1){
+                echo $server->worker_id.PHP_EOL;
                 $task_id = $server->task($temp);  //投递任务
                 return;
             }
