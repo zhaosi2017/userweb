@@ -132,6 +132,7 @@ class CallService {
             $this->app->result['data']['call_type'] = $this->call_type;
             $this->app->sendtext($this->group_id , ErrCode::CALL_MESSAGE_GROUP);   //给客户端一个打电话的唯一标志 用于中断呼叫
         }
+        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--发起呼叫--'.$this->group_id.PHP_EOL , 8);
         $this->app->result['data']['group_id'] = $this->group_id;
         $this->app->result['data']['call_type'] = $this->call_type;
         $this->app->sendtext('正在拨打第1'.self::$call_type_map[$this->call_type].'（共'.$count.'部)' , ErrCode::CALL_MESSAGE);
@@ -160,11 +161,13 @@ class CallService {
         $this->from_user    = unserialize($catch['from_user']);
         $this->call_type    = $catch['call_type'];
         $this->group_id     = $catch['group_id'];
+        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'---呼叫回调--'.$this->group_id.PHP_EOL , 8);
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return $result;
         }
         $tmp = $this->_redisGetVByK($this->group_id , false);
+        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
         if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
             return $result;
         }
@@ -188,7 +191,6 @@ class CallService {
                 }
                 return  $result;
             }
-            $tmp = $this->_redisGetVByK($this->group_id , false);
             if( !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
                 $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
                 $this->_redisGetVByK($this->group_id);
@@ -202,6 +204,7 @@ class CallService {
      */
     public function stop_call(){
         if(!empty($this->group_id)){
+            file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--结束电话--'.$this->group_id , 8);
             Yii::$app->redis->del($this->group_id);
         }
         $this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
