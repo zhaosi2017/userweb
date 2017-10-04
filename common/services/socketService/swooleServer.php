@@ -83,7 +83,7 @@ class swooleServer{
      * 只是呼叫消息处理  如果需要增加其他业务 请将业务层封装
      */
     public function onMessage($server,  $frame){
-        file_put_contents('/tmp/test-call'.date('Y-m-d').'.log' , var_export($frame->data , true).PHP_EOL , 8);
+        file_put_contents('/tmp/test-call'.date('Y-m-d').'.log' , date('Y-m-d H:i:s').var_export($frame->data , true).PHP_EOL , 8);
         $data = json_decode($frame->data);
         if(empty($data)  || !isset($data->action)){
 
@@ -100,7 +100,6 @@ class swooleServer{
         if($data->action == 1 || $data->action == 2 || $data->action == 6){    //电话相关
             $temp  = ['frame'=>$frame ];
             if($data->action == 1){
-                echo $server->worker_id.PHP_EOL;
                 $task_id = $server->task($temp);  //投递任务
                 return;
             }

@@ -30,7 +30,6 @@ class ClerkCallu extends  AbstruactClerk{
 
     public function stratClerk($server,  $frame , $data){
 
-
         if($data->action == 1){                     //打电话
 
             $this->_call($server,  $frame);
