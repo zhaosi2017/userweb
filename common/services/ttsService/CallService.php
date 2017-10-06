@@ -334,7 +334,7 @@ class CallService {
         $model->call_id             = $this->third->callId;
         $model->unactive_call_uid   = $this->to_user->id;
         $model->call_time           = time();
-        $model->text                = $this->third->Text;
+        $model->text                = $third->Text;
         $model->duration            = 0;                               //通话时间 暂时为0
         $model->amount              = 0;                               //通话费用 0
         $model->status              = $this->third->Event_Status;
