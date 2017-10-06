@@ -60,6 +60,7 @@ use frontend\models\User;
               ->offset($offset)->limit($limit)->orderBy('id desc') ->all();//createCommand()->getRawSql() ;
 
 
+
           $_res = [];
           if(!empty($data))
           {    $ids = [];
@@ -72,29 +73,32 @@ use frontend\models\User;
               }
           }
 
+
           $tmp = [];
           if(!empty($_res))
           {
               $_friends = Friends::find()->select('remark,friend_id')->where(['user_id'=>$userId])->indexBy('friend_id')->all();
               foreach ($_res as $k=>$v)
               {
-                  if(isset($v->user->account) &&  $v->user->account) {
-                      $_v['id'] = $v['id'];
-                      $_v['to_user_id'] = $v['unactive_call_uid'];
-                      $_v['time'] = date('y-m-d H:i', $v['call_time']);
-                      $_v['call_type'] = $v['type'];
-                      $_v['status'] = $v['status'];
-                      $_v['group_id'] = $v['group_id'];
 
-                      $_name = isset($_friends[$v['to_user_id']]['remark']) && $_friends[$v['to_user_id']]['remark'] ? $_friends[$v['to_user_id']]['remark'] : '';
+                  if(isset($v->user->account) &&  $v->user->account) {
+                      $_vs['id'] = $v['id'];
+                      $_vs['to_user_id'] = $v['unactive_call_uid'];
+                      $_vs['time'] = date('y-m-d H:i', $v['call_time']);
+                      $_vs['call_type'] = $v['type'];
+                      $_vs['status'] = $v['status'];
+                      $_vs['group_id'] = $v['group_id'];
+
+                      $_name = isset($_friends[$_vs['to_user_id']]['remark']) && $_friends[$_vs['to_user_id']]['remark'] ? $_friends[$_vs['to_user_id']]['remark'] : '';
                       if (empty($_name)) {
                           $_name = isset($v->user->nickname) ? $v->user->nickname : '';
                       }
-                      $_v['channel'] = isset($v->user->channel) ? $v->user->channel : '';
-                      $_v['nickname'] = $_name;
-                      $_v['account'] = isset($v->user->account) ? $v->user->account : '';
-                      $_v['header_url'] = isset($v->user->header_img) && $v->user->header_img ? Yii::$app->params['frontendBaseDomain'] . $v->user->header_img : '';
-                      $tmp[] = $_v;
+                      $_vs['channel'] = isset($v->user->channel) ? $v->user->channel : '';
+                      $_vs['nickname'] = $_name;
+                      $_vs['account'] = isset($v->user->account) ? $v->user->account : '';
+                      $_vs['header_url'] = isset($v->user->header_img) && $v->user->header_img ? Yii::$app->params['frontendBaseDomain'] . $v->user->header_img : '';
+                      $tmp[] = $_vs;
+
                   }
               }
           }
@@ -104,7 +108,7 @@ use frontend\models\User;
 
       public function getUser()
       {
-          return $this->hasOne(User::className(), ['id' => 'to_user_id']);
+          return $this->hasOne(User::className(), ['id' => 'unactive_call_uid']);
       }
 
 
