@@ -167,13 +167,13 @@ class CallService {
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return $result;
         }
-
+        $this->_saveRecord($catch);                   //保存通话记录
+        $tmp = $this->_redisGetVByK($this->group_id , false);
+        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
+        if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
+            return false;
+        }
         if(!$this->_Event_ActionResult($catch)){
-            $tmp = $this->_redisGetVByK($this->group_id , false);
-            file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
-            if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
-                return $result;
-            }
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
                 if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT ){   //校验有没有紧急联系人
@@ -228,7 +228,7 @@ class CallService {
      * 处理回调 结果
      */
     private function _Event_ActionResult($arr){
-        $this->_saveRecord($arr);                   //保存通话记录
+
         $serial =  $arr['serial'];  //电话顺序
         $count  =  $arr['count'];   //电话总量
         switch ($this->third->Event_Status){
