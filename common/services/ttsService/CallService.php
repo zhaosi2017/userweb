@@ -12,6 +12,7 @@ namespace  common\services\ttsService;
 use frontend\models\BlackLists\BlackList;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\ErrCode;
+use frontend\models\Friends\Friends;
 use frontend\models\UrgentContact;
 use frontend\models\User;
 use frontend\models\UserPhone;
@@ -328,6 +329,8 @@ class CallService {
      * 保存通话记录
      */
     private function _saveRecord($arr){
+
+        $friend = Friends::findOne(['user_id'=>$this->from_user->id , 'friend_id'=>$this->to_user->id]);
         $third = unserialize($arr['third']);
         $model = new CallRecord();
         $model->active_call_uid     = $this->from_user->id;
@@ -343,10 +346,10 @@ class CallService {
         $model->unactive_contact_number= $third->To;
         $model->third               = get_class($this->third);
         $model->group_id            = $this->group_id;
-        $model->active_account      ="*";
-        $model->unactive_nickname   ='*';
-        $model->unactive_account    ='*';
-        $model->active_nickname     ='*';
+        $model->active_account      = $this->from_user->nickname;
+        $model->active_nickname     = $this->from_user->nickname;
+        $model->unactive_nickname   = empty($friend)?$this->to_user->nickname:$friend->remark;
+        $model->unactive_account    = $this->to_user->nickname;
         $model->record_status       = 1;
         $model->save();
 
