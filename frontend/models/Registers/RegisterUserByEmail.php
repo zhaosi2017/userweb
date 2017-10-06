@@ -91,7 +91,7 @@ class RegisterUserByEmail extends User
             $user = new User();
 
             $user->auth_key = Yii::$app->security->generateRandomString();
-            $this->password && $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+            $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
             $user->reg_time = time();
             $user->token = $this->makeToken($this->email);
             $user->status = 0;
@@ -116,6 +116,9 @@ class RegisterUserByEmail extends User
                 $transaction->commit();
                 if(isset($user->password)){ unset($user->password);}
                 if(isset($user->auth_key)){ unset($user->auth_key);}
+                $user->email = $this->email;
+                $user->username = '';
+                $user->nickname = '';
                 $data = $user;
                 EmailCodeCheck::delCode($this->email);
                 return $this->jsonResponse($data,'注册成功',0,ErrCode::SUCCESS);

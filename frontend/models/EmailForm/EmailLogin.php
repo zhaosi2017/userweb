@@ -30,7 +30,9 @@ class EmailLogin extends User
     {
         if($this->validate())
         {
-            $_user = User::findOne(['email'=>$this->email]);
+
+            $_email = Yii::$app->security->decryptByKey(base64_decode($this->email), Yii::$app->params['inputKey']);
+            $_user = User::findOne(['email'=>$_email]);
             if(empty($_user))
             {
                 return $this->jsonResponse([],'该邮箱还未注册，请先注册',1,ErrCode::USER_NOT_EXIST);
@@ -46,6 +48,8 @@ class EmailLogin extends User
                 $user = User::findOne(['id'=>$_user->id]);
                 $user->setScenario('token');
                 $user->token = $user->makeToken($this->email);
+                $user->login_ip = Yii::$app->request->getUserIP();
+                $user->login_time = time();
                 if($user->save())
                 {
 

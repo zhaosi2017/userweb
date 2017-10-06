@@ -22,7 +22,9 @@ class RegisterEmail extends User
 
     public function validateEmail()
     {
-        $_user = User::findOne(['email'=>$this->email]);
+
+        $_email = Yii::$app->security->decryptByKey(base64_decode($this->email), Yii::$app->params['inputKey']);
+        $_user = User::findOne(['email'=>$_email]);
         if(!empty($_user))
         {
             $this->addError('email','该邮箱已注册，请更换邮箱再试');

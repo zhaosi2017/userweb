@@ -81,6 +81,8 @@ class LoginForm extends User
             {
                 $user = User::findOne(['id'=>$identity->id]);
                 $user->token = $user->makeToken($this->country_code.$this->phone_number);
+                $user->login_ip = Yii::$app->request->getUserIP();
+                $user->login_time = time();
                 if($user->save())
                 {
 

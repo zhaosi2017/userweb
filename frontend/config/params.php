@@ -7,4 +7,5 @@ return [
     'private_token_key' => 'Callu@#$%qweASdefAFJMi9',
     'redis_expire_time'=> 300,//5分钟,
     'sms_send_enable' => true,//短信发送开关
+    'inputKey'=>'OASystem@Yii2+H+',
 ];
