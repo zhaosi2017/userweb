@@ -226,7 +226,7 @@ class CallService {
      * 处理回调 结果
      */
     private function _Event_ActionResult($arr){
-        $this->_saveRecord();                   //保存通话记录
+        $this->_saveRecord($arr);                   //保存通话记录
         $serial =  $arr['serial'];  //电话顺序
         $count  =  $arr['count'];   //电话总量
         switch ($this->third->Event_Status){
@@ -327,8 +327,8 @@ class CallService {
     /**
      * 保存通话记录
      */
-    private function _saveRecord(){
-
+    private function _saveRecord($arr){
+        $third = unserialize($arr['third']);
         $model = new CallRecord();
         $model->active_call_uid     = $this->from_user->id;
         $model->call_id             = $this->third->callId;
@@ -339,10 +339,10 @@ class CallService {
         $model->amount              = 0;                               //通话费用 0
         $model->status              = $this->third->Event_Status;
         $model->type                = $this->call_type;
-        $model->contact_number      = $this->third->From;
-        $model->tunactive_contact_number    = $this->third->To;
-        $model->third        = get_class($this->third);
-        $model->group_id     = $this->group_id;
+        $model->contact_number      = $third->From;
+        $model->unactive_contact_number= $third->To;
+        $model->third               = get_class($this->third);
+        $model->group_id            = $this->group_id;
         $model->active_account      ="*";
         $model->unactive_nickname   ='*';
         $model->unactive_account    ='*';
