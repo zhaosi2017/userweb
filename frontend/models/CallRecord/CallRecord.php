@@ -56,7 +56,7 @@ use frontend\models\User;
           $limit =  $p == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
           $offset = $p == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($p-1);
 
-          $data  = self::find()->select('max(id) as id')->where(['from_user_id'=>$userId])->groupBy('to_user_id')
+          $data  = self::find()->select('max(id) as id')->where(['active_call_uid'=>$userId])->groupBy('unactive_call_uid')
               ->offset($offset)->limit($limit)->orderBy('id desc') ->all();//createCommand()->getRawSql() ;
 
 
@@ -80,9 +80,9 @@ use frontend\models\User;
               {
                   if(isset($v->user->account) &&  $v->user->account) {
                       $_v['id'] = $v['id'];
-                      $_v['to_user_id'] = $v['to_user_id'];
-                      $_v['time'] = date('y-m-d H:i', $v['time']);
-                      $_v['call_type'] = $v['call_type'];
+                      $_v['to_user_id'] = $v['unactive_call_uid'];
+                      $_v['time'] = date('y-m-d H:i', $v['call_time']);
+                      $_v['call_type'] = $v['type'];
                       $_v['status'] = $v['status'];
                       $_v['group_id'] = $v['group_id'];
 
