@@ -19,10 +19,10 @@ use frontend\models\User;
 
   class CallRecord extends FActiveRecord{
 
-        const CALLRECORD_STATUS_SUCCESS     = 1;
-        const CALLRECORD_STATUS_FILED       = 2;
+        const CALLRECORD_STATUS_SUCCESS     = 0;
+        const CALLRECORD_STATUS_FILED       = 1;
         const CALLRECORD_STATUS_BUSY        = 3;
-        const CALLRECORD_STATUS_NOANWSER    = 4;
+        const CALLRECORD_STATUS_NOANWSER    = 5;
 
         static public  $status_map = [
             self::CALLRECORD_STATUS_SUCCESS =>'呼叫成功',

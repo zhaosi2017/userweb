@@ -330,19 +330,24 @@ class CallService {
     private function _saveRecord(){
 
         $model = new CallRecord();
-        $model->from_user_id = $this->from_user->id;
-        $model->call_id      = $this->third->callId;
-        $model->to_user_id   = $this->to_user->id;
-        $model->time         = time();
-        $model->text         = $this->third->Text;
-        $model->duration     = 0;                               //通话时间 暂时为0
-        $model->amount       = 0;                               //通话费用
-        $model->status       = $this->third->Event_Status;
-        $model->call_type    = $this->call_type;
-        $model->from_number  = $this->third->From;
-        $model->to_number    = $this->third->To;
+        $model->active_call_uid     = $this->from_user->id;
+        $model->call_id             = $this->third->callId;
+        $model->unactive_call_uid   = $this->to_user->id;
+        $model->call_time           = time();
+        $model->text                = $this->third->Text;
+        $model->duration            = 0;                               //通话时间 暂时为0
+        $model->amount              = 0;                               //通话费用 0
+        $model->status              = $this->third->Event_Status;
+        $model->type                = $this->call_type;
+        $model->contact_number      = $this->third->From;
+        $model->tunactive_contact_number    = $this->third->To;
         $model->third        = get_class($this->third);
         $model->group_id     = $this->group_id;
+        $model->active_account      ="*";
+        $model->unactive_nickname   ='*';
+        $model->unactive_account    ='*';
+        $model->active_nickname     ='*';
+        $model->record_status       = 1;
         $model->save();
 
     }
