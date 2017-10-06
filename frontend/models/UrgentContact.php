@@ -24,7 +24,7 @@ class UrgentContact extends FActiveRecord
      */
     public static function tableName()
     {
-        return 'user_urgent_contact';
+        return 'user_gent_contact';
     }
 
     public function rules()

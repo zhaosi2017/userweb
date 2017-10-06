@@ -169,6 +169,11 @@ class CallService {
         }
 
         if(!$this->_Event_ActionResult($catch)){
+            $tmp = $this->_redisGetVByK($this->group_id , false);
+            file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
+            if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
+                return $result;
+            }
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
                 if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT ){   //校验有没有紧急联系人
@@ -187,11 +192,6 @@ class CallService {
                     $this->_redisGetVByK($this->group_id ,true);
                 }
                 return  $result;
-            }
-            $tmp = $this->_redisGetVByK($this->group_id , false);
-            file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
-            if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
-                return $result;
             }
             if( !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
                 $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
