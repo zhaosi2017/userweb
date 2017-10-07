@@ -10,6 +10,7 @@
 namespace  common\services\appService\apps;
 
 use common\services\ttsService\thirds\Sinch;
+use frontend\models\Report\ReportCall;
 use frontend\models\Channel;
 use frontend\models\ErrCode;
 use frontend\models\Friends\Friends;
@@ -210,6 +211,20 @@ class callu {
 
         $friend_by_from = Friends::findOne(['friend_id'=>$this->from_user->id , 'user_id'=>$this->to_user->id]);   //被叫的好友（指主叫）
         $friend_by_to   = Friends::findOne(['friend_id'=>$this->to_user->id , 'user_id'=>$this->from_user->id]);      //主叫的好友（指被叫）
+        if(empty($friend_by_to)){
+            $type = ReportCall::CALL_TYPE_NOFRIEND;
+        }else{
+            $type = ReportCall::CALL_TYPE_FRIEND;
+        }
+        $model = ReportCall::findOne(['day'=>date('Y-m-d') , 'type'=>$type]);
+        if(empty($model)){
+            $model = new ReportCall();
+            $model->day = date('Y-m-d');
+            $model->number = 0;
+            $model->type = $type;
+        }
+        $model->number++;
+        $model->save();
 
         if(!empty($friend_by_from)){
             $friend_by_from->link_time = time();
