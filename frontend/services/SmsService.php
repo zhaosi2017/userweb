@@ -22,6 +22,7 @@ class SmsService
     {
         if($number){
 
+
             $switch = Yii::$app->params['sms_send_enable'];
             $redis = Yii::$app->redis;
             $verifyCode = $this->getVerifyCode($number);
@@ -72,6 +73,7 @@ class SmsService
         $redis = Yii::$app->redis;
         $verifyCode = '';
         $expire = isset(Yii::$app->params['redis_expire_time']) ? Yii::$app->params['redis_expire_time'] : 120;
+
         if($redis->HEXISTS($number,'code'))
         {
             $verifyCode = $redis->hget($number,'code');
@@ -117,6 +119,8 @@ class SmsService
             {
                 return true;
             }
+            return false;
+        }else{
             return false;
         }
 
