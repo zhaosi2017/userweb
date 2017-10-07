@@ -218,7 +218,7 @@ class CallService {
         $cache_keys = Yii::$app->redis->hkeys($cacheKey);
         $catch_vals = Yii::$app->redis->hvals($cacheKey);
         if($flag){
-            //Yii::$app->redis->del($cacheKey);
+            Yii::$app->redis->del($cacheKey);
         }
 
         return array_combine($cache_keys , $catch_vals);
@@ -347,10 +347,10 @@ class CallService {
         $model->unactive_contact_number= $third->To;
         $model->third               = get_class($this->third);
         $model->group_id            = $this->group_id;
-        $model->active_account      = $this->from_user->nickname;
-        $model->active_nickname     = $this->from_user->nickname;
-        $model->unactive_nickname   = empty($friend)?$this->to_user->nickname:$friend->remark;
-        $model->unactive_account    = $this->to_user->nickname;
+        $model->active_account      = $this->from_user->nickname? $this->from_user->nickname:"*";
+        $model->active_nickname     =$this->from_user->nickname? $this->from_user->nickname:"*";
+        $model->unactive_nickname   = empty($friend)?$this->to_user->nickname?$this->to_user->nickname:"*":$friend->remark;
+        $model->unactive_account    = $this->to_user->nickname? $this->to_user->nickname:"*" ;
         $model->record_status       = 1;
         $model->save();
 
