@@ -84,6 +84,9 @@ class RegisterController extends AuthController
             $registerEmail->email = isset($data['email']) ? $data['email'] : '';
             $registerEmail->password = isset($data['password']) ? $data['password'] : '';
             $registerEmail->code = isset($data['code']) ? $data['code'] : '';
+            $registerEmail->address = isset($data['address']) ? $data['address']:'';
+            $registerEmail->longitude = isset($data['longitude'])?$data['longitude']:'';
+            $registerEmail->latitude = isset($data['latitude'])?$data['latitude']:'';
             return $registerEmail->RegisterUser();
         }catch (Exception $e)
         {
