@@ -171,7 +171,7 @@ class CallService {
         $tmp = $this->_redisGetVByK($this->group_id , false);
         file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
         if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
-            return false;
+            return $result;
         }
         if(!$this->_Event_ActionResult($catch)){
             $numbers = json_decode($catch['numbers']);
@@ -218,7 +218,7 @@ class CallService {
         $cache_keys = Yii::$app->redis->hkeys($cacheKey);
         $catch_vals = Yii::$app->redis->hvals($cacheKey);
         if($flag){
-            Yii::$app->redis->del($cacheKey);
+            //Yii::$app->redis->del($cacheKey);
         }
 
         return array_combine($cache_keys , $catch_vals);
