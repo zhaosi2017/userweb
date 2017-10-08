@@ -11,6 +11,7 @@ use frontend\models\ErrCode;
 use frontend\models\UrgentContact;
 use frontend\models\User;
 use frontend\models\UserPhone;
+use Yii;
 
 class FriendsSearch extends User
 {
