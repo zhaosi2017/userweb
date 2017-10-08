@@ -38,7 +38,7 @@ class FriendsSearch extends User
              // ->orWhere(['like','account',$this->search_word])
               //->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
                ->orWhere(['account'=>$this->search_word])
-               ->orWhere(['nickname'=>base64_encode(Yii::$app->security->encryptByKey($this->search_word, Yii::$app->params['inputKey'])))->distinct()->all() ;
+               ->orWhere(['nickname'=>base64_encode(Yii::$app->security->encryptByKey($this->search_word, Yii::$app->params['inputKey']))])->distinct()->all() ;
            $tmp = [];
            if(!empty($data))
            {
