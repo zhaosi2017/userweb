@@ -20,6 +20,7 @@ use Yii;
 use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
 use frontend\models\SecurityQuestion;
+use frontend\services\UcodeService;
 /**
  * Class Friends
  * @package frontend\models\Friends
@@ -83,6 +84,11 @@ class LoginForm extends User
                 $user->token = $user->makeToken($this->country_code.$this->phone_number);
                 $user->login_ip = Yii::$app->request->getUserIP();
                 $user->login_time = time();
+                if( empty($user->account))
+                {
+                    $user->account = UcodeService::makeCode();
+                    $_user->account = $user->account;
+                }
                 if($user->save())
                 {
 

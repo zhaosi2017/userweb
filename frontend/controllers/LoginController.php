@@ -6,6 +6,7 @@ use frontend\models\EmailForm\EmailLogin;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\db\Exception;
+use frontend\models\ErrCode;
 class LoginController extends AuthController
 {
     public $enableCsrfValidation = false;

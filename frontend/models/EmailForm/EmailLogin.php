@@ -7,6 +7,7 @@ use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
 use frontend\models\SecurityQuestion;
 use frontend\models\ErrCode;
+use frontend\services\UcodeService;
 use Yii;
 
 
@@ -21,8 +22,13 @@ class EmailLogin extends User
         return [
             [['email', 'password'], 'required'],
             ['email','email'],
+
+
         ];
     }
+
+
+
 
 
 
@@ -32,7 +38,8 @@ class EmailLogin extends User
         {
 
             $_email = Yii::$app->security->decryptByKey(base64_decode($this->email), Yii::$app->params['inputKey']);
-            $_user = User::findOne(['email'=>$_email]);
+            $_user = $this->findUser();
+
             if(empty($_user))
             {
                 return $this->jsonResponse([],'该邮箱还未注册，请先注册',1,ErrCode::USER_NOT_EXIST);
@@ -50,8 +57,14 @@ class EmailLogin extends User
                 $user->token = $user->makeToken($this->email);
                 $user->login_ip = Yii::$app->request->getUserIP();
                 $user->login_time = time();
+                if( empty($user->account))
+                {
+                    $user->account = UcodeService::makeCode();
+                    $_user->account = $user->account;
+                }
                 if($user->save())
                 {
+
 
                     $userLoginLog = new UserLoginLog();
                     $userLoginLog->user_id = $_user->id;
@@ -83,6 +96,7 @@ class EmailLogin extends User
                         unset($data['header_img']);
                     }
 
+
                     $data['userPhoneNum'] = $userPhoneNum;
                     $data['urgentContactNum'] = $urgentContactNum;
                     $data['isSetQuestion'] = $isSetQuestion > 0 ? true :false;
@@ -98,6 +112,24 @@ class EmailLogin extends User
         }else{
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
+
+    }
+
+    public function findUser()
+    {
+        $users = User::find()->all();
+        if(!empty($users))
+        {
+
+            foreach ($users as $v)
+            {
+                if($v->email == $this->email)
+                {
+                    return $v;
+                }
+            }
+        }
+        return [];
 
     }
 

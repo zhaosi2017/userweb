@@ -42,6 +42,8 @@ class FriendsSearch extends User
                ->distinct()->all();
               //->orWhere(['nickname'=>$nickName])->distinct()->all() ;
            $tmp = [];
+           $userId = Yii::$app->user->id;
+           $_friends = Friends::find()->where(['user_id'=>$userId])->indexBy('friend_id')->all();
            if(!empty($data))
            {
                 foreach ($data as $k => $v)
@@ -52,7 +54,8 @@ class FriendsSearch extends User
                     $tmp[$k]['nickname'] = $v['nickname'];
                     $tmp[$k]['account'] = $v['account'];
                     $tmp[$k]['header_url'] = $v['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$v['header_img'] : '';
-
+                    $tmp[$k]['is_friend'] =isset($_friends[$v['id']]) ? true : false;
+                    $tmp[$k]['is_self'] = $userId == $v['id'] ? true : false;
                 }
            }else{
                $data = User::find()
@@ -64,6 +67,8 @@ class FriendsSearch extends User
                         $tmp[0]['nickname'] = $item->nickname;
                         $tmp[0]['account'] = $item->account;
                         $tmp[0]['header_url'] = $item->header_img;
+                        $tmp[0]['is_friend'] =isset($_friends[$item->id]) ? true : false;
+                        $tmp[0]['is_self'] = $userId == $item->id ? true : false;
                         break;
                     }
                 }
