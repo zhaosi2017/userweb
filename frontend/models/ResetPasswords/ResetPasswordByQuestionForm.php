@@ -181,7 +181,7 @@ class ResetPasswordByQuestionForm extends User
             $redis->setex($key, $expire, $_tmp);
             return $this->jsonResponse(['token' => $_tmp], '操作成功', '0', ErrCode::SUCCESS);
         }else{
-            return $this->jsonResponse([], $this->getErrors(), '0', ErrCode::SUCCESS);
+            return $this->jsonResponse([], $this->getErrors(), '1', ErrCode::VALIDATION_NOT_PASS);
         }
 
     }
