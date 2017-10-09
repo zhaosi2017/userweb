@@ -11,6 +11,7 @@ use frontend\models\ErrCode;
 use frontend\models\UrgentContact;
 use frontend\models\User;
 use frontend\models\UserPhone;
+use Yii;
 
 class FriendsSearch extends User
 {
@@ -38,7 +39,8 @@ class FriendsSearch extends User
              // ->orWhere(['like','account',$this->search_word])
               //->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
                ->orWhere(['account'=>$this->search_word])
-               ->orWhere(['nickname'=>$this->search_word])->distinct()->all() ;
+               ->distinct()->all();
+              //->orWhere(['nickname'=>$nickName])->distinct()->all() ;
            $tmp = [];
            if(!empty($data))
            {
@@ -52,6 +54,20 @@ class FriendsSearch extends User
                     $tmp[$k]['header_url'] = $v['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$v['header_img'] : '';
 
                 }
+           }else{
+               $data = User::find()
+                        ->select(['id','nickname','account','header_img'])
+                        ->distinct()->all();
+                foreach($data as $item){
+                    if($item->nickname == $this->search_word){
+                        $tmp[0]['id'] = $item->id;
+                        $tmp[0]['nickname'] = $item->nickname;
+                        $tmp[0]['account'] = $item->account;
+                        $tmp[0]['header_url'] = $item->header_img;
+                        break;
+                    }
+                }
+
            }
            return $this->jsonResponse($tmp,'操作成功','0',ErrCode::SUCCESS);
        }else{
