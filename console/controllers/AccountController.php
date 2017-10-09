@@ -20,7 +20,7 @@ class AccountController extends Controller{
 
     public function actionStart(){
         try{
-            $user = User::find()->select('account,id')->where(['account'=>''])->limit(100)->all();
+            $user = User::find()->select('account,id')->where(['account'=>null])->orWhere(['account'=>''])->limit(100)->all();
             if(!empty($user))
             {
                 foreach ($user as $u)
