@@ -121,8 +121,16 @@ $module = $this->context->module->id;
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li class="<?php if(Yii::$app->controller->id == 'customer'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/customer/index']) ?>">客服管理</a>
-                        <li class="<?php if(Yii::$app->controller->id == 'agency'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/agency/index']) ?>">单位管理</a>
+                        <li class="<?php if(Yii::$app->controller->id == 'customer'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/customer/index']) ?>">
+                                <i class="fa fa-sun-o"></i>
+                                <span>客服管理</span>
+                            </a>
+                        <li class="<?php if(Yii::$app->controller->id == 'agency'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/agency/index']) ?>">
+                                <i class="fa fa-gear"></i>
+                                <span>单位管理</span>
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -134,7 +142,11 @@ $module = $this->context->module->id;
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li class="<?php if(Yii::$app->controller->action->id == 'index'){ echo 'active';}?>"><a class="J_menuItem" href="<?= Url::to(['/channel/index']) ?>">渠道管理</a>
+                        <li class="<?php if(Yii::$app->controller->action->id == 'index'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/channel/index']) ?>">
+                                <i class="fa fa-bars"></i>
+                                <span>渠道管理</span>
+                            </a>
                         </li>
                     </ul>
                 </li>
