@@ -5,6 +5,7 @@
  */
 
 $this->title = '系统信息';
+dmstr\web\AdminLteAsset::register($this);
 $this->registerJs("window.paceOptions = { ajax: false }", \yii\web\View::POS_HEAD);
 $this->registerJsFile(
     Yii::$app->request->baseUrl . 'js/system-information/index.js',
