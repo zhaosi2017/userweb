@@ -27,7 +27,10 @@
         "nexmo/client":"1.0.0-beta3",
         "codeception/base": "^2.3",
         "kartik-v/yii2-widget-fileinput":"v1.0.6",
-        "twilio/sdk": "^5.14"
+        "twilio/sdk": "^5.14",
+        "trntv/probe": "^0.2",
+        "miloschuman/yii2-highcharts-widget": "*",
+        "dmstr/yii2-adminlte-asset": "2.*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
