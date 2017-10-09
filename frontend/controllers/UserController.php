@@ -344,6 +344,10 @@ class UserController extends AuthController
             $user_qustion['a2']= $_qustion->a_two;
             $user_qustion['a3']= $_qustion->a_three;
         }
+        if(empty($user_qustion))
+        {
+            $user_qustion = (object)$user_qustion;
+        }
         return $this->jsonResponse(['questionList'=>$data,'userQuestion'=>$user_qustion] ,'操作成功',0,ErrCode::SUCCESS);
 
     }
