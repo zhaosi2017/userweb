@@ -173,6 +173,7 @@ class Friends extends FActiveRecord {
 
 
     private function _getMyFirstCharter($str,$pydic){
+
         //简体 繁体 等
         if(empty($str) ){return 'other';}
 
@@ -191,6 +192,8 @@ class Friends extends FActiveRecord {
             return 'other';
         }
         $postion =  strripos($pydic,$_str);
+
+
 
         if($postion)
         {

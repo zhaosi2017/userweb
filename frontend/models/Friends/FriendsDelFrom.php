@@ -53,6 +53,7 @@ class FriendsDelFrom extends Friends
             }else{
                 Yii::$app->db->beginTransaction(Transaction::READ_COMMITTED);
                 $transaction = Yii::$app->db->getTransaction();
+
                 if(!$_friend->delete()){
                     $transaction->rollBack();
                     return $this->jsonResponse([],$_friend->getErrors(),'1',ErrCode::FAILURE);
