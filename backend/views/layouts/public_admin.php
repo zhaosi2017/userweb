@@ -55,6 +55,12 @@ $module = $this->context->module->id;
                                 <span>系统日志</span>
                             </a>
                         </li>
+                        <li class="">
+                            <a href="<?= Url::to(['/system-information/index']) ?>">
+                                <i class="fa fa-line-chart"></i>
+                                <span>系统监控</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

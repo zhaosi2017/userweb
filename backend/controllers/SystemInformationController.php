@@ -7,7 +7,6 @@
  */
 namespace backend\controllers;
 
-use yii\web\Controller;
 use probe\Factory;
 use Yii;
 use yii\web\Response;
