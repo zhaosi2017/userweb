@@ -28,7 +28,7 @@
         "codeception/base": "^2.3",
         "kartik-v/yii2-widget-fileinput":"v1.0.6",
         "twilio/sdk": "^5.14",
-        "trntv/probe": "^0.2",
+        "trntv/probe": "1.0.0",
         "miloschuman/yii2-highcharts-widget": "*",
         "dmstr/yii2-adminlte-asset": "2.*",
         "bower-asset/flot": "^0.8"

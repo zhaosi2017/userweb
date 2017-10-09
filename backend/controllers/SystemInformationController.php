@@ -7,7 +7,7 @@
  */
 namespace backend\controllers;
 
-use probe\Factory;
+use Probe\ProviderFactory;
 use Yii;
 use yii\web\Response;
 use backend\models\logreader\LogFile;
@@ -19,7 +19,7 @@ class SystemInformationController extends PController
 
     public function actionIndex()
     {
-        $provider = Factory::create();
+        $provider = ProviderFactory::create();
         if ($provider) {
             if (Yii::$app->request->isAjax) {
                 Yii::$app->response->format = Response::FORMAT_JSON;
