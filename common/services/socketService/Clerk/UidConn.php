@@ -64,7 +64,7 @@ class UidConn extends  AbstruactClerk{
         }
         $this->result['message'] = '连接失败';
         $server->push($frame->fd,json_encode($this->result));
-
+        $server->close($frame->fd);
         return ;
     }
 

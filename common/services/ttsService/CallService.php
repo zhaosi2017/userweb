@@ -231,23 +231,29 @@ class CallService {
 
         $serial =  $arr['serial'];  //电话顺序
         $count  =  $arr['count'];   //电话总量
+        $text = '';
+        if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT){
+            $text = '部电话';
+        }else{
+            $text = '位联系人';
+        }
         switch ($this->third->Event_Status){
             case CallRecord::CALLRECORD_STATUS_SUCCESS:
-                $this->app->sendText('第'.$serial.'部'.$this->call_type.'电话接通成功' , ErrCode::CALL_SUCCESS);
+                $this->app->sendText('第'.$serial.$text.'接通成功' , ErrCode::CALL_SUCCESS);
                 $this->_redisGetVByK($this->group_id ,true);
                 return true;
                 break;
             case CallRecord::CALLRECORD_STATUS_FILED:
-                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'搜索不到信号(共'.$count.'部)', ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'搜索不到信号(共'.$count.'部)', ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_BUSY:
-                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'被挂断或占线(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'被挂断或占线(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_NOANWSER:
-                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             default:
-                $this->app->sendText('第'.$serial.'部'.self::$call_type_map[$this->call_type].'无信号(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'无信号(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
         }
         return false;
