@@ -31,7 +31,13 @@ class ClerkCallu extends  AbstruactClerk{
     public function stratClerk($server,  $frame , $data){
 
         if($data->action == 1){                     //打电话
-
+            $info = $server->connection_info($frame->fd);
+            if(!isset($info['uid']) || empty($info['uid']) ){
+                $this->result['message'] = '请登陆！';
+                $server->push($frame->fd , json_encode( $this->result , JSON_UNESCAPED_UNICODE));
+                $server->close($frame->fd);
+                return false;
+            }
             $this->_call($server,  $frame);
 
         }elseif($data->action == 6){
