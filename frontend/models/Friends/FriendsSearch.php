@@ -87,6 +87,7 @@ class FriendsSearch extends User
             $data['userPhoneNum']=$userPhoneNum;
             $data['urgentContactNum']=$urgentContactNum;
             $data['is_friend'] = empty($_friend) ? false : true;
+            $data['is_self'] = $user->id == $userId ? true : false;
 
             return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
         }else{

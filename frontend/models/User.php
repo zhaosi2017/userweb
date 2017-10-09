@@ -479,6 +479,7 @@ class User extends FActiveRecord implements IdentityInterface
             return $this->jsonResponse([],'手机号还没注册，请先注册','1',ErrCode::USER_NOT_EXIST);
         }
         $model = SecurityQuestion::find()->where(['userid'=>$user->id])->one();
+
         if(empty($model)){
             return $this->jsonResponse([],'用户没有设置密保问题','1',ErrCode::SECURITY_QUESTION_NOT_SET);
         }
