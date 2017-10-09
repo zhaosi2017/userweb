@@ -42,24 +42,74 @@ $module = $this->context->module->id;
                     <a class="J_menuItem" href="<?= Url::to(['/default/index']) ?>"><i class="fa fa-home"></i> <span class="nav-label">首页</span></a>
                 </li>
 
+                <li class="<?php if(Yii::$app->controller->id == 'channel'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-gears"></i>
+                        <span class="nav-label">系统模块</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="">
+                            <a href="<?= Url::to(['/system-information/log']) ?>">
+                                <i class="fa fa-bug"></i>
+                                <span>系统日志</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="<?php if(Yii::$app->controller->id == 'authitem' || Yii::$app->controller->id =='admin'){ echo 'active';}else{ echo '';}?>">
                     <a href="#">
-                        <i class="fa fa-gear"></i>
-                        <span class="nav-label">后台用户管理</span>
+                        <i class="fa fa-user-secret"></i>
+                        <span class="nav-label">用户模块</span>
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level" test="<?=Yii::$app->controller->action->id;?>">
+                        <li class="<?php if(Yii::$app->controller->id =='admin' && Yii::$app->controller->action->id == 'index'){ echo 'active';}?>">
+                            <a class="J_menuItem" href="<?= Url::to(['/admin/index']) ?>">
+                                <i class="fa fa-group"></i>
+                                <span>用户列表</span>
+                            </a>
+                        </li>
                         <li class="<?php if(Yii::$app->controller->id =='authItem' && Yii::$app->controller->action->id == 'index'){ echo 'active';}?>">
-                            <a class="J_menuItem" href="<?= Url::to(['/authitem/index']) ?>">角色列表</a>
+                            <a class="J_menuItem" href="<?= Url::to(['/authitem/index']) ?>">
+                                <i class="fa fa-group"></i>
+                                <span>角色列表</span>
+                            </a>
                         </li>
                         <li class="<?php if(Yii::$app->controller->id =='authItem' && Yii::$app->controller->action->id == 'privilege'){ echo 'active';}?>">
-                            <a class="J_menuItem" href="<?= Url::to(['/authitem/privilege']) ?>">权限列表</a>
-                        </li>
-                        <li class="<?php if(Yii::$app->controller->id =='admin' && Yii::$app->controller->action->id == 'index'){ echo 'active';}?>">
-                            <a class="J_menuItem" href="<?= Url::to(['/admin/index']) ?>">用户列表</a>
+                            <a class="J_menuItem" href="<?= Url::to(['/authitem/privilege']) ?>">
+                                <i class="fa fa-sitemap"></i>
+                                <span>权限列表</span>
+                            </a>
                         </li>
                         <li class="<?php if(Yii::$app->controller->id =='admin' && Yii::$app->controller->action->id == 'login-logs'){ echo 'active';}?>">
-                            <a class="J_menuItem" href="<?= Url::to(['/admin/login-logs']) ?>">登录日志</a>
+                            <a class="J_menuItem" href="<?= Url::to(['/admin/login-logs']) ?>">
+                                <i class="fa fa-file-text"></i>
+                                <span>登录日志</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="<?php if(Yii::$app->controller->id == 'channel'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-cny"></i>
+                        <span class="nav-label">财务模块</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="">
+                            <a href="">
+                                <i class="fa fa-mail-forward"></i>
+                                <span>充值</span>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="">
+                                <i class="fa fa-mail-reply"></i>
+                                <span>提款</span>
+                            </a>
                         </li>
                     </ul>
                 </li>
