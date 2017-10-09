@@ -51,7 +51,7 @@ class ResetPasswordByQuestionForm extends User
         return [
 
             ['country_code', 'integer'],
-            [['country_code', 'phone','q1','q2','q3','a1','a2','a3'], 'required'],
+            [['country_code', 'phone','q1','q2','q3','a1','a2','a3'], 'required','message'=>'{attribute}不能为空'],
             [['a1','a2','a3'],'string','length' => [1, 20]],
             ['country_code', 'match', 'pattern' => '/^[1-9]{1}[0-9]{0,5}$/', 'message' => '{attribute}必须为1到6位纯数字'],
             ['phone', 'match', 'pattern' => '/^[0-9]{4,11}$/', 'message' => '{attribute}必须为4到11位纯数字'],
@@ -60,6 +60,20 @@ class ResetPasswordByQuestionForm extends User
             ['q3','validateThree'],
 
 
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'country_code'=>'国码',
+            'phone'=>'电话',
+            'q1'=>'问题1',
+            'q1'=>'问题2',
+            'q3'=>'问题3',
+            'a1'=>'答案1',
+            'a2'=>'答案2',
+            'a3'=>'答案3',
         ];
     }
 
