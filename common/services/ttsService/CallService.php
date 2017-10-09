@@ -12,6 +12,7 @@ namespace  common\services\ttsService;
 use frontend\models\BlackLists\BlackList;
 use frontend\models\CallRecord\CallRecord;
 use frontend\models\ErrCode;
+use frontend\models\Friends\Friends;
 use frontend\models\UrgentContact;
 use frontend\models\User;
 use frontend\models\UserPhone;
@@ -132,6 +133,7 @@ class CallService {
             $this->app->result['data']['call_type'] = $this->call_type;
             $this->app->sendtext($this->group_id , ErrCode::CALL_MESSAGE_GROUP);   //给客户端一个打电话的唯一标志 用于中断呼叫
         }
+        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--发起呼叫--'.$this->group_id.PHP_EOL , 8);
         $this->app->result['data']['group_id'] = $this->group_id;
         $this->app->result['data']['call_type'] = $this->call_type;
         $this->app->sendtext('正在拨打第1'.self::$call_type_map[$this->call_type].'（共'.$count.'部)' , ErrCode::CALL_MESSAGE);
@@ -148,6 +150,7 @@ class CallService {
      * @param array $event_data
      * @return mixed
      * 回调事件
+     * 1 如果停止呼叫之后
      */
     public function Event(Array $event_data){
 
@@ -159,11 +162,17 @@ class CallService {
         $this->from_user    = unserialize($catch['from_user']);
         $this->call_type    = $catch['call_type'];
         $this->group_id     = $catch['group_id'];
+        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'---呼叫回调--'.$this->group_id.PHP_EOL , 8);
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return $result;
         }
-
+        $this->_saveRecord($catch);                   //保存通话记录
+        $tmp = $this->_redisGetVByK($this->group_id , false);
+        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
+        if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
+            return $result;
+        }
         if(!$this->_Event_ActionResult($catch)){
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
@@ -184,8 +193,7 @@ class CallService {
                 }
                 return  $result;
             }
-            $tmp = $this->_redisGetVByK($this->group_id , false);
-            if(!empty($tmp) && !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
+            if( !$this->_call($catch)){                  //前提是呼叫流程没有被用户强制中断
                 $this->app->sendtext("呼叫异常，请稍后再试！",ErrCode::CALL_EXCEPTION);
                 $this->_redisGetVByK($this->group_id);
             }
@@ -198,14 +206,15 @@ class CallService {
      */
     public function stop_call(){
         if(!empty($this->group_id)){
-            Yii::$app->redis->del($this->group_id);
+
+            $f = Yii::$app->redis->del($this->group_id);
+            file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--结束电话--'.$this->group_id.'&&'.var_export($f , true).PHP_EOL , 8);
         }
         $this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
     }
 
 
     private function _redisGetVByK($cacheKey , $flag = true){
-
         $cache_keys = Yii::$app->redis->hkeys($cacheKey);
         $catch_vals = Yii::$app->redis->hvals($cacheKey);
         if($flag){
@@ -219,26 +228,32 @@ class CallService {
      * 处理回调 结果
      */
     private function _Event_ActionResult($arr){
-        $this->_saveRecord();                   //保存通话记录
+
         $serial =  $arr['serial'];  //电话顺序
         $count  =  $arr['count'];   //电话总量
+        $text = '';
+        if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT){
+            $text = '部电话';
+        }else{
+            $text = '位联系人';
+        }
         switch ($this->third->Event_Status){
             case CallRecord::CALLRECORD_STATUS_SUCCESS:
-                $this->app->sendText('第'.$serial.'部电话接通成功' , ErrCode::CALL_SUCCESS);
+                $this->app->sendText('第'.$serial.$text.'接通成功' , ErrCode::CALL_SUCCESS);
                 $this->_redisGetVByK($this->group_id ,true);
                 return true;
                 break;
             case CallRecord::CALLRECORD_STATUS_FILED:
-                $this->app->sendText('第'.$serial.'部电话搜索不到信号(共'.$count.'部)', ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'搜索不到信号(共'.$count.'部)', ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_BUSY:
-                $this->app->sendText('第'.$serial.'部电话被挂断或占线(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'被挂断或占线(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             case CallRecord::CALLRECORD_STATUS_NOANWSER:
-                $this->app->sendText('第'.$serial.'部电话无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'无人接听(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
             default:
-                $this->app->sendText('第'.$serial.'部电话无信号(共'.$count.'部)',ErrCode::CALL_FAIL);
+                $this->app->sendText('第'.$serial.$text.'无信号(共'.$count.'部)',ErrCode::CALL_FAIL);
                 break;
         }
         return false;
@@ -282,10 +297,13 @@ class CallService {
         Yii::$app->redis->hset($call_key , 'count' ,(count($numbers) + $Serial) );
         Yii::$app->redis->hset($call_key , 'group_id' ,$this->group_id );
 
-        Yii::$app->redis->expire($call_key , 60*60 );
+        Yii::$app->redis->expire($call_key , 2*60 );
+        if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT)
+        {
+            Yii::$app->redis->hset($this->group_id , 'call_type' ,$this->call_type );   //这个记录的是同一次呼叫 的呼叫类型
+            Yii::$app->redis->expire($this->group_id , 10*60 );
+        }
 
-        Yii::$app->redis->hset($this->group_id , 'call_type' ,$this->call_type );   //这个记录的是同一次呼叫 的呼叫类型
-        Yii::$app->redis->expire($this->group_id , 60*60 );
     }
     /**
      * 获取被叫的电话号码
@@ -317,22 +335,29 @@ class CallService {
     /**
      * 保存通话记录
      */
-    private function _saveRecord(){
+    private function _saveRecord($arr){
 
+        $friend = Friends::findOne(['user_id'=>$this->from_user->id , 'friend_id'=>$this->to_user->id]);
+        $third = unserialize($arr['third']);
         $model = new CallRecord();
-        $model->from_user_id = $this->from_user->id;
-        $model->call_id      = $this->third->callId;
-        $model->to_user_id   = $this->to_user->id;
-        $model->time         = time();
-        $model->text         = $this->third->Text;
-        $model->duration     = 0;                               //通话时间 暂时为0
-        $model->amount       = 0;                               //通话费用
-        $model->status       = $this->third->Event_Status;
-        $model->call_type    = $this->call_type;
-        $model->from_number  = $this->third->From;
-        $model->to_number    = $this->third->To;
-        $model->third        = get_class($this->third);
-        $model->group_id     = $this->group_id;
+        $model->active_call_uid     = $this->from_user->id;
+        $model->call_id             = $this->third->callId;
+        $model->unactive_call_uid   = $this->to_user->id;
+        $model->call_time           = time();
+        $model->text                = $third->Text;
+        $model->duration            = 0;                               //通话时间 暂时为0
+        $model->amount              = 0;                               //通话费用 0
+        $model->status              = $this->third->Event_Status;
+        $model->type                = $this->call_type;
+        $model->contact_number      = $third->From;
+        $model->unactive_contact_number= $third->To;
+        $model->third               = get_class($this->third);
+        $model->group_id            = $this->group_id;
+        $model->active_account      = $this->from_user->nickname? $this->from_user->nickname:"*";
+        $model->active_nickname     =$this->from_user->nickname? $this->from_user->nickname:"*";
+        $model->unactive_nickname   = empty($friend)?$this->to_user->nickname?$this->to_user->nickname:"*":$friend->remark;
+        $model->unactive_account    = $this->to_user->nickname? $this->to_user->nickname:"*" ;
+        $model->record_status       = 1;
         $model->save();
 
     }

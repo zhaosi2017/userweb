@@ -51,14 +51,14 @@ class swooleServer{
 
         $this->server->set([
             'worker_num' => 4,
-            'daemonize' => false,
+            'daemonize' => true,
             'max_request' => 10000,
             'dispatch_mode' => 5,
             'log_file'=>'/tmp/swooles.log',
             'debug_mode'=> 1,
             'heartbeat_check_interval' => 350,//每180秒 遍历所有连接
             'heartbeat_idle_time' => 360,//与heartbeat_check_interval配合使用。表示连接最大允许空闲的时间（6分钟）
-            'task_worker_num'=>100,
+            'task_worker_num'=>10,
         ]);
 
 
@@ -83,7 +83,7 @@ class swooleServer{
      * 只是呼叫消息处理  如果需要增加其他业务 请将业务层封装
      */
     public function onMessage($server,  $frame){
-        file_put_contents('/tmp/test-call'.date('Y-m-d').'.log' , var_export($frame->data , true).PHP_EOL , 8);
+        file_put_contents('/tmp/test-call'.date('Y-m-d').'.log' , date('Y-m-d H:i:s').var_export($frame->data , true).PHP_EOL , 8);
         $data = json_decode($frame->data);
         if(empty($data)  || !isset($data->action)){
 
@@ -138,13 +138,6 @@ class swooleServer{
 
     public function onClose( $server,  $fd){
 
-        $redis = \Yii::$app->redis;
-        if($redis->exists(UidConn::UID_CONN_FD.$fd))
-        {
-            $uid = $redis->get(UidConn::UID_CONN_FD.$fd);
-            $redis->del(UidConn::UID_CONN_ACCOUNT.$uid);
-            $redis->del(UidConn::UID_CONN_FD.$fd);
-        }
     }
 
 

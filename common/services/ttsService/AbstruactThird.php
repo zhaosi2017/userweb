@@ -12,6 +12,7 @@
 namespace  common\services\ttsService;
 
 use frontend\models\TtsLog\TtsLog;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
@@ -102,6 +103,10 @@ abstract  class AbstruactThird{
         try{
               $response = $client->send($request , ['timeout' => 30]);
         }catch ( Exception $e){
+              $response = new Response();
+        }catch(\Error $e){
+              $response = new Response();
+        }catch (ConnectException $e){
               $response = new Response();
         }
         return $response;

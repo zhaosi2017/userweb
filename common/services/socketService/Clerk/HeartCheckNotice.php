@@ -54,6 +54,7 @@ class HeartCheckNotice extends  AbstruactClerk{
         {
             $this->result['message'] = 'token非法';
             $server->push($frame->fd, json_encode($this->result));
+            $server->close($frame->fd);
             return ;
         }
         $this->result['data'] = ['account'=>$_user->account,'type'=>3];

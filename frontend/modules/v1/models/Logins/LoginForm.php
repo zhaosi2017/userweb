@@ -84,7 +84,7 @@ class LoginForm extends User
             if(Yii::$app->user->login($identity))
             {
                 $user = User::findOne(['id'=>$identity->id]);
-                $user->token = $user->makeToken();
+                $user->token = $user->makeToken($this->country_code.$this->phone_number);
                 if($user->save())
                 {
                     $identity->token = $user->token;

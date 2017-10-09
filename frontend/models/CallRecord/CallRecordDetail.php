@@ -45,8 +45,8 @@ class CallRecordDetail extends CallRecord
             }
             $offset = $this->p == 0 ? 0: self::PAGE_NUM*($this->p-1);
 
-            $callRecord = CallRecord::find()->select(['id','to_user_id','time','status','call_type'])
-                ->where(['to_user_id'=>$user->id,'from_user_id'=>$userId])->orderBy('time desc')
+            $callRecord = CallRecord::find()->select(['id','unactive_call_uid','call_time','status','type'])
+                ->where(['unactive_call_uid'=>$user->id,'active_call_uid'=>$userId])->orderBy('call_time desc')
                 ->limit(self::PAGE_NUM)
                 ->offset($offset)
                 ->all();
@@ -55,10 +55,10 @@ class CallRecordDetail extends CallRecord
             if(!empty($callRecord))
             {
                 foreach ($callRecord as $key => $call) {
-                    $data[$key]['time'] = date('y-m-d H:i', $call['time']);
+                    $data[$key]['time'] = date('y-m-d H:i', $call['call_time']);
                     $data[$key]['msg'] = isset(self::$status_map[$call['status']]) ? self::$status_map[$call['status']] : '未知错误';
                     $data[$key]['status'] = $call['status'];
-                    $_user = User::find()->select('account,header_img')->where(['id' => $call['to_user_id']])->one();
+                    $_user = User::find()->select('account,header_img')->where(['id' => $call['unactive_call_uid']])->one();
                     $data[$key]['account'] = isset($_user['account']) ? $_user['account'] : '';
                     $data[$key]['header_url'] = isset($_user['header_img']) &&  $_user['header_img'] ? Yii::$app->params['frontendBaseDomain'].$_user['header_img'] : '';
                     $data[$key]['id'] = $call['id'];

@@ -11,6 +11,7 @@ use frontend\models\ErrCode;
 use frontend\models\UrgentContact;
 use frontend\models\User;
 use frontend\models\UserPhone;
+use Yii;
 
 class FriendsSearch extends User
 {
@@ -38,8 +39,11 @@ class FriendsSearch extends User
              // ->orWhere(['like','account',$this->search_word])
               //->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
                ->orWhere(['account'=>$this->search_word])
-               ->orWhere(['nickname'=>$this->search_word])->distinct()->all() ;
+               ->distinct()->all();
+              //->orWhere(['nickname'=>$nickName])->distinct()->all() ;
            $tmp = [];
+           $userId = Yii::$app->user->id;
+           $_friends = Friends::find()->where(['user_id'=>$userId])->indexBy('friend_id')->all();
            if(!empty($data))
            {
                 foreach ($data as $k => $v)
@@ -50,8 +54,25 @@ class FriendsSearch extends User
                     $tmp[$k]['nickname'] = $v['nickname'];
                     $tmp[$k]['account'] = $v['account'];
                     $tmp[$k]['header_url'] = $v['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$v['header_img'] : '';
-
+                    $tmp[$k]['is_friend'] =isset($_friends[$v['id']]) ? true : false;
+                    $tmp[$k]['is_self'] = $userId == $v['id'] ? true : false;
                 }
+           }else{
+               $data = User::find()
+                        ->select(['id','nickname','account','header_img'])
+                        ->distinct()->all();
+                foreach($data as $item){
+                    if($item->nickname == $this->search_word){
+                        $tmp[0]['id'] = $item->id;
+                        $tmp[0]['nickname'] = $item->nickname;
+                        $tmp[0]['account'] = $item->account;
+                        $tmp[0]['header_url'] = $item->header_img;
+                        $tmp[0]['is_friend'] =isset($_friends[$item->id]) ? true : false;
+                        $tmp[0]['is_self'] = $userId == $item->id ? true : false;
+                        break;
+                    }
+                }
+
            }
            return $this->jsonResponse($tmp,'操作成功','0',ErrCode::SUCCESS);
        }else{
@@ -87,6 +108,7 @@ class FriendsSearch extends User
             $data['userPhoneNum']=$userPhoneNum;
             $data['urgentContactNum']=$urgentContactNum;
             $data['is_friend'] = empty($_friend) ? false : true;
+            $data['is_self'] = $user->id == $userId ? true : false;
 
             return $this->jsonResponse($data,'操作成功','0',ErrCode::SUCCESS);
         }else{

@@ -19,10 +19,10 @@ use frontend\models\User;
 
   class CallRecord extends FActiveRecord{
 
-        const CALLRECORD_STATUS_SUCCESS     = 1;
-        const CALLRECORD_STATUS_FILED       = 2;
+        const CALLRECORD_STATUS_SUCCESS     = 0;
+        const CALLRECORD_STATUS_FILED       = 1;
         const CALLRECORD_STATUS_BUSY        = 3;
-        const CALLRECORD_STATUS_NOANWSER    = 4;
+        const CALLRECORD_STATUS_NOANWSER    = 5;
 
         static public  $status_map = [
             self::CALLRECORD_STATUS_SUCCESS =>'呼叫成功',
@@ -56,8 +56,9 @@ use frontend\models\User;
           $limit =  $p == 0 ?  self::FIRST_NUM : self::OTHER_NUM;
           $offset = $p == 0 ? 0: self::FIRST_NUM+self::OTHER_NUM*($p-1);
 
-          $data  = self::find()->select('max(id) as id')->where(['from_user_id'=>$userId])->groupBy('to_user_id')
+          $data  = self::find()->select('max(id) as id')->where(['active_call_uid'=>$userId])->groupBy('unactive_call_uid')
               ->offset($offset)->limit($limit)->orderBy('id desc') ->all();//createCommand()->getRawSql() ;
+
 
 
           $_res = [];
@@ -72,29 +73,32 @@ use frontend\models\User;
               }
           }
 
+
           $tmp = [];
           if(!empty($_res))
           {
               $_friends = Friends::find()->select('remark,friend_id')->where(['user_id'=>$userId])->indexBy('friend_id')->all();
               foreach ($_res as $k=>$v)
               {
-                  if(isset($v->user->account) &&  $v->user->account) {
-                      $_v['id'] = $v['id'];
-                      $_v['to_user_id'] = $v['to_user_id'];
-                      $_v['time'] = date('y-m-d H:i', $v['time']);
-                      $_v['call_type'] = $v['call_type'];
-                      $_v['status'] = $v['status'];
-                      $_v['group_id'] = $v['group_id'];
 
-                      $_name = isset($_friends[$v['to_user_id']]['remark']) && $_friends[$v['to_user_id']]['remark'] ? $_friends[$v['to_user_id']]['remark'] : '';
+                  if(isset($v->user->account) &&  $v->user->account) {
+                      $_vs['id'] = $v['id'];
+                      $_vs['to_user_id'] = $v['unactive_call_uid'];
+                      $_vs['time'] = date('y-m-d H:i', $v['call_time']);
+                      $_vs['call_type'] = $v['type'];
+                      $_vs['status'] = $v['status'];
+                      $_vs['group_id'] = $v['group_id'];
+
+                      $_name = isset($_friends[$_vs['to_user_id']]['remark']) && $_friends[$_vs['to_user_id']]['remark'] ? $_friends[$_vs['to_user_id']]['remark'] : '';
                       if (empty($_name)) {
                           $_name = isset($v->user->nickname) ? $v->user->nickname : '';
                       }
-                      $_v['channel'] = isset($v->user->channel) ? $v->user->channel : '';
-                      $_v['nickname'] = $_name;
-                      $_v['account'] = isset($v->user->account) ? $v->user->account : '';
-                      $_v['header_url'] = isset($v->user->header_img) && $v->user->header_img ? Yii::$app->params['frontendBaseDomain'] . $v->user->header_img : '';
-                      $tmp[] = $_v;
+                      $_vs['channel'] = isset($v->user->channel) ? $v->user->channel : '';
+                      $_vs['nickname'] = $_name;
+                      $_vs['account'] = isset($v->user->account) ? $v->user->account : '';
+                      $_vs['header_url'] = isset($v->user->header_img) && $v->user->header_img ? Yii::$app->params['frontendBaseDomain'] . $v->user->header_img : '';
+                      $tmp[] = $_vs;
+
                   }
               }
           }
@@ -104,7 +108,7 @@ use frontend\models\User;
 
       public function getUser()
       {
-          return $this->hasOne(User::className(), ['id' => 'to_user_id']);
+          return $this->hasOne(User::className(), ['id' => 'unactive_call_uid']);
       }
 
 

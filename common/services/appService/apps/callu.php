@@ -10,6 +10,7 @@
 namespace  common\services\appService\apps;
 
 use common\services\ttsService\thirds\Sinch;
+use frontend\models\Report\ReportCall;
 use frontend\models\Channel;
 use frontend\models\ErrCode;
 use frontend\models\Friends\Friends;
@@ -18,6 +19,7 @@ use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
 use WebSocket\Client;
 use yii\db\Exception;
+use Yii;
 
 class callu {
     /**
@@ -52,10 +54,17 @@ class callu {
 
     ];
 
+    /***
+     * @param $string
+     * @param string $code
+     * @return bool
+     * 返回电话消息给app
+     */
     public function sendText($string , $code = "0000"){
 
         $this->result['message'] = $string;
         $this->result['code']    = $code;
+        $this->_union_check($this->from_user->account , $this->from_user->token);
         if(empty($this->socket)){
             $this->socket = new WebSocket();
         }
@@ -72,7 +81,6 @@ class callu {
         if($b){ //发送消息失败
             return false;
         }
-        sleep(1);
         $data = $this->socket->recv_data();
         $json = json_decode($data);
         return $json->status;
@@ -120,6 +128,7 @@ class callu {
         $service = new  CallService();
         $service->app = $this;
         $service->group_id = $data->group_id;
+        $this->_union_check($this->from_user->account , $this->from_user->token , true);
         $service->stop_call();
 
     }
@@ -155,8 +164,45 @@ class callu {
         $this->to_user     = $to_user;
         $this->channel     = $channel;
         $this->result['status'] = 0;
+        if(!$this->_union_call( $this->from_user->account , $this->from_user->token)){
+            $this->sendText('只能发起一个电话',ErrCode::CODE_ERROR);
+            return false;
+        }
         return true;
     }
+
+    /**
+     * @param $ucode
+     * @param $token
+     * @return bool
+     * 一个用户在同一时间只能发起一起次呼叫
+     */
+    private function _union_call($ucode , $token ){
+
+        $key = $ucode.'-'.$token;
+        if(Yii::$app->redis->exists($key)){
+            return false;
+        }
+        Yii::$app->redis->hset($key , 'status' , 1);
+        Yii::$app->redis->expire($key , 2*60);
+        return true;
+    }
+
+    /**
+     * @param $ucode
+     * @param $token
+     * 管理唯一呼叫标志
+     */
+    private function _union_check($ucode , $token , $flag = false){
+        if(in_array($this->result['code'] ,[ErrCode::CALL_EXCEPTION , ErrCode::CALL_SUCCESS , ErrCode::CALL_END]) || $flag){
+            $key = $ucode.'-'.$token;
+            if(Yii::$app->redis->exists($key)){
+                Yii::$app->redis->del($key);
+            }
+        }
+        return true;
+    }
+
 
     /**
      * 最近联系人记录
@@ -165,6 +211,20 @@ class callu {
 
         $friend_by_from = Friends::findOne(['friend_id'=>$this->from_user->id , 'user_id'=>$this->to_user->id]);   //被叫的好友（指主叫）
         $friend_by_to   = Friends::findOne(['friend_id'=>$this->to_user->id , 'user_id'=>$this->from_user->id]);      //主叫的好友（指被叫）
+        if(empty($friend_by_to)){
+            $type = ReportCall::CALL_TYPE_NOFRIEND;
+        }else{
+            $type = ReportCall::CALL_TYPE_FRIEND;
+        }
+        $model = ReportCall::findOne(['day'=>date('Y-m-d') , 'type'=>$type]);
+        if(empty($model)){
+            $model = new ReportCall();
+            $model->day = date('Y-m-d');
+            $model->number = 0;
+            $model->type = $type;
+        }
+        $model->number++;
+        $model->save();
 
         if(!empty($friend_by_from)){
             $friend_by_from->link_time = time();
