@@ -20,7 +20,7 @@ class AccountController extends Controller{
 
     public function actionStart(){
         try{
-            $user = User::find()->select('account')->where(['account'=>''])->limit(100)->all();
+            $user = User::find()->select('account,id')->where(['account'=>''])->limit(100)->all();
             if(!empty($user))
             {
                 foreach ($user as $u)
@@ -29,7 +29,14 @@ class AccountController extends Controller{
                     if($code)
                     {
                         $u->account = $code;
-                        $u->save();
+                        $u->setScenario('update-account');
+
+                        if(!$u->save())
+                        {
+                            echo json_encode($u->getErrors());
+                            echo '操作失败';
+                            break;
+                        }
                     }
                 }
             }
