@@ -13,6 +13,8 @@ ALTER TABLE `call_record` ADD `call_id` CHAR(64) NULL DEFAULT NULL AFTER `active
 /***user表***/
 ALTER TABLE `user` ADD `account` VARCHAR(255) NULL DEFAULT NULL COMMENT '邮箱' AFTER `email`, ADD `token` VARCHAR(255) NULL DEFAULT NULL COMMENT '令牌' AFTER `email`, ADD `channel` VARCHAR(255) NULL DEFAULT NULL COMMENT '渠道' AFTER `token`, ADD `address` VARCHAR(255) NULL DEFAULT NULL COMMENT '注册地址' AFTER `channel`, ADD `longitude` VARCHAR(64) NULL DEFAULT NULL COMMENT '注册经度' AFTER `address`, ADD `latitude` VARCHAR(64) NULL DEFAULT NULL COMMENT '注册纬度' AFTER `longitude`, ADD `header_img` VARCHAR(255) NULL DEFAULT NULL COMMENT '头像地址' AFTER `latitude`, ADD `balance` DECIMAL(14,4) NULL DEFAULT '0.0000' COMMENT '余额' AFTER `header_img`;
 
+
+ALTER TABLE `user` ADD UNIQUE(`account`);
 /***
 ** call_record     修改结构
 ** user            修改结构
