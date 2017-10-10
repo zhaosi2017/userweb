@@ -29,7 +29,8 @@ class SystemInformationController extends PController
                             return $provider->getCpuUsage();
                             break;
                         case 'memory_usage':
-                            return ($provider->getTotalMem() - $provider->getFreeMem()) / $provider->getTotalMem();
+                            $totalMem = $provider->getTotalMem();
+                            return empty($totalMem) ? 0 : (($totalMem - $provider->getFreeMem()) / $totalMem);
                             break;
                     }
                 }
