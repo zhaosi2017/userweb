@@ -18,7 +18,7 @@ class WhiteListSearchForm extends WhiteList
     {
         $userId = Yii::$app->user->id ;
         $limit =  self::PAGE_NUM;
-        $offset = $p == 0 ? 0: self::PAGE_NUM*($p-1);
+        $offset = $p == 0 ? 0: self::PAGE_NUM*$p;
         $res = self::find()->select('white_uid')->where(['uid'=>$userId])->offset($offset)->limit($limit)->orderBy('id desc')->all();
         $data = [];
         if(!empty($res))
