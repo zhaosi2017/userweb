@@ -45,17 +45,12 @@ class SystemInformationController extends PController
     public function actionLog()
     {
         $files = [];
-        foreach ($this->dirs as $dir)
-        {
-
+        foreach ($this->dirs as $dir) {
             $path = Yii::getAlias($dir);
-            if(is_dir($path))
-            {
+            if (is_dir($path)) {
                 $list = scandir($path);
-                foreach ($list as $item)
-                {
-                    if (preg_match('|\.log$|', $item))
-                    {
+                foreach ($list as $item) {
+                    if (preg_match('|\.log$|', $item)) {
                         $model = new Reader($path, $item);
                         if($model !== false) $files[] = $model;
                     }
