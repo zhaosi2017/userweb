@@ -31,9 +31,9 @@ class SmsService
                 return $this->jsonResponse([],'操作太频繁，每5分钟最多发送5次',1,ErrCode::SUCCESS);
             }
 
-            if($switch === false){
-                return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
-            }
+//            if($switch === false){
+//                return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
+//            }
             $msg = '您注册客优的验证码为：'.$verifyCode.'，有效期5分钟。';
             try {
                 $_sms = Yii::$app->sms;

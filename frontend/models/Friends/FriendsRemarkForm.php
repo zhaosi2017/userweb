@@ -34,7 +34,7 @@ class FriendsRemarkForm extends Friends
     {
         if( preg_match("/\/|\`|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\（|\）|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\\' | \`|\-|\=|\\\|\||\s+/",$this->remark))
         {
-            $this->addError('remark','备注应不允许输入标点、空格、特殊字符');
+            $this->addError('remark','备注至少包含1-12个字符，仅中英文、数字、下划线');
         }
 
     }

@@ -30,15 +30,17 @@ class AccountController extends Controller{
                     {
                         $u->account = $code;
                         $u->setScenario('update-account');
-
+                        echo $u->id.'---'.$code.PHP_EOL;
                         if(!$u->save())
                         {
                             echo json_encode($u->getErrors());
-                            echo '操作失败';
+                            echo '操作失败'.PHP_EOL;
                             break;
                         }
                     }
                 }
+            }else{
+                echo 'no data'.PHP_EOL;
             }
             echo '操作成功';
 

@@ -43,7 +43,8 @@ class CallRecordDetail extends CallRecord
             {
                 return $this->jsonResponse([],'数据非法','1',ErrCode::USER_NOT_EXIST);
             }
-            $offset = $this->p == 0 ? 0: self::PAGE_NUM*($this->p-1);
+            $offset = $this->p == 0 ? 0: self::PAGE_NUM*($this->p);
+
 
             $callRecord = CallRecord::find()->select(['id','unactive_call_uid','call_time','status','type'])
                 ->where(['unactive_call_uid'=>$user->id,'active_call_uid'=>$userId])->orderBy('call_time desc')
