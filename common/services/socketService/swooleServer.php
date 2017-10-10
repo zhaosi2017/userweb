@@ -159,7 +159,7 @@ class swooleServer{
 
     public function onFinish($server, $task_id, $data){
 
-
+        return true;
     }
 
 }

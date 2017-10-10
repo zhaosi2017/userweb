@@ -30,23 +30,33 @@ class ClerkCallu extends  AbstruactClerk{
 
     public function stratClerk($server,  $frame , $data){
 
-        if($data->action == 1){                     //打电话
-            $info = $server->connection_info($frame->fd);
-            if(!isset($info['uid']) || empty($info['uid']) ){
-                $this->result['message'] = '请登陆！';
-                $server->push($frame->fd , json_encode( $this->result , JSON_UNESCAPED_UNICODE));
-                $server->close($frame->fd);
-                return false;
+        try{
+            if($data->action == 1){                     //打电话
+                $info = $server->connection_info($frame->fd);
+                if(!isset($info['uid']) || empty($info['uid']) ){
+                    $this->result['message'] = '请登陆！';
+                    $server->push($frame->fd , json_encode( $this->result , JSON_UNESCAPED_UNICODE));
+                    $server->close($frame->fd);
+                    return false;
+                }
+                $this->_call($server,  $frame);
+
+            }elseif($data->action == 6){
+
+                $this->_stop_call($server,  $frame);
+
+            } else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
+                $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_NO);
             }
-            $this->_call($server,  $frame);
-
-        }elseif($data->action == 6){
-
-            $this->_stop_call($server,  $frame);
-
-        } else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
-            $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_NO);
+        }catch(\Exception $exception){
+            $this->result['message'] = '拨打异常，请稍后重试！';
+        }catch(\yii\base\ErrorException $exception){
+            $this->result['message'] = '拨打异常，请稍后重试！';
+        }catch(\Error $error){
+            $this->result['message'] = '拨打异常，请稍后重试！';
         }
+        $server->push($frame->fd , json_encode( $this->result , JSON_UNESCAPED_UNICODE));
+        return true;
     }
 
 
