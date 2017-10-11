@@ -132,7 +132,22 @@ class swooleServer{
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
             return ;
         }
-        $clerk->stratClerk($server,  $frame , $data);
+        $result = [
+            "data"=> [],
+            "message"=>"请求时失败，请稍后重试！",
+            "status"=> 1,
+            "code"=>ErrCode::FAILURE
+        ];
+        try{
+            $clerk->stratClerk($server,  $frame , $data);
+        }catch (\yii\base\ErrorException $exception){
+            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
+        }catch(\Error $error){
+            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
+        }catch(\Exception $exception){
+            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
+        }
+        return true;
     }
 
 

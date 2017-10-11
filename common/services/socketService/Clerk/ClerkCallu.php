@@ -10,6 +10,7 @@ namespace common\services\socketService\Clerk;
 use common\models\User;
 use common\services\appService\apps\callu;
 use common\services\socketService\AbstruactClerk;
+use frontend\models\ErrCode;
 use Yii;
 
 class ClerkCallu extends  AbstruactClerk{
@@ -44,13 +45,18 @@ class ClerkCallu extends  AbstruactClerk{
             }elseif($data->action == 6){
 
                 $this->_stop_call($server,  $frame);
-
-            } else{                  //电话消息通知  需要通知另外一个fd所以这里做一个消息转发
-                $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_NO);
+                return true;
+            } else{                  //电话消息通知
+                if($data->text->code == ErrCode::CALL_END){
+                    $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_SHORT);
+                }else{
+                    $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_NO);
+                }
             }
+            return true;
         }catch(\Exception $exception){
             $this->result['message'] = '拨打异常，请稍后重试！';
-        }catch(\yii\base\ErrorException $exception){
+        }catch(yii\base\ErrorException $exception){
             $this->result['message'] = '拨打异常，请稍后重试！';
         }catch(\Error $error){
             $this->result['message'] = '拨打异常，请稍后重试！';

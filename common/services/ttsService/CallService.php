@@ -157,7 +157,10 @@ class CallService {
         $result = $this->third->Event($event_data);   //反馈第三方的消息 和业务处理无关 用于输出
         $catch_key =  get_class($this->third).$this->third->callId;
         $catch = $this->_redisGetVByK($catch_key);
-        $this->app = unserialize($catch['apps']);
+        $this->app = isset($catch['apps'])?unserialize($catch['apps']):'';
+        if(empty($this->app)){
+            return $result;
+        }
         $this->to_user      = unserialize($catch['to_user']);
         $this->from_user    = unserialize($catch['from_user']);
         $this->call_type    = $catch['call_type'];
