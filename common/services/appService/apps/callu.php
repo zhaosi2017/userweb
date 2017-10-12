@@ -151,12 +151,13 @@ class callu {
             $this->sendText('不存在被叫的用户' , ErrCode::CODE_ERROR);
             return false;
         }
+        $user_channels = explode(',' , $to_user->channel);
         if(!key_exists($data->call_type , CallRecord::$type_map)){
             $this->sendText('呼叫类型错误' , ErrCode::CODE_ERROR);
             return false;
         }
         $channel = Channel::findOne($data->channel_id);
-        if(empty($channel)){
+        if(empty($channel) || !in_array($data->channel_id ,$user_channels ) ){
             $this->sendText('呼叫渠道错误',ErrCode::CODE_ERROR);
             return false;
         }
