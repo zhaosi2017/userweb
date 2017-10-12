@@ -25,6 +25,7 @@ use common\services\socketService\Clerk\HeartCheckNotice;
 use common\services\socketService\Clerk\WebSocketReload;
 use common\services\socketService\Clerk\CloseWebSocketMaster;
 use common\services\socketService\Clerk\RefuseFriendNotice;
+use Yii;
 
 class swooleServer{
 
@@ -141,10 +142,10 @@ class swooleServer{
         try{
             $clerk->stratClerk($server,  $frame , $data);
         }catch (\yii\base\ErrorException $exception){
+            Yii::$app->db->close();
+            Yii::$app->db->open();
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }catch(\Error $error){
-            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
-        }catch(\Exception $exception){
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }
         return true;
