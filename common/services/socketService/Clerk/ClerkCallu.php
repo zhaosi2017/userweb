@@ -31,7 +31,7 @@ class ClerkCallu extends  AbstruactClerk{
 
     public function stratClerk($server,  $frame , $data){
 
-        try{
+
             if($data->action == 1){                     //打电话
                 $info = $server->connection_info($frame->fd);
                 if(!isset($info['uid']) || empty($info['uid']) ){
@@ -47,21 +47,8 @@ class ClerkCallu extends  AbstruactClerk{
                 $this->_stop_call($server,  $frame);
                 return true;
             } else{                  //电话消息通知
-                if($data->text->code == ErrCode::CALL_END){
-                    $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_SHORT);
-                }else{
-                    $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_NO);
-                }
+               $this->sendMessage($server, $data->uCode , $data->text , self::TCP_MESSAGE_CATCH_NO);
             }
-            return true;
-        }catch(\Exception $exception){
-            $this->result['message'] = '拨打异常，请稍后重试！';
-        }catch(yii\base\ErrorException $exception){
-            $this->result['message'] = '拨打异常，请稍后重试！';
-        }catch(\Error $error){
-            $this->result['message'] = '拨打异常，请稍后重试！';
-        }
-        $server->push($frame->fd , json_encode( $this->result , JSON_UNESCAPED_UNICODE));
         return true;
     }
 
