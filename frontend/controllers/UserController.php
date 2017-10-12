@@ -152,6 +152,8 @@ class UserController extends AuthController
         }catch (\Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1,ErrCode::UNKNOWN_ERROR);
+        }catch (Exception $e){
+            return $this->jsonResponse('',$e->getMessage(),1,ErrCode::DATA_SAVE_ERROR);
         }
     }
 

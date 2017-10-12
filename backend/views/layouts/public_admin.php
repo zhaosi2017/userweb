@@ -42,7 +42,7 @@ $module = $this->context->module->id;
                     <a class="J_menuItem" href="<?= Url::to(['/default/index']) ?>"><i class="fa fa-home"></i> <span class="nav-label">首页</span></a>
                 </li>
 
-                <li class="<?php if(Yii::$app->controller->id == 'channel'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}else{ echo '';}?>">
+                <li class="<?php if(Yii::$app->controller->id == 'system-information'  ){ echo 'active';}else{ echo '';}?>">
                     <a href="#">
                         <i class="fa fa-gears"></i>
                         <span class="nav-label">系统模块</span>
@@ -98,7 +98,7 @@ $module = $this->context->module->id;
                     </ul>
                 </li>
 
-                <li class="<?php if(Yii::$app->controller->id == 'channel'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}else{ echo '';}?>">
+                <li class="<?php if(Yii::$app->controller->id == 'channel'  ){ echo 'active';}else{ echo '';}?>">
                     <a href="#">
                         <i class="fa fa-cny"></i>
                         <span class="nav-label">财务模块</span>
@@ -141,7 +141,7 @@ $module = $this->context->module->id;
                     </ul>
                 </li>
 
-                <li class="<?php if(Yii::$app->controller->id == 'channel'  || Yii::$app->controller->id == 'agency' ){ echo 'active';}else{ echo '';}?>">
+                <li class="<?php if(Yii::$app->controller->id == 'channel'   ){ echo 'active';}else{ echo '';}?>">
                     <a href="#">
                         <i class="fa fa-tasks"></i>
                         <span class="nav-label">callu管理</span>
@@ -152,6 +152,43 @@ $module = $this->context->module->id;
                             <a href="<?= Url::to(['/channel/index']) ?>">
                                 <i class="fa fa-bars"></i>
                                 <span>渠道管理</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="<?php if(Yii::$app->controller->id == 'user'  ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-tasks"></i>
+                        <span class="nav-label">前台用户管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'user'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/user/index']) ?>">
+                                <i class="fa fa-bars"></i>
+                                <span>前台用户管理</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="<?php if(Yii::$app->controller->id == 'report'  ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-tasks"></i>
+                        <span class="nav-label">报表管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'report'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/report/index']) ?>">
+                                <i class="fa fa-bars"></i>
+                                <span>报表管理</span>
+                            </a>
+                        </li>
+                        <li class="<?php if(Yii::$app->controller->action->id == 'report'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/report/retained']) ?>">
+                                <i class="fa fa-bars"></i>
+                                <span>流存率</span>
                             </a>
                         </li>
                     </ul>
