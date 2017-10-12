@@ -141,11 +141,7 @@ class callu {
         $data = json_decode($data);
         $user =  User::findOne(['token'=>$data->token]);   //身份校验
         $this->result['status'] = 1;
-        if(empty($user)){
-            $this->sendText('token错误' , ErrCode::CODE_ERROR);
-            return false;
-        }
-
+        $this->from_user   = $user;
         $to_user = User::findOne(['account'=>$data->account]);
         if(empty($to_user)){
             $this->sendText('不存在被叫的用户' , ErrCode::CODE_ERROR);
