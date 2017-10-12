@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\PasswordForm;
 use backend\models\Reports\RetainedReportSearch;
+use backend\models\Reports\UserNumberSearch;
 use frontend\models\UserLoginLogs\UserLoginLog;
 use Yii;
 use backend\models\Admin;
@@ -36,8 +37,23 @@ class ReportController extends PController
 
     }
 
-    public function ActionActiveDay()
+    /**
+     * 活跃日报表
+     */
+    public function actionActiveDay()
     {
         UserLoginLog::find()->select('user_id')->where(['>','login_time',strtotime(date('Y-m-d'))])->andWhere(['>','login_time',strtotime(date('Y-m-d'))])->distinct()->count();
+    }
+
+    /**
+     * 用户数日报表
+     */
+    public function actionUserNumber()
+    {
+        $userNumberSearchModel = new UserNumberSearch();
+        $searchModel = $userNumberSearchModel->search();
+        return $this->render('user_number', [
+            'searchModel' => $searchModel,
+        ]);
     }
 }

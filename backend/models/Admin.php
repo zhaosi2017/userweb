@@ -34,7 +34,7 @@ class Admin extends GActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return 'admin';
+        return 'manager';
     }
 
     /**
@@ -173,6 +173,7 @@ class Admin extends GActiveRecord implements IdentityInterface
             $this->auth_key = Yii::$app->security->generateRandomString();
             $this->account = base64_encode(Yii::$app->security->encryptByKey($this->account, Yii::$app->params['inputKey']));
             $this->password && $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+            $this->nickname && $this->nickname = base64_encode(Yii::$app->security->encryptByKey($this->nickname, Yii::$app->params['inputKey']));
         }
         return $this->save();
     }
@@ -185,7 +186,7 @@ class Admin extends GActiveRecord implements IdentityInterface
                 $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
             }
             $this->account = base64_encode(Yii::$app->security->encryptByKey($this->account, Yii::$app->params['inputKey']));
-
+            $this->nickname = base64_encode(Yii::$app->security->encryptByKey($this->nickname, Yii::$app->params['inputKey']));
         }
         $this->update_at = $_SERVER['REQUEST_TIME'];
         return true;
@@ -205,6 +206,7 @@ class Admin extends GActiveRecord implements IdentityInterface
     {
         parent::afterFind();
         $this->account = Yii::$app->security->decryptByKey(base64_decode($this->account), Yii::$app->params['inputKey']);
+        $this->nickname && $this->nickname = Yii::$app->security->decryptByKey(base64_decode($this->nickname), Yii::$app->params['inputKey']);
     }
 
     public function getRoles()
