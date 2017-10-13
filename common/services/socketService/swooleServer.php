@@ -147,6 +147,10 @@ class swooleServer{
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }catch(\Error $error){
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
+        }catch(\Exception $exception){
+            Yii::$app->db->close();
+            Yii::$app->db->open();
+            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }
         return true;
     }
