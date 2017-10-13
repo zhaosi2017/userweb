@@ -69,6 +69,7 @@ class swooleServer{
         $this->server->on('connect' ,[$this , 'onConnect']);
         $this->server->on('task' , [$this, 'onTask']);
         $this->server->on('finish' , [$this, 'onFinish']);
+        $this->server->on('request' , [$this , "onRequest"]);
         $this->server->start();
     }
 
@@ -181,5 +182,42 @@ class swooleServer{
 
         return true;
     }
+
+
+    /**
+     * @param $request
+     * @param $response
+     * 转发消息 如果成功 htpp返回200 失败500
+     */
+    public  function onRequest($request , $response){
+        $body = $request->get['json'];
+        $json = json_decode($body);
+        $message = $json->message;
+        $uCode = $json->uCode;
+        if(empty($uCode)){
+            $response->status(500);
+            $response->end('参数错误');
+            return true;
+        }
+        $status = false;
+        foreach($this->server->connection_list()  as $fd){
+            $info = $this->server->connection_info($fd);
+            if(empty($info) || !is_array($info)){
+                continue;
+            }
+            if((int)$uCode == $info['uid']){
+                $status = $this->server->push($fd , $message);
+            }
+        }
+        if($status){
+            $code = 200;
+        }else{
+            $code = 500;
+        }
+        $response->status(500);
+        $response->end();
+
+    }
+
 
 }

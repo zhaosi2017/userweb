@@ -17,6 +17,10 @@ use frontend\models\Friends\Friends;
 use frontend\models\User;
 use common\services\ttsService\CallService;
 use frontend\models\CallRecord\CallRecord;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use WebSocket\Client;
 use yii\db\Exception;
 use Yii;
@@ -60,7 +64,7 @@ class callu {
      * @return bool
      * 返回电话消息给app
      */
-    public function sendText($string , $code = "0000"){
+    public function _sendText($string , $code = "0000"){
 
         $this->result['message'] = $string;
         $this->result['code']    = $code;
@@ -84,6 +88,29 @@ class callu {
         $data = $this->socket->recv_data();
         $json = json_decode($data);
         return $json->status;
+    }
+
+    public function sendText($string , $code = "0000"){
+        $this->result['message'] = $string;
+        $this->result['code']    = $code;
+        $text = json_encode( $this->result ,JSON_UNESCAPED_UNICODE);
+        $json = ['uCode'=>$this->from_user->account , 'message'=>$text];
+        $body =json_encode( $json);
+        $this->_union_check($this->from_user->account , $this->from_user->token);
+        $request = new Request('GET' ,
+                                '127.0.0.1:9803?json='.$body);
+        $client  = new \GuzzleHttp\Client();
+        try{
+            $response = $client->send($request , ['timeout'=>10]);
+        }catch (\Exception $e){
+            $response = new Response();
+        }catch(\Error $e){
+            $response = new Response();
+        }
+        if($response->getStatusCode() == 200){
+            return true;
+        }
+        return false;
     }
 
 
@@ -157,7 +184,6 @@ class callu {
             $this->sendText('呼叫渠道错误',ErrCode::CODE_ERROR);
             return false;
         }
-        $this->from_user   = $user;
         $this->to_user     = $to_user;
         $this->channel     = $channel;
         $this->result['status'] = 0;
