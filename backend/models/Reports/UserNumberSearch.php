@@ -79,7 +79,10 @@ class UserNumberSearch extends Model
             ->andWhere(['not',['active_code'=>'']])
             ->indexBy('active_code')
             ->groupBy('active_code')
+//            ->createCommand()->getRawSql();
             ->all();
+
+           // ->all();
         $key1 = !empty($_Yesterday) ? array_keys($_Yesterday) : [];
 
         $key2 =  !empty($_Before) ? array_keys($_Before) : [];
@@ -104,10 +107,9 @@ class UserNumberSearch extends Model
 
             }
         }
-        var_dump($tmp);
-        die;
+
         $this->data = [$_Yesterday,$_Before];
-        echo '<pre>'; print_r($keys);;
+        echo '<pre>'; print_r($tmp);;
         return $this;
 
 
