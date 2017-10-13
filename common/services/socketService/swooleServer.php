@@ -191,6 +191,7 @@ class swooleServer{
      */
     public  function onRequest($request , $response){
         $body = $request->get['json'];
+        file_put_contents('/tmp/test-call'.date('Y-m-d').'.log' , date('Y-m-d H:i:s').var_export($body , true).PHP_EOL , 8);
         $json = json_decode($body);
         $message = $json->message;
         $uCode = $json->uCode;
