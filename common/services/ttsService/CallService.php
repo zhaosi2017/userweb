@@ -361,6 +361,7 @@ class CallService {
         $model->unactive_nickname   = empty($friend)?$this->to_user->nickname?$this->to_user->nickname:"*":$friend->remark;
         $model->unactive_account    = $this->to_user->nickname? $this->to_user->nickname:"*" ;
         $model->record_status       = 1;
+        $model->active_code         = $this->from_user->country_code;
         $model->save();
 
     }
