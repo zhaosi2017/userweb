@@ -95,7 +95,7 @@ class callu {
         $this->result['code']    = $code;
         $text = json_encode( $this->result ,JSON_UNESCAPED_UNICODE);
         $json = ['uCode'=>$this->from_user->account , 'message'=>$text];
-        $body =json_encode( $json);
+        $body =json_encode( $json , JSON_UNESCAPED_UNICODE);
         $this->_union_check($this->from_user->account , $this->from_user->token);
         $request = new Request('GET' ,
                                 '127.0.0.1:9803?json='.$body);
