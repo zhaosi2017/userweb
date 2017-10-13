@@ -99,8 +99,6 @@ class UserNumberSearch extends Model
             foreach ($keys as $i=> $k)
             {
 
-
-
                 $tmp[$k]['before'] = isset($_Before[$k]->id) ? $_Before[$k]->id:0;
                 $tmp[$k]['yesterday'] = isset($_Yesterday[$k]->id) ? $_Yesterday[$k]->id:0;
                 $tmp[$k]['call_num'] = isset($_callRecord[$k]->id) ? $_callRecord[$k]->id:0;
@@ -108,8 +106,8 @@ class UserNumberSearch extends Model
             }
         }
 
-        $this->data = [$_Yesterday,$_Before];
-        echo '<pre>'; print_r($tmp);;
+        $this->data = $tmp;
+
         return $this;
 
 
