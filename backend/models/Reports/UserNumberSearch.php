@@ -80,13 +80,14 @@ class UserNumberSearch extends Model
             ->indexBy('active_code')
             ->groupBy('active_code')
             ->all();
-        $keys1 =  array_keys($_Yesterday);
-        var_dump($keys1);
+        $key1 = !empty($_Yesterday) ? array_keys($_Yesterday) : [];
 
-        $keys2 =  array_keys($_Before);
-        var_dump($keys2);
+        $key2 =  !empty($_Before) ? array_keys($_Before) : [];
 
-        var_dump(array_keys($_callRecord));
+
+        $key3  =  !empty($_callRecord) ? array_keys($_callRecord) : [];
+        $keys = array_merge($key1,$key3,$key2);
+        var_dump($keys);
 
         $this->data = [$_Yesterday,$_Before];
         echo '<pre>'; print_r($this->data);;
