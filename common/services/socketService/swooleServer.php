@@ -214,7 +214,7 @@ class swooleServer{
         }else{
             $code = 500;
         }
-        $response->status(500);
+        $response->status($code);
         $response->end();
 
     }
