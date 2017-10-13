@@ -42,7 +42,10 @@ class ReportController extends PController
      */
     public function actionActiveDay()
     {
-        UserLoginLog::find()->select('user_id')->where(['>','login_time',strtotime(date('Y-m-d'))])->andWhere(['>','login_time',strtotime(date('Y-m-d'))])->distinct()->count();
+        $searchModel = UserLoginLog::find()->select('user_id')->where(['>','login_time',strtotime(date('Y-m-d'))])->andWhere(['>','login_time',strtotime(date('Y-m-d'))])->distinct()->count();
+        return $this->render('active_day', [
+            'searchModel' => $searchModel,
+        ]);
     }
 
     /**
@@ -51,7 +54,8 @@ class ReportController extends PController
     public function actionUserNumber()
     {
         $userNumberSearchModel = new UserNumberSearch();
-        $searchModel = $userNumberSearchModel->search();
+        $searchModel = $userNumberSearchModel->search(Yii::$app->request->queryParams);
+
         return $this->render('user_number', [
             'searchModel' => $searchModel,
         ]);

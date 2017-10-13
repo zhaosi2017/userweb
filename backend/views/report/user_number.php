@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="channel-index">
 
     <?php  echo $this->render('user_number_search', ['model' => $searchModel]); ?>
-    <?php var_dump($searchModel); ?>
-    <p class="text-right">
-        <?= Html::a('新增渠道', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php var_dump($searchModel->data);?>
+
 </div>
