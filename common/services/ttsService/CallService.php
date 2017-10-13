@@ -300,7 +300,7 @@ class CallService {
         Yii::$app->redis->hset($call_key , 'count' ,(count($numbers) + $Serial) );
         Yii::$app->redis->hset($call_key , 'group_id' ,$this->group_id );
 
-        Yii::$app->redis->expire($call_key , 2*60 );
+        Yii::$app->redis->expire($call_key , 5*60 );
         if($this->call_type == CallRecord::CALLRECORD_TYPE_UNURGENT)
         {
             Yii::$app->redis->hset($this->group_id , 'call_type' ,$this->call_type );   //这个记录的是同一次呼叫 的呼叫类型
