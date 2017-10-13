@@ -2,6 +2,7 @@
 namespace backend\models\Reports;
 
 
+use frontend\models\CallRecord\CallRecord;
 use frontend\models\UserLoginLogs\UserLoginLog;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -23,7 +24,7 @@ class UserNumberSearch extends Model
     {
 
         $this->start_date = isset($param['UserNumberSearch']['start_date'])  && $param['UserNumberSearch']['start_date']?$param['UserNumberSearch']['start_date']:date('Y-m-d');
-
+//        var_dump($this->start_date);
 
 //        $days=array();
 //
@@ -54,9 +55,11 @@ class UserNumberSearch extends Model
             ->indexBy('country_code')
             ->groupBy('country_code')
             ->all();
+
 //            ->createCommand()->getRawSql();
+
+        $end = $start;
         $start = $start -86400;
-        $end = $end - 86400;
         //前天
         $_Before = User::find()->select('count("id") as id,country_code')
             ->where(['>','reg_time',$start])
@@ -69,14 +72,24 @@ class UserNumberSearch extends Model
         $_tmp = [];
 
 
+        $_callRecord  = CallRecord::find()->select('count("id") as id,active_code')
+            ->where(['>','call_time',$start])
+            ->andWhere(['<','call_time',$end])
+            ->andWhere(['not',['active_code'=>null]])
+            ->andWhere(['not',['active_code'=>'']])
+            ->indexBy('active_code')
+            ->groupBy('active_code')
+            ->all();
         $keys1 =  array_keys($_Yesterday);
         var_dump($keys1);
 
         $keys2 =  array_keys($_Before);
         var_dump($keys2);
 
+        var_dump(array_keys($_callRecord));
+
         $this->data = [$_Yesterday,$_Before];
-        echo '<pre>'; print_r($this->data);die;
+        echo '<pre>'; print_r($this->data);;
         return $this;
 
 
