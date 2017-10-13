@@ -86,15 +86,26 @@ class UserNumberSearch extends Model
 
 
         $key3  =  !empty($_callRecord) ? array_keys($_callRecord) : [];
+        $keys = [];
         $keys = array_merge($key1,$key3,$key2);
-
+        $tmp = [];
+       // var_dump($_Before);
         if(!empty($keys))
         {
+
             foreach ($keys as $i=> $k)
             {
-                $keys[$i]['before'] = isset($_Before->$k) ? ($_Before->$k) :0;
+
+
+
+                $tmp[$k]['before'] = isset($_Before[$k]->id) ? $_Before[$k]->id:0;
+                $tmp[$k]['yesterday'] = isset($_Yesterday[$k]->id) ? $_Yesterday[$k]->id:0;
+                $tmp[$k]['call_num'] = isset($_callRecord[$k]->id) ? $_callRecord[$k]->id:0;
+
             }
         }
+        var_dump($tmp);
+        die;
         $this->data = [$_Yesterday,$_Before];
         echo '<pre>'; print_r($keys);;
         return $this;
