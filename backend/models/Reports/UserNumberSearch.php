@@ -92,7 +92,7 @@ class UserNumberSearch extends Model
         {
             foreach ($keys as $i=> $k)
             {
-                $keys[$i]['before'] = isset($_Before->$k) ? ($_Before->$k)['id'] :0;
+                $keys[$i]['before'] = isset($_Before->$k) ? ($_Before->$k) :0;
             }
         }
         $this->data = [$_Yesterday,$_Before];
