@@ -56,7 +56,7 @@ class ReportController extends PController
         $userNumberSearchModel = new UserNumberSearch();
         $searchModel = $userNumberSearchModel->search(Yii::$app->request->queryParams);
 
-       
+
         return $this->render('user_number', [
             'searchModel' => $searchModel,
         ]);
