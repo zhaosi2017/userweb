@@ -389,12 +389,14 @@ ALTER TABLE `tmp_report_call`
 CREATE TABLE `user_login_log` (
   `id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) NOT NULL COMMENT '登录用户id',
+  `country_code` VARCHAR(32) NULL DEFAULT NULL COMMENT '国码（便于做报表）',
   `address` varchar(255) DEFAULT NULL COMMENT '登录地址',
   `longitude` varchar(64) DEFAULT NULL COMMENT '经度',
   `latitude` varchar(64) DEFAULT NULL COMMENT '纬度',
   `login_ip` varchar(64) DEFAULT NULL COMMENT '登录IP',
   `login_time` int(11) NOT NULL DEFAULT '0' COMMENT '登录时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 --
 -- Indexes for dumped tables
