@@ -26,12 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     <thead>
                     <tr>
                         <th class="text-center">国别</th>
-                        <th class="text-center">前日24时累计用户数</th>
-                        <th class="text-center">昨天新增上涨数</th>
-                        <th class="text-center">前日呼叫数</th>
-                        <th class="text-center">前日24时累计用户数</th>
-                        <th class="text-center">昨天新增上涨数</th>
-                        <th class="text-center">前日呼叫数</th>
+                        <th class="text-center">次留</th>
+                        <th class="text-center">三日留存</th>
+                        <th class="text-center">七日留存</th>
+                        <th class="text-center">14日流存</th>
+                        <th class="text-center">30天流存</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php if(isset(CountryAddress::$codeAddress[$i])  ){?>
                             <tr>
                                 <td class="text-center"><?php echo CountryAddress::$codeAddress[$i];?></td>
-                                <td class="text-center"><?php echo $v['today'];?></td>
                                 <td class="text-center"><?php echo $v['second'];?></td>
                                 <td class="text-center"><?php echo $v['third'];?></td>
                                 <td class="text-center"><?php echo $v['seven'];?></td>
