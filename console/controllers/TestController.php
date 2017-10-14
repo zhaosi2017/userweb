@@ -21,7 +21,7 @@ class TestController extends Controller{
 
     public function actionStart(){
         try{
-            $user = UserLoginLog::find()->select('country_code,user_id,id')->where(['country_code'=>null])->orWhere(['country_code'=>''])->limit(100)->all();
+            $user = UserLoginLog::find()->select('country_code,user_id,id')->where(['country_code'=>null])->orWhere(['country_code'=>''])->limit(500)->all();
 
 
             if(!empty($user))
