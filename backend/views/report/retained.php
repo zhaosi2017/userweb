@@ -35,25 +35,39 @@ $this->params['breadcrumbs'][] = $this->title;
                     </tr>
                     </thead>
                     <tbody>
+                    <?php $y = 0;?>
                     <?php foreach ($searchModel->data as $i => $v){?>
-                        <?php if($v){ foreach ($v as $k=> $m){?>
-                        <?php if(isset(CountryAddress::$codeAddress[$k])  ){?>
-                            <tr>
+                        <?php $y = $y + 1;?>
+                        <?php if(!empty($v)){ ?>
+                            <?php foreach ($v as $k=> $m){?>
+                                <?php if(isset(CountryAddress::$codeAddress[$k])){?>
+                                    <tr style="<?php if($y%2 == 0){ echo 'color:red;';}?>">
+                                        <td class="text-center"> <?php echo $i;?> </td>
+                                        <td class="text-center"><?php echo CountryAddress::$codeAddress[$k];?></td>
+                                        <td class="text-center"><?php echo $m['second'];?></td>
+                                        <td class="text-center"><?php echo $m['third'];?></td>
+                                        <td class="text-center"><?php echo $m['seven'];?></td>
+                                        <td class="text-center"><?php echo $m['fourteen'];?></td>
+                                        <td class="text-center"><?php echo $m['thirty'];?></td>
+                                    </tr>
+                                <?php }?>
+                            <?php }?>
+                        <?php }else{ ?>
+                            <tr style="<?php if($y%2 == 0){ echo 'color:red;';}?>">
                                 <td class="text-center"> <?php echo $i;?> </td>
-                                <td class="text-center"><?php echo CountryAddress::$codeAddress[$k];?></td>
-                                <td class="text-center"><?php echo $m['second'];?></td>
-                                <td class="text-center"><?php echo $m['third'];?></td>
-                                <td class="text-center"><?php echo $m['seven'];?></td>
-                                <td class="text-center"><?php echo $m['fourteen'];?></td>
-                                <td class="text-center"><?php echo $m['thirty'];?></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
                             </tr>
-                        <?php }?>
-                        <?php }?>
+                            <?php }?>
                         <?php }?>
                     <?php }?>
                     </tbody>
                 </table>
-            <?php }?>
+
         </div>
     </div>
 </div>
