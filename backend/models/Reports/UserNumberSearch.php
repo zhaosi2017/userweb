@@ -24,17 +24,7 @@ class UserNumberSearch extends Model
     {
 
         $this->start_date = isset($param['UserNumberSearch']['start_date'])  && $param['UserNumberSearch']['start_date']?$param['UserNumberSearch']['start_date']:date('Y-m-d');
-//        var_dump($this->start_date);
 
-//        $days=array();
-//
-//        for($i=0;$i<=7;$i++){//这里数字根据需要变动
-//
-//        $days[]=date("Y-m-d",strtotime('-'.$i.'day'));
-//
-//        }
-//        return $this;
-//        echo '<pre>';print_r($days);
         $start = strtotime($this->start_date)-86400;
         $end = strtotime($this->start_date) ;
         //当天

@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <table class="table table-striped table-bordered">
                     <thead>
                     <tr>
+                        <th class="text-center">日期</th>
                         <th class="text-center">国别</th>
                         <th class="text-center">次留</th>
                         <th class="text-center">三日留存</th>
@@ -35,15 +36,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     </thead>
                     <tbody>
                     <?php foreach ($searchModel->data as $i => $v){?>
-                        <?php if(isset(CountryAddress::$codeAddress[$i])  ){?>
+                        <?php if($v){ foreach ($v as $k=> $m){?>
+                        <?php if(isset(CountryAddress::$codeAddress[$k])  ){?>
                             <tr>
-                                <td class="text-center"><?php echo CountryAddress::$codeAddress[$i];?></td>
-                                <td class="text-center"><?php echo $v['second'];?></td>
-                                <td class="text-center"><?php echo $v['third'];?></td>
-                                <td class="text-center"><?php echo $v['seven'];?></td>
-                                <td class="text-center"><?php echo $v['fourteen'];?></td>
-                                <td class="text-center"><?php echo $v['thirty'];?></td>
+                                <td class="text-center"> <?php echo $i;?> </td>
+                                <td class="text-center"><?php echo CountryAddress::$codeAddress[$k];?></td>
+                                <td class="text-center"><?php echo $m['second'];?></td>
+                                <td class="text-center"><?php echo $m['third'];?></td>
+                                <td class="text-center"><?php echo $m['seven'];?></td>
+                                <td class="text-center"><?php echo $m['fourteen'];?></td>
+                                <td class="text-center"><?php echo $m['thirty'];?></td>
                             </tr>
+                        <?php }?>
+                        <?php }?>
                         <?php }?>
                     <?php }?>
                     </tbody>
