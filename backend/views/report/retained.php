@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use backend\models\Reports\CountryAddress;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ChannelSearch */
@@ -9,6 +10,7 @@ use yii\grid\GridView;
 
 $this->title = '留存报表';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="channel-index">
 
