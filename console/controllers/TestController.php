@@ -21,7 +21,7 @@ class TestController extends Controller{
 
     public function actionStart(){
         try{
-            $user = UserLoginLog::find()->select('country_code,user_id')->where(['country_code'=>null])->orWhere(['country_code'=>''])->limit(100)->all();
+            $user = UserLoginLog::find()->select('country_code,user_id,id')->where(['country_code'=>null])->orWhere(['country_code'=>''])->limit(100)->all();
 
 
             if(!empty($user))
@@ -33,7 +33,7 @@ class TestController extends Controller{
                     if(!empty($code))
                     {
                         $u->country_code = $code->country_code;
-                       
+
                         if(!$u->save())
                         {
                             echo json_encode($u->getErrors());
