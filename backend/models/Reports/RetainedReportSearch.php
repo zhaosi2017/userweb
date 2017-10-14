@@ -21,7 +21,14 @@ class RetainedReportSearch extends UserLoginLog
         $endTime =  $startTime + 24*60*60;
 
 
-
+        $sql = User::find()->select('count(id) as id,country_code')->where(['>','reg_time',$startTime])
+            ->andWhere(['<','reg_time',$endTime])
+            ->andWhere(['not',['country_code'=>null]])
+            ->andWhere(['not',['country_code'=>'']])
+            ->indexBy('country_code')
+            ->groupBy('country_code')
+            ->createCommand()
+            ->getRawSql();
 
         $_data = User::find()->select('count(id) as id,country_code')->where(['>','reg_time',$startTime])
             ->andWhere(['<','reg_time',$endTime])
@@ -33,7 +40,7 @@ class RetainedReportSearch extends UserLoginLog
 //            ->getRawSql();
             ->all();
 
-        var_dump($_data);die;
+        var_dump($sql.PHP_EOL,$_data);die;
 
 //        $secondDay = UserLoginLog::find()->where(['>','reg_time',$startTime])->andWhere(['<','reg_time',$endTime])->select('id')->
 
