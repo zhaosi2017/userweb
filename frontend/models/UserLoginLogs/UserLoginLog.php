@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 use frontend\models\FActiveRecord;
+use frontend\models\User;
 
 
 
@@ -33,6 +34,12 @@ class UserLoginLog extends FActiveRecord
     public static function tableName()
     {
         return 'user_login_log';
+    }
+
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(),['id' => 'user_id']);
     }
 
 }
