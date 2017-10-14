@@ -50,10 +50,10 @@ class RetainedReportSearch extends UserLoginLog
 
     }
 
-    public function getDatas($startTime,$endTime)
+    public function getDatas($start,$end)
     {
-        $_data = User::find()->select('count(id) as id,country_code')->where(['>','reg_time',$startTime])
-            ->andWhere(['<','reg_time',$endTime])
+        $_data = User::find()->select('count(id) as id,country_code')->where(['>','reg_time',$start])
+            ->andWhere(['<','reg_time',$end])
             ->andWhere(['not',['country_code'=>null]])
             ->andWhere(['not',['country_code'=>'']])
             ->indexBy('country_code')
@@ -66,7 +66,8 @@ class RetainedReportSearch extends UserLoginLog
         if(!empty($_data)) {
 
             foreach ($_data as $k => $_d) {
-
+                $startTime = $start;
+                $endTime = $end;
                 if ($_d->id) {
 
                     $_User = User::find()->select('id')->where(['>', 'reg_time', $startTime])
