@@ -60,6 +60,8 @@ class RetainedReportSearch extends UserLoginLog
                     ->indexBy('id')
                     ->asArray()
                     ->all();
+
+                //次日
                 $startTime = $startTime + 86400;
                 $endTime = $endTime + 86400;
                 $_SecondLogin = UserLoginLog::find()->select('user_id as id')->where(['>','login_time',$startTime])
@@ -80,7 +82,7 @@ class RetainedReportSearch extends UserLoginLog
                     ->indexBy('id')
                     ->asArray()
                     ->all();
-
+                    //七日
 
                 $startTime = $startTime + 86400*7;
                 $endTime = $endTime + 86400*7;
@@ -92,7 +94,7 @@ class RetainedReportSearch extends UserLoginLog
                     ->asArray()
                     ->all();
 
-
+                //14日
                 $startTime = $startTime + 86400*14;
                 $endTime = $endTime + 86400*14;
                 $_FourteenLogin = UserLoginLog::find()->select('user_id as id')->where(['>','login_time',$startTime])
@@ -103,8 +105,7 @@ class RetainedReportSearch extends UserLoginLog
                     ->asArray()
                     ->all();
 
-
-
+                //30日
                 $startTime = $startTime + 86400*30;
                 $endTime = $endTime + 86400*30;
                 $_ThirtyLogin = UserLoginLog::find()->select('user_id as id')->where(['>','login_time',$startTime])
@@ -115,23 +116,23 @@ class RetainedReportSearch extends UserLoginLog
                     ->asArray()
                     ->all();
 
-                $TodayIntersect =  count(array_intersect_key($_User,$_TodayLogin));
+//                $TodayIntersect =  count(array_intersect_key($_User,$_TodayLogin));
                 $SecondIntersect =  count(array_intersect_key($_User,$_SecondLogin));
-                $ThirdIntersect =  count(array_intersect_key($_User,$_ThirdLogin));
+//                $ThirdIntersect =  count(array_intersect_key($_User,$_ThirdLogin));
                 $SevenIntersect =  count(array_intersect_key($_User,$_SevenLogin));
                 $FourteenIntersect =  count(array_intersect_key($_User,$_FourteenLogin));
                 $ThirtyIntersect =  count(array_intersect_key($_User,$_ThirtyLogin));
 
-                $tmp[$k]['today'] = $_d->id ? $TodayIntersect/$_d->id :'0';
+//                $tmp[$k]['today'] = $_d->id ? $TodayIntersect/$_d->id :'0';
                 $tmp[$k]['second'] = $_d->id ? $SecondIntersect/$_d->id :'0';
-                $tmp[$k]['third'] = $_d->id ? $ThirdIntersect/$_d->id :'0';
+//                $tmp[$k]['third'] = $_d->id ? $ThirdIntersect/$_d->id :'0';
                 $tmp[$k]['seven'] = $_d->id ? $SevenIntersect/$_d->id :'0';
                 $tmp[$k]['fourteen'] = $_d->id ? $FourteenIntersect/$_d->id :'0';
                 $tmp[$k]['thirty'] = $_d->id ? $ThirtyIntersect/$_d->id :'0';
                 }else{
-                    $tmp[$k]['today'] = '0';
+//                    $tmp[$k]['today'] = '0';
                     $tmp[$k]['second'] = '0';
-                    $tmp[$k]['third'] = '0';
+//                    $tmp[$k]['third'] = '0';
                     $tmp[$k]['seven'] = '0';
                     $tmp[$k]['fourteen'] = '0';
                     $tmp[$k]['thirty'] = '0';
