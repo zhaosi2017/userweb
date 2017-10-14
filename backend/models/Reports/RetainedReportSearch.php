@@ -69,12 +69,13 @@ class RetainedReportSearch extends UserLoginLog
                     ->andWhere(['country_code'=>$_d['country_code']])
                     ->distinct()
                     ->indexBy('id')
+//                    ->createCommand()->getRawSql();
                     ->asArray()
                     ->all();
 
 
-                $startTime = $startTime + 86400*3;
-                $endTime = $endTime + 86400*3;
+                $startTime = $startTime + 86400*2;
+                $endTime = $endTime + 86400*2;
                 $_ThirdLogin = UserLoginLog::find()->select('user_id as id')->where(['>','login_time',$startTime])
                     ->andWhere(['<','login_time',$endTime])
                     ->andWhere(['country_code'=>$_d['country_code']])
@@ -84,8 +85,8 @@ class RetainedReportSearch extends UserLoginLog
                     ->all();
                     //七日
 
-                $startTime = $startTime + 86400*7;
-                $endTime = $endTime + 86400*7;
+                $startTime = $startTime + 86400*4;
+                $endTime = $endTime + 86400*4;
                 $_SevenLogin = UserLoginLog::find()->select('user_id as id')->where(['>','login_time',$startTime])
                     ->andWhere(['<','login_time',$endTime])
                     ->andWhere(['country_code'=>$_d['country_code']])
@@ -95,8 +96,8 @@ class RetainedReportSearch extends UserLoginLog
                     ->all();
 
                 //14日
-                $startTime = $startTime + 86400*14;
-                $endTime = $endTime + 86400*14;
+                $startTime = $startTime + 86400*7;
+                $endTime = $endTime + 86400*7;
                 $_FourteenLogin = UserLoginLog::find()->select('user_id as id')->where(['>','login_time',$startTime])
                     ->andWhere(['<','login_time',$endTime])
                     ->andWhere(['country_code'=>$_d['country_code']])
@@ -106,8 +107,8 @@ class RetainedReportSearch extends UserLoginLog
                     ->all();
 
                 //30日
-                $startTime = $startTime + 86400*30;
-                $endTime = $endTime + 86400*30;
+                $startTime = $startTime + 86400*16;
+                $endTime = $endTime + 86400*16;
                 $_ThirtyLogin = UserLoginLog::find()->select('user_id as id')->where(['>','login_time',$startTime])
                     ->andWhere(['<','login_time',$endTime])
                     ->andWhere(['country_code'=>$_d['country_code']])
@@ -117,6 +118,7 @@ class RetainedReportSearch extends UserLoginLog
                     ->all();
 
 //                $TodayIntersect =  count(array_intersect_key($_User,$_TodayLogin));
+
                 $SecondIntersect =  count(array_intersect_key($_User,$_SecondLogin));
                 $ThirdIntersect =  count(array_intersect_key($_User,$_ThirdLogin));
                 $SevenIntersect =  count(array_intersect_key($_User,$_SevenLogin));
@@ -132,7 +134,7 @@ class RetainedReportSearch extends UserLoginLog
                 }else{
 //                    $tmp[$k]['today'] = '0';
                     $tmp[$k]['second'] = '0';
-//                    $tmp[$k]['third'] = '0';
+                    $tmp[$k]['third'] = '0';
                     $tmp[$k]['seven'] = '0';
                     $tmp[$k]['fourteen'] = '0';
                     $tmp[$k]['thirty'] = '0';
