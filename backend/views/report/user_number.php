@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use backend\models\Reports\CountryAddress;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ChannelSearch */
@@ -29,12 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
             <tbody>
             <?php foreach ($searchModel->data as $i => $v){?>
+                <?php if(isset(CountryAddress::$codeAddress[$i])  ){?>
                 <tr>
-                    <td><?php echo $i;?></td>
+                    <td><?php echo CountryAddress::$codeAddress[$i];?></td>
                     <td><?php echo $v['before'];?></td>
                     <td><?php echo $v['yesterday'];?></td>
                     <td><?php echo $v['call_num'];?></td>
                 </tr>
+                    <?php }?>
             <?php }?>
             </tbody>
         </table>
