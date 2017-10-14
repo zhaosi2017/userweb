@@ -21,18 +21,19 @@ class TestController extends Controller{
 
     public function actionStart(){
         try{
-            $user = UserLoginLog::find()->select('country_code,id')->where(['country_code'=>null])->orWhere(['country_code'=>''])->limit(100)->all();
+            $user = UserLoginLog::find()->select('country_code,user_id')->where(['country_code'=>null])->orWhere(['country_code'=>''])->limit(100)->all();
 
 
             if(!empty($user))
             {
                 foreach ($user as $u)
                 {
-                    $code = User::find()->select('country_code')->where(['id'=>$u->id])->one();
+                    $code = User::find()->select('country_code')->where(['id'=>$u->user_id])->one();
 
                     if(!empty($code))
                     {
                         $u->country_code = $code->country_code;
+                       
                         if(!$u->save())
                         {
                             echo json_encode($u->getErrors());
