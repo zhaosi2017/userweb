@@ -124,11 +124,11 @@ class RetainedReportSearch extends UserLoginLog
                 $ThirtyIntersect =  count(array_intersect_key($_User,$_ThirtyLogin));
 
 //                $tmp[$k]['today'] = $_d->id ? $TodayIntersect/$_d->id :'0';
-                $tmp[$k]['second'] = $_d->id ? $SecondIntersect/$_d->id :'0';
+                $tmp[$k]['second'] = $_d->id ? ((($SecondIntersect/$_d->id)*100).'%'):'0';
 //                $tmp[$k]['third'] = $_d->id ? $ThirdIntersect/$_d->id :'0';
-                $tmp[$k]['seven'] = $_d->id ? $SevenIntersect/$_d->id :'0';
-                $tmp[$k]['fourteen'] = $_d->id ? $FourteenIntersect/$_d->id :'0';
-                $tmp[$k]['thirty'] = $_d->id ? $ThirtyIntersect/$_d->id :'0';
+                $tmp[$k]['seven'] = $_d->id ? ((($SevenIntersect/$_d->id)*100).'%') :'0';
+                $tmp[$k]['fourteen'] = $_d->id ?  ((($FourteenIntersect/$_d->id)*100).'%') :'0';
+                $tmp[$k]['thirty'] = $_d->id ? ((($ThirtyIntersect/$_d->id)*100).'%') :'0';
                 }else{
 //                    $tmp[$k]['today'] = '0';
                     $tmp[$k]['second'] = '0';
