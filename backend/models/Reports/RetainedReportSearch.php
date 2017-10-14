@@ -10,6 +10,8 @@ use backend\models\Reports\CountryAddress;
 class RetainedReportSearch extends UserLoginLog
 {
     public $start_date;
+    public $start_time;
+    public $end_time;
 
     public $data;
     public function search($param)
@@ -124,6 +126,7 @@ class RetainedReportSearch extends UserLoginLog
                 $SevenIntersect =  count(array_intersect_key($_User,$_SevenLogin));
                 $FourteenIntersect =  count(array_intersect_key($_User,$_FourteenLogin));
                 $ThirtyIntersect =  count(array_intersect_key($_User,$_ThirtyLogin));
+
 
 //                $tmp[$k]['today'] = $_d->id ? $TodayIntersect/$_d->id :'0';
                 $tmp[$k]['second'] = $_d->id ? ((($SecondIntersect/$_d->id)*100).'%'):'0';
