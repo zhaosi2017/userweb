@@ -179,19 +179,19 @@ $module = $this->context->module->id;
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li class="<?php if(Yii::$app->controller->action->id == 'report'){ echo 'active';}?>">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'user-number'){ echo 'active';}?>">
                             <a href="<?= Url::to(['/report/user-number']) ?>">
                                 <i class="fa fa-bars"></i>
                                 <span>用户数报表</span>
                             </a>
                         </li>
-                        <li class="<?php if(Yii::$app->controller->action->id == 'report'){ echo 'active';}?>">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'retained'){ echo 'active';}?>">
                             <a href="<?= Url::to(['/report/retained']) ?>">
                                 <i class="fa fa-bars"></i>
                                 <span>流存率报表</span>
                             </a>
                         </li>
-                        <li class="<?php if(Yii::$app->controller->action->id == 'report'){ echo 'active';}?>">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'active-day'){ echo 'active';}?>">
                             <a href="<?= Url::to(['/report/active-day']) ?>">
                                 <i class="fa fa-bars"></i>
                                 <span>活跃日报表</span>
