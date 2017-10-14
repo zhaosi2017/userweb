@@ -28,22 +28,23 @@ class RetainedReportSearch extends UserLoginLog
             $startTime  = strtotime($this->start_date);
             $endTime = $startTime  + 24*60*60 ;
             for ($i = 0; $i <= 10; $i++) {//这里数字根据需要变动
-                $tmp = date('Y-m-d', strtotime('-' . $i . 'day',strtotime($this->start_date)));
-                $startTime = strtotime($tmp);
+                $_tmp = date('Y-m-d', strtotime('-' . $i . 'day',strtotime($this->start_date)));
+                $startTime = strtotime($_tmp);
                 $endTime = $startTime + 24 * 60 * 60;
-                $days[$tmp] = $this->getDatas($startTime, $endTime);
+                
+                $days[$_tmp] = $this->getDatas($startTime, $endTime);
 
             }
 
-            $days[$this->start_date] = $this->getDatas($startTime,$endTime);
+
         }
         if(empty($days)) {
 
             for ($i = 0; $i <= 10; $i++) {//这里数字根据需要变动
-                 $tmp = date("Y-m-d", strtotime('-' . $i . 'day'));
-                $startTime = strtotime($tmp);
+                $_tmp = date("Y-m-d", strtotime('-' . $i . 'day'));
+                $startTime = strtotime($_tmp);
                 $endTime = $startTime + 24 * 60 * 60;
-                $days[$tmp] = $this->getDatas($startTime, $endTime);
+                $days[$_tmp] = $this->getDatas($startTime, $endTime);
 
             }
         }
@@ -69,6 +70,7 @@ class RetainedReportSearch extends UserLoginLog
 //            ->createCommand()
 //            ->getRawSql();
             ->all();
+
 
         $tmp = [];
         if(!empty($_data)) {
@@ -177,6 +179,7 @@ class RetainedReportSearch extends UserLoginLog
 
             }
         }
+
         return $tmp;
     }
 }

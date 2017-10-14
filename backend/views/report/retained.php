@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php if(!empty($v)){ ?>
                             <?php foreach ($v as $k=> $m){?>
                                 <?php if(isset(CountryAddress::$codeAddress[$k])){?>
-                                    <tr style="<?php if($y%2 == 0){ echo 'color:red;';}?>">
+                                    <tr style="<?php if($y%2 == 0){ /*echo 'border-top: 2px solid green;';*/ }?>">
                                         <td class="text-center"> <?php echo $i;?> </td>
                                         <td class="text-center"><?php echo CountryAddress::$codeAddress[$k];?></td>
                                         <td class="text-center"><?php echo $m['second'];?></td>
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?php }?>
                             <?php }?>
                         <?php }else{ ?>
-                            <tr style="<?php if($y%2 == 0){ echo 'color:red;';}?>">
+                            <tr style="<?php if($y%2 == 0){ /*echo 'border-top: 2px solid green;';*/ }?>">
                                 <td class="text-center"> <?php echo $i;?> </td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
