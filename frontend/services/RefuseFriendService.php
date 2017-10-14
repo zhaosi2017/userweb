@@ -11,7 +11,7 @@ class RefuseFriendService
      * @param $token 请求者
      * @return mixed
      */
-    public function notice($account,$token)
+    public function notice_($account,$token)
     {
         $client = new WebSocket();
         $client->connect(Yii::$app->params['webSocket_host'] , Yii::$app->params['webSocket_port']);
@@ -33,7 +33,7 @@ class RefuseFriendService
      * @param $token
      * 好友申请结果推送
      */
-    public function _notice($account,$token){
+    public function notice($account,$token){
         $user = User::findOne(['token'=>$token]);
 
         $data = ['account'=>$user->account,'type'=>4,'num'=>1];
@@ -43,8 +43,8 @@ class RefuseFriendService
 
         $text = json_encode( $result ,JSON_UNESCAPED_UNICODE);
         $json = ['uCode'=>$account , 'message'=>$text];
-        $body =json_encode( $json , JSON_UNESCAPED_UNICODE);
-        $request = new Request('GET' , '127.0.0.1:9803?json='.$body);
+        $body =json_encode( $json );
+        $request = new Request('GET' , '127.0.0.1:9803?json='.urlencode($body));
         $client  = new \GuzzleHttp\Client();
         try{
             $response = $client->send($request , ['timeout'=>10]);

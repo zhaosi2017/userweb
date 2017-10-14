@@ -17,7 +17,7 @@ class FriendNoticeService
      * @param $token 请求者
      * @return mixed
      */
-    public function notice($account,$token)
+    public function _notice($account,$token)
     {
         try {
             $client = new WebSocket();
@@ -43,24 +43,23 @@ class FriendNoticeService
      * @param $token
      *
      */
-    public function _notice($account,$token){
+    public function notice($account,$token){
 
         $user = User::findOne(['token'=>$token]);
 
         $data = ['account'=>$user->account,'type'=>1,'num'=>1];
-        $message = $user->account .'向你发送了好友请求';
+        $message = $user->account.'向你发送了好友请求';
         $code = ErrCode::WEB_SOCKET_INVITE_FRIEND;
         $result = FActiveRecord::jsonResult($data , $message , 0 , $code);
 
-
-        $text = json_encode( $result ,JSON_UNESCAPED_UNICODE);
+        $text = json_encode( $result,JSON_UNESCAPED_UNICODE );
         $json = ['uCode'=>$account , 'message'=>$text];
-        $body =json_encode( $json , JSON_UNESCAPED_UNICODE);
+        $body =json_encode( $json );
         $request = new Request('GET' ,
-            '127.0.0.1:9803?json='.$body);
+            '127.0.0.1:9803?json='.urldecode($body));
         $client  = new \GuzzleHttp\Client();
         try{
-            $response = $client->send($request , ['timeout'=>10]);
+            $response = $client->send($request , ['timeout'=>1]);
         }catch (\Exception $e){
             $response = new Response();
         }catch(\Error $e){
