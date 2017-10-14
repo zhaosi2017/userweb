@@ -213,7 +213,7 @@ class CallService {
             $f = Yii::$app->redis->del($this->group_id);
             file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--结束电话--'.$this->group_id.'&&'.var_export($f , true).PHP_EOL , 8);
         }
-        $this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
+        //$this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
     }
 
 
