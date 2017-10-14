@@ -72,6 +72,7 @@ class EmailLogin extends User
                     $userLoginLog->latitude = $this->latitude;
                     $userLoginLog->longitude = $this->longitude;
                     $userLoginLog->login_time = time();
+                    $userLoginLog->country_code = $user->country_code ?  $user->country_code : null;
                     $userLoginLog->login_ip= Yii::$app->request->getUserIP();
 
                     if(!$userLoginLog->save())
