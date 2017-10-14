@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\ChannelSearch */
+/* @var $model  */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="channel-search">
+<div class="manager-login-logs-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['retained'],
@@ -19,18 +19,56 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col-lg-6">
 
+            <?= $form->field($model,'start_date')->input('date',['prompt'=>'请选择'])->label('搜索日期：') ?>
+            <a class="btn btn-xs btn-danger" onclick="
+                $('#usernumbersearch-start_date').val('');
+            ">清除时间</a>
+
+
         </div>
         <div class="col-lg-6">
-            <div class="text-right no-padding">
-                <?= $form->field($model, 'search_time')->textInput() ?>
-                <div class="form-group">
-                    <?= Html::submitButton('搜索', ['class' => 'btn btn-primary m-t-n-xs','id'=>'search']) ?>
-                    &nbsp;
-                    <?= Html::resetButton('重置', ['class' => 'btn btn-primary m-t-n-xs']) ?>
-                </div>
+
+            <div class="form-group">
+                <?= Html::submitButton('search', ['class' => 'hide','id'=>'search_hide']) ?>
+                <button onclick = "return searchClick();" id="search" class = 'btn btn-primary m-t-n-xs'>搜索</button>
             </div>
         </div>
     </div>
-    <?php ActiveForm::end(); ?>
-
 </div>
+
+<?php ActiveForm::end(); ?>
+</div>
+
+<script type="text/javascript">
+
+
+    function searchClick(){
+        var start = $('#loginlogssearch-start_date').val();
+        var end =  $('#loginlogssearch-end_date').val();
+        if (start == "" && end != ""){
+            alert('请同时选择开始时间和结束时间进行查询！');
+            return false;
+        }
+        if(start != "" && end == ""){
+            alert('请同时选择开始时间和结束时间进行查询！');
+            return false;
+        }
+        return true;
+    }
+
+    function timeChange(){
+
+        var start = $('#loginlogssearch-start_date').val();
+        var end =  $('#loginlogssearch-end_date').val();
+        if(start == '' || end ==''){
+            alert('请同时选择开始时间和结束时间进行查询！');
+            return false;
+        }
+
+    }
+
+    function clearDate(){
+        $('#loginlogssearch-start_date').val('');
+        $('#loginlogssearch-end_date').val('');
+    }
+</script>
