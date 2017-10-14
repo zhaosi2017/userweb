@@ -99,6 +99,7 @@ class LoginForm extends User
                     $userLoginLog->longitude = $this->longitude;
                     $userLoginLog->login_time = time();
                     $userLoginLog->login_ip= Yii::$app->request->getUserIP();
+                    $userLoginLog->country_code = $user->country_code ?  $user->country_code : null;
 
                     if(!$userLoginLog->save())
                     {

@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model,'start_date')->input('date',['prompt'=>'请选择'])->label('搜索日期：') ?>
             <a class="btn btn-xs btn-danger" onclick="
-                $('#loginlogssearch-start_date').val('');
+                $('#usernumbersearch-start_date').val('');
             ">清除时间</a>
 
 

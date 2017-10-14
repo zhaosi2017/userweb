@@ -23,19 +23,19 @@ $this->params['breadcrumbs'][] = $this->title;
             <thead>
             <tr>
             <th class="text-center">国别</th>
-            <th class="text-center">前天</th>
-            <th class="text-center">昨天</th>
-            <th class="text-center">呼叫数</th>
+            <th class="text-center">前日24时累计用户数</th>
+            <th class="text-center">昨天新增上涨数</th>
+            <th class="text-center">前日呼叫数</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($searchModel->data as $i => $v){?>
                 <?php if(isset(CountryAddress::$codeAddress[$i])  ){?>
                 <tr>
-                    <td><?php echo CountryAddress::$codeAddress[$i];?></td>
-                    <td><?php echo $v['before'];?></td>
-                    <td><?php echo $v['yesterday'];?></td>
-                    <td><?php echo $v['call_num'];?></td>
+                    <td class="text-center"><?php echo CountryAddress::$codeAddress[$i];?></td>
+                    <td class="text-center"><?php echo $v['before'];?></td>
+                    <td class="text-center"><?php echo $v['yesterday'];?></td>
+                    <td class="text-center"><?php echo $v['call_num'];?></td>
                 </tr>
                     <?php }?>
             <?php }?>
