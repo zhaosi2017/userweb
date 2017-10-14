@@ -26,4 +26,41 @@ class RefuseFriendService
         $json = json_decode($data);
         return isset($json->status) ? $json->status:'';
     }
+
+
+    /**
+     * @param $account
+     * @param $token
+     * 好友申请结果推送
+     */
+    public function _notice($account,$token){
+        $user = User::findOne(['token'=>$token]);
+
+        $data = ['account'=>$user->account,'type'=>4,'num'=>1];
+        $message = $user->account .'拒绝了你的好友请求';
+        $code = ErrCode::WEB_SOCKET_REFUSE_INVITE;
+        $result = FActiveRecord::jsonResult($data , $message , 0 , $code);
+
+        $text = json_encode( $result ,JSON_UNESCAPED_UNICODE);
+        $json = ['uCode'=>$account , 'message'=>$text];
+        $body =json_encode( $json , JSON_UNESCAPED_UNICODE);
+        $request = new Request('GET' , '127.0.0.1:9803?json='.$body);
+        $client  = new \GuzzleHttp\Client();
+        try{
+            $response = $client->send($request , ['timeout'=>10]);
+        }catch (\Exception $e){
+            $response = new Response();
+        }catch(\Error $e){
+            $response = new Response();
+        }
+        if($response->getStatusCode() == 200){
+            return true;
+        }
+        return false;
+    }
+
+
 }
+
+
+

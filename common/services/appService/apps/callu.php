@@ -10,6 +10,7 @@
 namespace  common\services\appService\apps;
 
 use common\services\ttsService\thirds\Sinch;
+use frontend\models\MessageCatch\MessageCatch;
 use frontend\models\Report\ReportCall;
 use frontend\models\Channel;
 use frontend\models\ErrCode;
@@ -109,6 +110,15 @@ class callu {
         }
         if($response->getStatusCode() == 200){
             return true;
+        }
+        if($code == ErrCode::CALL_END){   //如果是结束消息发送失败  则将消息缓存起来 等待下次登陆时发送回去 其他消息则不管
+            $model = new MessageCatch();
+            $model->status = 0;
+            $model->message = $text;
+            $model->begin_time = time();
+            $model->ucode = $this->from_user->account;
+            $model->end_time = time() + 30*24*60*60;
+            $model->save();
         }
         return false;
     }
