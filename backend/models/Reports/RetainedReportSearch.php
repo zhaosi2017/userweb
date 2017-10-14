@@ -44,7 +44,7 @@ class RetainedReportSearch extends UserLoginLog
 
                 if($_d->id)
                 {
-                    
+
                 $_User =User::find()->select('id')->where(['>','reg_time',$startTime])
                     ->andWhere(['<','reg_time',$endTime])
                     ->andWhere(['country_code'=>$_d['country_code']])
@@ -141,7 +141,8 @@ class RetainedReportSearch extends UserLoginLog
             }
         }
 
-        var_dump($tmp);die;
+        $this->data = $tmp;
+        return $this;
 
 
 
