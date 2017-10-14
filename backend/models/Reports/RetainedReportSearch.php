@@ -11,24 +11,30 @@ class RetainedReportSearch extends UserLoginLog
 {
     public $start_date;
 
+    public $data;
     public function search($params)
     {
 
-        $startTime =  strtotime(date('Y-m-d'));
-        $endTime = $startTime + 24*60*60;
+        $this->start_date = isset($param['RetainedReportSearch']['start_date'])  && $param['RetainedReportSearch']['start_date']?$param['RetainedReportSearch']['start_date']:date('Y-m-d');
 
-        if($this->start_date){
-            $startTime = strtotime($this->start_date) ;
-            $endTime =  $startTime + 24*60*60;
-        }
+        $startTime = strtotime($this->start_date) ;
+        $endTime =  $startTime + 24*60*60;
 
 
-        $count = User::find()->where(['>','reg_time',$startTime])
+
+
+        $_data = User::find()->select('count(id) as id,country_code')->where(['>','reg_time',$startTime])
             ->andWhere(['<','reg_time',$endTime])
-            ->createCommand()
-            ->getRawSql();
-//            ->count();
-        var_dump($count);die;
+            ->andWhere(['not',['country_code'=>null]])
+            ->andWhere(['not',['country_code'=>'']])
+            ->indexBy('country_code')
+            ->groupBy('country_code')
+//            ->createCommand()
+//            ->getRawSql();
+            ->all();
+
+        var_dump($_data);die;
+
 //        $secondDay = UserLoginLog::find()->where(['>','reg_time',$startTime])->andWhere(['<','reg_time',$endTime])->select('id')->
 
 
