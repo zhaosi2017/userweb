@@ -99,7 +99,7 @@ class swooleServer{
             $server->push($frame->fd , json_encode($result , JSON_UNESCAPED_UNICODE));
             return;
         }
-        if($data->action == 1 || $data->action == 2 || $data->action == 6){    //电话相关
+        if($data->action == 1  || $data->action == 6){    //电话相关
             $temp  = ['frame'=>$frame ];
             if($data->action == 1){
                 $task_id = $server->task($temp);  //投递任务
@@ -107,12 +107,8 @@ class swooleServer{
             }
             $clerk = new ClerkCallu();
             $clerk->fd = $frame->fd;
-        }elseif (isset($data->action) && $data->action == 3){
-            $clerk = new FriendRequetNotice();
         }elseif(isset($data->action) && $data->action === 0){
             $clerk = new UidConn();
-        }elseif (isset($data->action) && $data->action == 5){
-            $clerk = new AgreeFriendNotice();
         }elseif (isset($data->action) && $data->action == 7){
             $clerk = new HeartCheckNotice();
         }elseif (isset($data->action) && $data->action == 8)
@@ -121,9 +117,6 @@ class swooleServer{
         }elseif (isset($data->action) && $data->action == 9)
         {
             $clerk = new CloseWebSocketMaster();
-        }elseif (isset($data->action) && $data->action == 10)
-        {
-            $clerk = new RefuseFriendNotice();
         }else{
             $result = [
                 "data"=> [],
@@ -169,7 +162,12 @@ class swooleServer{
     }
 
 
-
+    /**
+     * @param $server
+     * @param $task_id
+     * @param $from_id
+     * @param $data
+     */
     public function onTask($server, $task_id, $from_id, $data){
         $frame = $data['frame'];
         $data = json_decode($frame->data);
@@ -203,6 +201,7 @@ class swooleServer{
     /**
      * @param $request
      * @param $response
+     * @return  mixed
      * 转发消息 如果成功 htpp返回200 失败500
      */
     public  function onRequest($request , $response){
