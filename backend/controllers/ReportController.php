@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\PasswordForm;
+use backend\models\Reports\ActiveDaySearch;
 use backend\models\Reports\RetainedReportSearch;
 use backend\models\Reports\UserNumberSearch;
 use frontend\models\UserLoginLogs\UserLoginLog;
@@ -42,7 +43,8 @@ class ReportController extends PController
      */
     public function actionActiveDay()
     {
-        $searchModel = UserLoginLog::find()->select('user_id')->where(['>','login_time',strtotime(date('Y-m-d'))])->andWhere(['>','login_time',strtotime(date('Y-m-d'))])->distinct()->count();
+        $activeDaySearch = new ActiveDaySearch();
+        $searchModel = $activeDaySearch->search(Yii::$app->request->queryParams);
         return $this->render('active_day', [
             'searchModel' => $searchModel,
         ]);

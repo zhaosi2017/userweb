@@ -31,7 +31,8 @@
         "trntv/probe": "1.0.0",
         "miloschuman/yii2-highcharts-widget": "*",
         "dmstr/yii2-adminlte-asset": "2.*",
-        "bower-asset/flot": "^0.8"
+        "bower-asset/flot": "^0.8",
+        "ip2location/ip2location-php": "8.*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use frontend\models\ErrCode;
+use frontend\models\Reports\RequestBasicInfo;
 use frontend\services\LimitRate\LimitRateService;
 use yii\web\Controller;
 use yii\helpers\ArrayHelper;
@@ -93,7 +94,9 @@ class AuthController extends Controller
 //                return $this->jsonResponse([],$ms,'1',ErrCode::LIMIT_RATE_ERROR);
 //            }
 //        }
-
+        $data = \Yii::$app->request->getHeaders();
+        $requestBasicInfo = new RequestBasicInfo();
+        @$requestBasicInfo->createLogs($data);
         if(defined('YII_ENV') && YII_ENV == 'dev') {
             file_put_contents('/tmp/userweb.log', 'response ----------' .PHP_EOL. var_export($result, true) . PHP_EOL, 8);
         }
