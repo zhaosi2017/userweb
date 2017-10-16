@@ -1,7 +1,11 @@
 <?php
 namespace frontend\services;
 use common\services\appService\apps\WebSocket;
+use frontend\models\ErrCode;
+use frontend\models\FActiveRecord;
 use frontend\models\User;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Yii;
 
 class RefuseFriendService
