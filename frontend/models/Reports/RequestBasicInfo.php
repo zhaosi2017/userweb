@@ -68,7 +68,7 @@ class RequestBasicInfo extends FActiveRecord
 
         $records = $db->lookup($ip, \IP2Location\Database::ALL);
         $this->country_code = isset($records['countryCode']) ?  $records['countryCode'] : '';
-        $this->country = isset($data['country']) ?  $data['country'] : '';
+        $this->country = isset($records['countryName']) ?  $records['countryName'] : '';
         $this->osversion = isset($data['osversion']) ?  $data['osversion'] : '';
         $this->version = isset($data['version']) ?  $data['version'] : '';
         $this->create_at = time();
