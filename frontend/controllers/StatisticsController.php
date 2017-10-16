@@ -11,7 +11,7 @@ use frontend\models\User;
 use frontend\models\ErrCode;
 
 
-class ActiveController extends AuthController
+class StatisticsController extends AuthController
 {
 
     public $enableCsrfValidation = false;
