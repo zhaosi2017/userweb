@@ -542,3 +542,5 @@ ALTER TABLE `request_basic_info`
 
 
 ALTER TABLE `request_basic_info` ADD `country_code` VARCHAR(11) NULL DEFAULT NULL COMMENT '国码' AFTER `location`;
+ALTER TABLE `request_basic_info` ADD `longitude` VARCHAR(32) NULL DEFAULT NULL AFTER `location`;
+ALTER TABLE `request_basic_info` ADD `latitude` VARCHAR(32) NULL DEFAULT NULL AFTER `longitude`;

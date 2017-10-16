@@ -199,6 +199,22 @@ $module = $this->context->module->id;
                         </li>
                     </ul>
                 </li>
+                <li class="<?php if(Yii::$app->controller->id == 'package'  ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-tasks"></i>
+                        <span class="nav-label">包管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'index'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/package/index']) ?>">
+                                <i class="fa fa-bars"></i>
+                                <span>包列表</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
             </ul>
         </div>
