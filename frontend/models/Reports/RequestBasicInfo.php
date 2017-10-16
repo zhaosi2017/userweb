@@ -32,11 +32,11 @@ class RequestBasicInfo extends FActiveRecord
         $this->longitude = isset($data['longitude']) ?  $data['longitude'] : '';
         $this->latitude = isset($data['latitude']) ?  $data['latitude'] : '';
         $ip = Yii::$app->request->getUserIP();
-
         $db = new \IP2Location\Database(YII_BASE_PATH.'/../../vendor/ip2location/ip2location-php/databases/IP-COUNTRY-SAMPLE.BIN', \IP2Location\Database::FILE_IO);
 
         $records = $db->lookup($ip, \IP2Location\Database::ALL);
-        $this->country_code = isset($records['country_code']) ?  $records['country_code'] : '';
+
+        $this->country_code = isset($records['countryCode']) ?  $records['countryCode'] : '';
         $this->country = isset($records['countryName']) ?  $records['countryName'] : '';
         $this->osversion = isset($data['osversion']) ?  $data['osversion'] : '';
         $this->version = isset($data['version']) ?  $data['version'] : '';
@@ -67,7 +67,7 @@ class RequestBasicInfo extends FActiveRecord
         $db = new \IP2Location\Database(YII_BASE_PATH.'/../../vendor/ip2location/ip2location-php/databases/IP-COUNTRY-SAMPLE.BIN', \IP2Location\Database::FILE_IO);
 
         $records = $db->lookup($ip, \IP2Location\Database::ALL);
-        $this->country_code = isset($records['country_code']) ?  $records['country_code'] : '';
+        $this->country_code = isset($records['countryCode']) ?  $records['countryCode'] : '';
         $this->country = isset($data['country']) ?  $data['country'] : '';
         $this->osversion = isset($data['osversion']) ?  $data['osversion'] : '';
         $this->version = isset($data['version']) ?  $data['version'] : '';
