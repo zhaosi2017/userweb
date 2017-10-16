@@ -13,15 +13,7 @@ use common\services\socketService\AbstruactClerk;
 use frontend\models\ErrCode;
 
 class WebSocketReload extends  AbstruactClerk{
-    /**
-     * @var callu
-     */
-    public $app;
-    public $server;     //当前服务
-    public $fd;         //当前fd
 
-    const UID_CONN_ACCOUNT = 'uid_conn_account';
-    const UID_CONN_FD = 'uid_conn_fd';
 
     public function stratClerk($server,  $frame , $data){
         if(isset($data->key) && !empty($data->key) && $data->key == Yii::$app->params['web_socket_reload'])

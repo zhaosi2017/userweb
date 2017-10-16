@@ -175,7 +175,23 @@ class swooleServer{
         $data = json_decode($frame->data);
         $clerk = new ClerkCallu();
         $clerk->fd = $frame->fd;
-        return   $clerk->stratClerk($server,  $frame , $data);
+        $result = [
+            "data"=> [],
+            "message"=>"请求时失败，请稍后重试！",
+            "status"=> 1,
+            "code"=>ErrCode::FAILURE
+        ];
+        try{
+               $clerk->stratClerk($server,  $frame , $data);
+        }catch (\Exception $exception){
+            Yii::$app->db->close();
+            Yii::$app->db->open();
+            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
+        }catch (\Error $error){
+            Yii::$app->db->close();
+            Yii::$app->db->open();
+            $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
+        }
     }
 
     public function onFinish($server, $task_id, $data){
