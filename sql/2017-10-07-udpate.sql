@@ -455,3 +455,40 @@ ALTER TABLE `version`
 --
 ALTER TABLE `version`
   MODIFY `id` mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+
+
+
+CREATE TABLE `active_day` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `country_code` varchar(11) DEFAULT NULL COMMENT '国码',
+  `active_time` varchar(11) DEFAULT NULL COMMENT '活跃时间',
+  `create_at` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `active_day`
+--
+
+
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `active_day`
+--
+ALTER TABLE `active_day`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `active_day`
+--
+ALTER TABLE `active_day`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;

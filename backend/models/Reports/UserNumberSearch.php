@@ -25,19 +25,40 @@ class UserNumberSearch extends Model
 
         $this->start_date = isset($param['UserNumberSearch']['start_date'])  && $param['UserNumberSearch']['start_date']?$param['UserNumberSearch']['start_date']:date('Y-m-d');
 
-        $start = strtotime($this->start_date)-86400;
-        $end = strtotime($this->start_date) ;
-        //当天
-//        $_Today = User::find()->select('count("id") as id,country_code')->where(['>','reg_time',$start])
-//            ->andWhere(['<','reg_time',$end])
-//            ->andWhere(['not',['country_code'=>null]])
-//            ->andWhere(['not',['country_code'=>'']])
-//            ->indexBy('country_code')
-//            ->groupBy('country_code')
-//            ->all();
-        //昨天
+        $days=array();
+        if($this->start_date)
+        {
+            $start = strtotime($this->start_date)-86400;
+            $end = strtotime($this->start_date) ;
+            for ($i = 0; $i <= 10; $i++) {//这里数字根据需要变动
+                $_tmp = date('Y-m-d', strtotime('-' . $i . 'day',strtotime($this->start_date)));
+                $startTime = strtotime($_tmp);
+                $endTime = $startTime + 24 * 60 * 60;
+                $days[$_tmp] = $this->getUserNumberData($startTime, $endTime);
+            }
+        }
+
+        if(empty($days)) {
+            for ($i = 0; $i <= 10; $i++) {//这里数字根据需要变动
+                $_tmp = date("Y-m-d", strtotime('-' . $i . 'day'));
+                $startTime = strtotime($_tmp);
+                $endTime = $startTime + 24 * 60 * 60;
+                $days[$_tmp] = $this->getUserNumberData($startTime, $endTime);
+            }
+        }
 
 
+        $this->data = $days;
+
+        return $this;
+
+
+    }
+
+
+
+    public function getUserNumberData($start,$end)
+    {
         $_Yesterday = User::find()->select('count("id") as id,country_code')->where(['>','reg_time',$start])
             ->andWhere(['<','reg_time',$end])
             ->andWhere(['not',['country_code'=>null]])
@@ -72,7 +93,7 @@ class UserNumberSearch extends Model
 //            ->createCommand()->getRawSql();
             ->all();
 
-           // ->all();
+        // ->all();
         $key1 = !empty($_Yesterday) ? array_keys($_Yesterday) : [];
 
         $key2 =  !empty($_Before) ? array_keys($_Before) : [];
@@ -82,7 +103,7 @@ class UserNumberSearch extends Model
         $keys = [];
         $keys = array_merge($key1,$key3,$key2);
         $tmp = [];
-       // var_dump($_Before);
+        // var_dump($_Before);
         if(!empty($keys))
         {
 
@@ -96,10 +117,6 @@ class UserNumberSearch extends Model
             }
         }
 
-        $this->data = $tmp;
-
-        return $this;
-
-
+        return $tmp;
     }
 }

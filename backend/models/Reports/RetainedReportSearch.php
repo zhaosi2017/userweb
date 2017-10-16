@@ -31,7 +31,7 @@ class RetainedReportSearch extends UserLoginLog
                 $_tmp = date('Y-m-d', strtotime('-' . $i . 'day',strtotime($this->start_date)));
                 $startTime = strtotime($_tmp);
                 $endTime = $startTime + 24 * 60 * 60;
-                
+
                 $days[$_tmp] = $this->getDatas($startTime, $endTime);
 
             }
