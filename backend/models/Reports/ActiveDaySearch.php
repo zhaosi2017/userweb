@@ -2,11 +2,13 @@
 namespace backend\models\Reports;
 
 
+use frontend\models\Reports\ActiveDay;
 use frontend\models\UserLoginLogs\UserLoginLog;
 use function GuzzleHttp\Psr7\str;
 use yii\data\ActiveDataProvider;
 use frontend\models\User;
 use backend\models\Reports\CountryAddress;
+use frontend\models\CallRecord\CallRecord;
 
 class ActiveDaySearch extends UserLoginLog
 {
@@ -18,7 +20,7 @@ class ActiveDaySearch extends UserLoginLog
     public function search($param)
     {
 
-        $this->start_date = isset($param['RetainedReportSearch']['start_date'])  && $param['RetainedReportSearch']['start_date']? $param['RetainedReportSearch']['start_date']:'';
+        $this->start_date = isset($param['ActiveDaySearch']['start_date'])  && $param['ActiveDaySearch']['start_date']? $param['ActiveDaySearch']['start_date']:'';
         $days=array();
         if($this->start_date)
         {
@@ -28,15 +30,12 @@ class ActiveDaySearch extends UserLoginLog
                 $_tmp = date('Y-m-d', strtotime('-' . $i . 'day',strtotime($this->start_date)));
                 $startTime = strtotime($_tmp);
                 $endTime = $startTime + 24 * 60 * 60;
-
                 $days[$_tmp] = $this->getDatas($startTime, $endTime);
-
             }
 
 
         }
         if(empty($days)) {
-
             for ($i = 0; $i <= 10; $i++) {//这里数字根据需要变动
                 $_tmp = date("Y-m-d", strtotime('-' . $i . 'day'));
                 $startTime = strtotime($_tmp);
@@ -58,125 +57,59 @@ class ActiveDaySearch extends UserLoginLog
 
     public function getDatas($start,$end)
     {
-        $_data = User::find()->select('count(id) as id,country_code')->where(['>','reg_time',$start])
-            ->andWhere(['<','reg_time',$end])
+        $_activeNum = ActiveDay::find()->select('count(id) as id,country_code')->where(['>','active_time',$start])
+            ->andWhere(['<','active_time',$end])
             ->andWhere(['not',['country_code'=>null]])
             ->andWhere(['not',['country_code'=>'']])
             ->indexBy('country_code')
             ->groupBy('country_code')
-//            ->createCommand()
-//            ->getRawSql();
             ->all();
 
 
+        $_callUserNum = CallRecord::find()->select('count("id") as id,active_code')->where(['>','call_time',$start])
+            ->andWhere(['<','call_time',$end])
+            ->andWhere(['not',['active_code'=>null]])
+            ->andWhere(['not',['active_code'=>'']])
+            ->indexBy('active_code')
+            ->groupBy('active_code')
+//            ->createCommand()->getRawSql();
+//        var_dump($_callUserNum);die;
+            ->all();
+
+
+        $_callNum  = CallRecord::find()->select('count("id") as id,active_code')
+            ->where(['>','call_time',$start])
+            ->andWhere(['<','call_time',$end])
+            ->andWhere(['not',['active_code'=>null]])
+            ->andWhere(['not',['active_code'=>'']])
+            ->indexBy('active_code')
+            ->groupBy('active_code')
+//            ->createCommand()->getRawSql();
+            ->all();
+
+        // ->all();
+        $key1 = !empty($_activeNum) ? array_keys($_activeNum) : [];
+
+        $key2 =  !empty($_callUserNum) ? array_keys($_callUserNum) : [];
+
+
+        $key3  =  !empty($_callNum) ? array_keys($_callNum) : [];
+        $keys = [];
+        $keys = array_merge($key1,$key3,$key2);
         $tmp = [];
-        if(!empty($_data)) {
-
-            foreach ($_data as $k => $_d) {
-                $startTime = $start;
-                $endTime = $end;
-                if ($_d->id) {
-
-                    $_User = User::find()->select('id')->where(['>', 'reg_time', $startTime])
-                        ->andWhere(['<', 'reg_time', $endTime])
-                        ->andWhere(['country_code' => $_d['country_code']])
-                        ->indexBy('id')
-                        ->asArray()
-                        ->all();
-
-
-                    $_TodayLogin = UserLoginLog::find()->select('user_id as id')->where(['>', 'login_time', $startTime])
-                        ->andWhere(['<', 'login_time', $endTime])
-                        ->andWhere(['country_code' => $_d['country_code']])
-                        ->distinct()
-                        ->indexBy('id')
-                        ->asArray()
-                        ->all();
-
-                    //次日
-//                    $startTime = $startTime + 86400;
-                    $endTime = $endTime + 86400;
-                    $_SecondLogin = UserLoginLog::find()->select('user_id as id')->where(['>', 'login_time', $startTime])
-                        ->andWhere(['<', 'login_time', $endTime])
-                        ->andWhere(['country_code' => $_d['country_code']])
-                        ->distinct()
-                        ->indexBy('id')
-//                    ->createCommand()->getRawSql();
-                        ->asArray()
-                        ->all();
-
-
-//                    $startTime = $startTime + 86400 * 2;
-                    $endTime = $endTime + 86400 * 2;
-                    $_ThirdLogin = UserLoginLog::find()->select('user_id as id')->where(['>', 'login_time', $startTime])
-                        ->andWhere(['<', 'login_time', $endTime])
-                        ->andWhere(['country_code' => $_d['country_code']])
-                        ->distinct()
-                        ->indexBy('id')
-                        ->asArray()
-                        ->all();
-                    //七日
-
-//                    $startTime = $startTime + 86400 * 4;
-                    $endTime = $endTime + 86400 * 4;
-                    $_SevenLogin = UserLoginLog::find()->select('user_id as id')->where(['>', 'login_time', $startTime])
-                        ->andWhere(['<', 'login_time', $endTime])
-                        ->andWhere(['country_code' => $_d['country_code']])
-                        ->distinct()
-                        ->indexBy('id')
-                        ->asArray()
-                        ->all();
-
-                    //14日
-//                    $startTime = $startTime + 86400 * 7;
-                    $endTime = $endTime + 86400 * 7;
-                    $_FourteenLogin = UserLoginLog::find()->select('user_id as id')->where(['>', 'login_time', $startTime])
-                        ->andWhere(['<', 'login_time', $endTime])
-                        ->andWhere(['country_code' => $_d['country_code']])
-                        ->distinct()
-                        ->indexBy('id')
-                        ->asArray()
-                        ->all();
-
-                    //30日
-//                    $startTime = $startTime + 86400 * 16;
-                    $endTime = $endTime + 86400 * 16;
-                    $_ThirtyLogin = UserLoginLog::find()->select('user_id as id')->where(['>', 'login_time', $startTime])
-                        ->andWhere(['<', 'login_time', $endTime])
-                        ->andWhere(['country_code' => $_d['country_code']])
-                        ->distinct()
-                        ->indexBy('id')
-                        ->asArray()
-                        ->all();
-
-//                $TodayIntersect =  count(array_intersect_key($_User,$_TodayLogin));
-
-                    $SecondIntersect = count(array_intersect_key($_User, $_SecondLogin));
-                    $ThirdIntersect = count(array_intersect_key($_User, $_ThirdLogin));
-                    $SevenIntersect = count(array_intersect_key($_User, $_SevenLogin));
-                    $FourteenIntersect = count(array_intersect_key($_User, $_FourteenLogin));
-                    $ThirtyIntersect = count(array_intersect_key($_User, $_ThirtyLogin));
-
-
-//                $tmp[$k]['today'] = $_d->id ? $TodayIntersect/$_d->id :'0';
-                    $tmp[$k]['second'] = $_d->id ? ((($SecondIntersect / $_d->id) * 100) . '%') : '0';
-                    $tmp[$k]['third'] = $_d->id ? ((($ThirdIntersect / $_d->id) * 100) . '%') : '0';
-                    $tmp[$k]['seven'] = $_d->id ? ((($SevenIntersect / $_d->id) * 100) . '%') : '0';
-                    $tmp[$k]['fourteen'] = $_d->id ? ((($FourteenIntersect / $_d->id) * 100) . '%') : '0';
-                    $tmp[$k]['thirty'] = $_d->id ? ((($ThirtyIntersect / $_d->id) * 100) . '%') : '0';
-                } else {
-//                    $tmp[$k]['today'] = '0';
-                    $tmp[$k]['second'] = '0';
-                    $tmp[$k]['third'] = '0';
-                    $tmp[$k]['seven'] = '0';
-                    $tmp[$k]['fourteen'] = '0';
-                    $tmp[$k]['thirty'] = '0';
-                }
-
+        if(!empty($keys))
+        {
+            foreach ($keys as $i=> $k)
+            {
+                $tmp[$k]['active_num'] = isset($_activeNum[$k]->id) ? $_activeNum[$k]->id:0;
+                $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) ? $_callUserNum[$k]->id:0;
+                $tmp[$k]['call_num'] = isset($_callNum[$k]->id) ? $_callNum[$k]->id:0;
 
             }
         }
 
         return $tmp;
+
+
     }
 }

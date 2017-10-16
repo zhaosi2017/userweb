@@ -492,3 +492,53 @@ ALTER TABLE `active_day`
 --
 ALTER TABLE `active_day`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+
+CREATE TABLE `request_basic_info` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `from_id` int(11) DEFAULT NULL COMMENT '包id',
+  `utma` varchar(64) DEFAULT NULL COMMENT 'utma是我们自己统计设备数用的',
+  `imei` varchar(32) DEFAULT NULL COMMENT 'imei是跟渠道对数据用的哈',
+  `model` varchar(32) DEFAULT NULL COMMENT '手机型号',
+  `mac` varchar(32) DEFAULT NULL COMMENT '网卡地址',
+  `os` tinyint(2) DEFAULT '0' COMMENT '手机系统 0:ios 1:android',
+  `screen` varchar(32) DEFAULT NULL COMMENT '屏幕分辨率',
+  `network` varchar(32) DEFAULT NULL COMMENT '用户使用的网络 wifi gprs',
+  `operator` varchar(32) DEFAULT NULL COMMENT '运营商',
+  `location` varchar(64) DEFAULT NULL COMMENT '位置信息',
+  `country` varchar(32) DEFAULT NULL COMMENT '国家',
+  `osversion` varchar(32) DEFAULT NULL COMMENT '系统版本',
+  `version` varchar(32) DEFAULT NULL COMMENT 'app版本',
+  `create_at` int(11) DEFAULT '0' COMMENT '添加时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `request_basic_info`
+--
+
+
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `request_basic_info`
+--
+ALTER TABLE `request_basic_info`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `request_basic_info`
+--
+ALTER TABLE `request_basic_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+ALTER TABLE `request_basic_info` ADD `country_code` VARCHAR(11) NULL DEFAULT NULL COMMENT '国码' AFTER `location`;

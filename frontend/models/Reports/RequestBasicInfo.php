@@ -31,7 +31,12 @@ class RequestBasicInfo extends FActiveRecord
         $this->operator = isset($data['operator']) ?  $data['operator'] : '';
         $this->location = isset($data['location']) ?  $data['location'] : '';
         $ip = Yii::$app->request->getUserIP();
-        $this->country = isset($data['country']) ?  $data['country'] : '';
+
+        $db = new \IP2Location\Database(YII_BASE_PATH.'/../../vendor/ip2location/ip2location-php/databases/IP-COUNTRY-SAMPLE.BIN', \IP2Location\Database::FILE_IO);
+
+        $records = $db->lookup($ip, \IP2Location\Database::ALL);
+        $this->country_code = isset($records['country_code']) ?  $records['country_code'] : '';
+        $this->country = isset($records['countryName']) ?  $records['countryName'] : '';
         $this->osversion = isset($data['osversion']) ?  $data['osversion'] : '';
         $this->version = isset($data['version']) ?  $data['version'] : '';
         $this->create_at = time();
@@ -57,6 +62,10 @@ class RequestBasicInfo extends FActiveRecord
         $this->network = isset($data['network']) ?  $data['network'] : '';
         $this->operator = isset($data['operator']) ?  $data['operator'] : '';
         $this->location = isset($data['location']) ?  $data['location'] : '';
+        $db = new \IP2Location\Database(YII_BASE_PATH.'/../../vendor/ip2location/ip2location-php/databases/IP-COUNTRY-SAMPLE.BIN', \IP2Location\Database::FILE_IO);
+
+        $records = $db->lookup($ip, \IP2Location\Database::ALL);
+        $this->country_code = isset($records['country_code']) ?  $records['country_code'] : '';
         $this->country = isset($data['country']) ?  $data['country'] : '';
         $this->osversion = isset($data['osversion']) ?  $data['osversion'] : '';
         $this->version = isset($data['version']) ?  $data['version'] : '';
