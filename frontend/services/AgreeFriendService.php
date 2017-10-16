@@ -1,6 +1,7 @@
 <?php
 namespace frontend\services;
 use common\services\appService\apps\WebSocket;
+use frontend\models\User;
 use Yii;
 
 class AgreeFriendService
