@@ -1,5 +1,6 @@
 <?php
 namespace frontend\controllers;
+use frontend\models\Reports\ActiveApp;
 use frontend\models\Reports\ActiveDay;
 use frontend\models\Reports\ActiveOne;
 use Yii;
@@ -27,7 +28,7 @@ class StatisticsController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['active-one'],
+                        'actions' => ['active-one','active-app'],
                         'roles' => ['?'],
                     ],
                     [
@@ -71,6 +72,22 @@ class StatisticsController extends AuthController
         try{
             $data = Yii::$app->request->getHeaders();
             $activeDay = new ActiveOne();
+            return $activeDay->writeLogs($data);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+    public function actionActiveApp()
+    {
+        try{
+            $data = Yii::$app->request->getHeaders();
+            $activeDay = new ActiveApp();
             return $activeDay->writeLogs($data);
         }catch (Exception $e)
         {

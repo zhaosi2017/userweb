@@ -2,7 +2,7 @@
 namespace frontend\models\Reports;
 use frontend\models\ErrCode;
 use frontend\models\FActiveRecord;
-class ActiveOne
+class ActiveApp
 {
     public $utma;
     public $imei;
@@ -25,7 +25,7 @@ class ActiveOne
             $this->countryCode,
             $this->countryName,
         ];
-        $fp = @fopen('/tmp/active-one.csv', 'w');
+        $fp = @fopen('/tmp/active-app.csv', 'w');
         @fputcsv($fp,$_data);
         @fclose($fp);
         return FActiveRecord::jsonResult([],'操作成功',0,ErrCode::SUCCESS);

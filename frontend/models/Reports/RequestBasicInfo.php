@@ -22,7 +22,7 @@ class RequestBasicInfo extends FActiveRecord
         $this->user_id = Yii::$app->user->id ?   Yii::$app->user->id  : 0;
         $this->from_id = isset($data['from_id']) ?  (int)$data['from_id'] : 0;
         $this->utma = isset($data['from_id']) ?  $data['from_id'] : '';
-        $this->imei = isset($data['imei']) ?  $data['imei'] : '';
+        $this->imei = isset($data['mei']) ?  $data['mei'] : '';
         $this->model = isset($data['model']) ?  $data['model'] : '';
         $this->mac = isset($data['mac']) ?  $data['mac'] : '';
         $this->os = isset($data['os']) ?  $data['os'] : '';
