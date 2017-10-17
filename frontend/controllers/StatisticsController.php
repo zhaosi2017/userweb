@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 use frontend\models\Reports\ActiveDay;
+use frontend\models\Reports\ActiveOne;
 use Yii;
 use frontend\models\Channel;
 use yii\db\Exception;
@@ -26,6 +27,11 @@ class StatisticsController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['active-one'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
                         'actions' => ['index'],
                         'roles' => ['@'],
                     ],
@@ -48,6 +54,24 @@ class StatisticsController extends AuthController
             $data = $this->getRequestContent();
             $activeDay = new ActiveDay();
             return $activeDay->statistics();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    /**
+     * app,只使用一次
+     */
+    public function actionActiveOne()
+    {
+        try{
+            $data = Yii::$app->request->getHeaders();
+            $activeDay = new ActiveOne();
+            return $activeDay->writeLogs($data);
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

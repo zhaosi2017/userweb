@@ -42,6 +42,7 @@ class AuthController extends Controller
                         'reset-message',
                         'user-question',
                         'send-sms',
+                        'active-one'
                     ],
                 ]
             ]
