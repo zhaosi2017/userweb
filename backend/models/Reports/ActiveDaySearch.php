@@ -68,7 +68,7 @@ class ActiveDaySearch extends UserLoginLog
             ->all();
 
 
-        $_callUserNum = CallRecord::find()->select('GROUP_CONCAT(active_call_uid) as id,active_code')->where(['>','call_time',$start])
+        $_callUserNum = CallRecord::find()->select('GROUP_CONCAT(`active_call_uid`) as sqlText,active_code')->where(['>','call_time',$start])
             ->andWhere(['<','call_time',$end])
             ->andWhere(['not',['active_code'=>null]])
             ->andWhere(['not',['active_code'=>'']])
@@ -77,6 +77,7 @@ class ActiveDaySearch extends UserLoginLog
 //            ->createCommand()->getRawSql();
 
             ->all();
+
 
 
 
@@ -101,18 +102,13 @@ class ActiveDaySearch extends UserLoginLog
         $keys = [];
         $keys = array_merge($key1,$key3,$key2);
         $tmp = [];
+
         if(!empty($keys))
         {
             foreach ($keys as $i=> $k)
             {
-                file_put_contents('/tmp/myswoole.log','------'.PHP_EOL,8);
-                file_put_contents('/tmp/myswoole.log',var_export($k,true).PHP_EOL,8);
-                if(isset($_callUserNum[$k]->id)) {
-                    file_put_contents('/tmp/myswoole.log', var_export($_callUserNum[$k]->id, true) . PHP_EOL, 8);
-                    file_put_contents('/tmp/myswoole.log', count(array_flip(explode(',', $_callUserNum[$k]->id))) . PHP_EOL, 8);
-                }
                 $tmp[$k]['active_num'] = isset($_activeNum[$k]->id) ? $_activeNum[$k]->id:0;
-                $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) && $_callUserNum[$k]->id ? count(array_flip(explode(',',$_callUserNum[$k]->id))):0;
+                $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->sqlText) && $_callUserNum[$k]->sqlText ? count(array_flip(explode(',',$_callUserNum[$k]->sqlText))):0;
                 $tmp[$k]['call_num'] = isset($_callNum[$k]->id) ? $_callNum[$k]->id:0;
 
             }

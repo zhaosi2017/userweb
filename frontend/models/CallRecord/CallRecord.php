@@ -18,6 +18,8 @@ use frontend\models\User;
   use  frontend\models\FActiveRecord;
 
   class CallRecord extends FActiveRecord{
+        //保存分组查询的，勿删
+        public $sqlText;
 
         const CALLRECORD_STATUS_SUCCESS     = 0;
         const CALLRECORD_STATUS_FILED       = 1;
