@@ -72,11 +72,12 @@ class ActiveDaySearch extends UserLoginLog
             ->andWhere(['not',['active_code'=>null]])
             ->andWhere(['not',['active_code'=>'']])
             ->indexBy('active_code')
-            ->groupBy('active_code,active_call_uid')
+            ->groupBy('active_code')
 //            ->createCommand()->getRawSql();
 
             ->all();
-       
+
+
 
         $_callNum  = CallRecord::find()->select('count("id") as id,active_code')
             ->where(['>','call_time',$start])
