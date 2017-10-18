@@ -108,6 +108,7 @@ class callu {
         }catch(\Error $e){
             $response = new Response(500);
         }
+        file_put_contents('/tmp/test_123.log' ,$code.'******'.var_export($response , true).PHP_EOL  , 8);
         if($response->getStatusCode() == 200){
             return true;
         }
