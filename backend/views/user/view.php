@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'latitude',
             'header_img',
             'reg_ip',
-            'reg_time',
             'login_ip',
 
             [
