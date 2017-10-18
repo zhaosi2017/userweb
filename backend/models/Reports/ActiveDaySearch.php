@@ -21,11 +21,12 @@ class ActiveDaySearch extends UserLoginLog
     {
 
         $this->start_date = isset($param['ActiveDaySearch']['start_date'])  && $param['ActiveDaySearch']['start_date']? $param['ActiveDaySearch']['start_date']:'';
-        $days=array();
+
+
         if($this->start_date)
         {
-            $startTime  = strtotime($this->start_date);
-            $endTime = $startTime  + 24*60*60 ;
+//            $startTime  = strtotime($this->start_date);
+//            $endTime = $startTime  + 24*60*60 ;
             for ($i = 0; $i <= 10; $i++) {//这里数字根据需要变动
                 $_tmp = date('Y-m-d', strtotime('-' . $i . 'day',strtotime($this->start_date)));
                 $startTime = strtotime($_tmp);
@@ -57,8 +58,8 @@ class ActiveDaySearch extends UserLoginLog
 
     public function getDatas($start,$end)
     {
-        $_activeNum = ActiveDay::find()->select('count(id) as id,country_code')->where(['>','active_time',$start])
-            ->andWhere(['<','active_time',$end])
+        $_activeNum = ActiveDay::find()->select('count(id) as id,country_code')->where(['>','create_at',$start])
+            ->andWhere(['<','create_at',$end])
             ->andWhere(['not',['country_code'=>null]])
             ->andWhere(['not',['country_code'=>'']])
             ->indexBy('country_code')
@@ -66,16 +67,16 @@ class ActiveDaySearch extends UserLoginLog
             ->all();
 
 
-        $_callUserNum = CallRecord::find()->select('count("id") as id,active_code')->where(['>','call_time',$start])
+        $_callUserNum = CallRecord::find()->select('GROUP_CONCAT(active_call_uid) as id,active_code')->where(['>','call_time',$start])
             ->andWhere(['<','call_time',$end])
             ->andWhere(['not',['active_code'=>null]])
             ->andWhere(['not',['active_code'=>'']])
             ->indexBy('active_code')
-            ->groupBy('active_code')
+            ->groupBy('active_code,active_call_uid')
 //            ->createCommand()->getRawSql();
-//        var_dump($_callUserNum);die;
-            ->all();
 
+            ->all();
+       
 
         $_callNum  = CallRecord::find()->select('count("id") as id,active_code')
             ->where(['>','call_time',$start])
@@ -102,7 +103,7 @@ class ActiveDaySearch extends UserLoginLog
             foreach ($keys as $i=> $k)
             {
                 $tmp[$k]['active_num'] = isset($_activeNum[$k]->id) ? $_activeNum[$k]->id:0;
-                $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) ? $_callUserNum[$k]->id:0;
+                $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) && $_callUserNum[$k]->id ? count(explode(',',$_callUserNum[$k]->id)):0;
                 $tmp[$k]['call_num'] = isset($_callNum[$k]->id) ? $_callNum[$k]->id:0;
 
             }
