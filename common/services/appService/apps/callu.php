@@ -96,7 +96,7 @@ class callu {
         $this->result['code']    = $code;
         $text = json_encode( $this->result ,JSON_UNESCAPED_UNICODE);
         $json = ['uCode'=>$this->from_user->account , 'message'=>$text];
-        $body =json_encode( $json , JSON_UNESCAPED_UNICODE);
+        $body =json_encode( $json );
         $this->_union_check($this->from_user->account , $this->from_user->token);
         $request = new Request('GET' ,
                                 '127.0.0.1:9803?json='.$body);
@@ -108,7 +108,6 @@ class callu {
         }catch(\Error $e){
             $response = new Response(500);
         }
-        file_put_contents('/tmp/test_123.log' , var_export($response->getStatusCode() , true).'**'.$code.PHP_EOL , 8);
         if($response->getStatusCode() == 200){
             return true;
         }
