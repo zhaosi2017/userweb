@@ -87,6 +87,8 @@ class User extends FActiveRecord implements IdentityInterface
             'account'=>'优码',
             'nickname'=>'昵称',
             'channel'=>'渠道',
+            'token'=>'令牌',
+            'username'=>'用户名'
         ];
     }
 
