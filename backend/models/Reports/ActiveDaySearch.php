@@ -105,6 +105,12 @@ class ActiveDaySearch extends UserLoginLog
         {
             foreach ($keys as $i=> $k)
             {
+                file_put_contents('/tmp/myswoole.log','------'.PHP_EOL,8);
+                file_put_contents('/tmp/myswoole.log',var_export($k,true).PHP_EOL,8);
+                if(isset($_callUserNum[$k]->id)) {
+                    file_put_contents('/tmp/myswoole.log', var_export($_callUserNum[$k]->id, true) . PHP_EOL, 8);
+                    file_put_contents('/tmp/myswoole.log', count(array_flip(explode(',', $_callUserNum[$k]->id))) . PHP_EOL, 8);
+                }
                 $tmp[$k]['active_num'] = isset($_activeNum[$k]->id) ? $_activeNum[$k]->id:0;
                 $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) && $_callUserNum[$k]->id ? count(array_flip(explode(',',$_callUserNum[$k]->id))):0;
                 $tmp[$k]['call_num'] = isset($_callNum[$k]->id) ? $_callNum[$k]->id:0;
