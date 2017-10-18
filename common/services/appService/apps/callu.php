@@ -104,9 +104,9 @@ class callu {
         try{
             $response = $client->send($request , ['timeout'=>10]);
         }catch (\Exception $e){
-            $response = new Response();
+            $response = new Response(500);
         }catch(\Error $e){
-            $response = new Response();
+            $response = new Response(500);
         }
         if($response->getStatusCode() == 200){
             return true;
