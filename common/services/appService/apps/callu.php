@@ -190,7 +190,7 @@ class callu {
             return false;
         }
         $channel = Channel::findOne($data->channel_id);
-        if(empty($channel) || !in_array($data->channel_id ,$user_channels ) ){
+        if(empty($channel)){
             $this->sendText('呼叫渠道错误',ErrCode::CODE_ERROR);
             return false;
         }
