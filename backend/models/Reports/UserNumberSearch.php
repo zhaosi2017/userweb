@@ -109,7 +109,10 @@ class UserNumberSearch extends Model
 
             foreach ($keys as $i=> $k)
             {
-
+                if($k && substr($k,0,1) ==='+')
+                {
+                    $k = substr($k,1);
+                }
                 $tmp[$k]['before'] = isset($_Before[$k]->id) ? $_Before[$k]->id:0;
                 $tmp[$k]['yesterday'] = isset($_Yesterday[$k]->id) ? $_Yesterday[$k]->id:0;
                 $tmp[$k]['call_num'] = isset($_callRecord[$k]->id) ? $_callRecord[$k]->id:0;

@@ -76,6 +76,10 @@ class RetainedReportSearch extends UserLoginLog
         if(!empty($_data)) {
 
             foreach ($_data as $k => $_d) {
+                if($k && substr($k,0,1) ==='+')
+                {
+                    $k = substr($k,1);
+                }
                 $startTime = $start;
                 $endTime = $end;
                 if ($_d->id) {
