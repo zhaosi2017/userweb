@@ -58,6 +58,7 @@ class ActiveDaySearch extends UserLoginLog
 
     public function getDatas($start,$end)
     {
+
         $_activeNum = ActiveDay::find()->select('count(id) as id,country_code')->where(['>','create_at',$start])
             ->andWhere(['<','create_at',$end])
             ->andWhere(['not',['country_code'=>null]])
@@ -76,6 +77,7 @@ class ActiveDaySearch extends UserLoginLog
 //            ->createCommand()->getRawSql();
 
             ->all();
+
 
 
 
@@ -104,13 +106,11 @@ class ActiveDaySearch extends UserLoginLog
             foreach ($keys as $i=> $k)
             {
                 $tmp[$k]['active_num'] = isset($_activeNum[$k]->id) ? $_activeNum[$k]->id:0;
-                if(isset($_callUserNum[$k]->id)){var_dump( $_callUserNum[$k]->id).PHP_EOL;}
-                $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) && $_callUserNum[$k]->id ? count(array_unique(explode(',',$_callUserNum[$k]->id))):0;
+                $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) && $_callUserNum[$k]->id ? count(array_flip(explode(',',$_callUserNum[$k]->id))):0;
                 $tmp[$k]['call_num'] = isset($_callNum[$k]->id) ? $_callNum[$k]->id:0;
 
             }
         }
-        die;
         return $tmp;
 
 
