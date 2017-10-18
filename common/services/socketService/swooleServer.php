@@ -231,7 +231,7 @@ class swooleServer{
             $code = 500;
         }
         $response->status($code);
-        file_put_contents('/tmp/test_123.log' ,$code.'******'.var_export($response , true).PHP_EOL  , 8);
+        file_put_contents('/tmp/test_123.log' ,$code.'-----'.var_export($response , true).PHP_EOL  , 8);
         $response->end();
 
     }
