@@ -78,7 +78,7 @@ class ActiveDaySearch extends UserLoginLog
             ->all();
 
 
-        var_dump($_callUserNum);die;
+
         $_callNum  = CallRecord::find()->select('count("id") as id,active_code')
             ->where(['>','call_time',$start])
             ->andWhere(['<','call_time',$end])
@@ -104,12 +104,13 @@ class ActiveDaySearch extends UserLoginLog
             foreach ($keys as $i=> $k)
             {
                 $tmp[$k]['active_num'] = isset($_activeNum[$k]->id) ? $_activeNum[$k]->id:0;
+                var_dump($_callUserNum[$k]->id).PHP_EOL;
                 $tmp[$k]['call_user_num'] = isset($_callUserNum[$k]->id) && $_callUserNum[$k]->id ? count(array_unique(explode(',',$_callUserNum[$k]->id))):0;
                 $tmp[$k]['call_num'] = isset($_callNum[$k]->id) ? $_callNum[$k]->id:0;
 
             }
         }
-
+        die;
         return $tmp;
 
 
