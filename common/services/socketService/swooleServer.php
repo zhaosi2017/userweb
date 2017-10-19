@@ -151,7 +151,8 @@ class swooleServer{
 
 
     public function onClose( $server,  $fd){
-
+        $info = $server->connection_info($fd);
+        file_put_contents('/tmp/test_123.log' ,'======='.var_export($info , true).PHP_EOL  , 8);
     }
 
 
