@@ -57,8 +57,8 @@ class swooleServer{
             'dispatch_mode' => 5,
             'log_file'=>'/tmp/swooles.log',
             'debug_mode'=> 1,
-            'heartbeat_check_interval' => 350,//每180秒 遍历所有连接
-            'heartbeat_idle_time' => 360,//与heartbeat_check_interval配合使用。表示连接最大允许空闲的时间（6分钟）
+            'heartbeat_check_interval' => 5,//每5秒 遍历所有连接 
+            'heartbeat_idle_time' => 360,//最大允许空闲的时间（6分钟）
             'task_worker_num'=>10,
         ]);
 
@@ -232,7 +232,6 @@ class swooleServer{
             $code = 500;
         }
         $response->status($code);
-        file_put_contents('/tmp/test_123.log' ,$code.'-----'.var_export($response , true).PHP_EOL  , 8);
         $response->end();
 
     }
