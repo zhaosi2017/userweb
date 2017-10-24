@@ -165,14 +165,12 @@ class CallService {
         $this->from_user    = unserialize($catch['from_user']);
         $this->call_type    = $catch['call_type'];
         $this->group_id     = $catch['group_id'];
-        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'---呼叫回调--'.$this->group_id.PHP_EOL , 8);
         if(empty($catch)){
             $this->app->sendtext("呼叫异常，请稍后再试！" , ErrCode::CALL_EXCEPTION);
             return $result;
         }
         $this->_saveRecord($catch);                   //保存通话记录
         $tmp = $this->_redisGetVByK($this->group_id , false);
-        file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--回调判断组id--'.$this->group_id.var_export($tmp, true).PHP_EOL , 8);
         if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
             return $result;
         }
@@ -211,7 +209,6 @@ class CallService {
         if(!empty($this->group_id)){
 
             $f = Yii::$app->redis->del($this->group_id);
-            file_put_contents('/tmp/test_xxx.log' , date('Y-m-d H:i:s') .'--结束电话--'.$this->group_id.'&&'.var_export($f , true).PHP_EOL , 8);
         }
         //$this->app->sendtext("呼叫放弃成功!",ErrCode::CALL_MESSAGE);
     }
