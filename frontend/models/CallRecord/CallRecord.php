@@ -114,10 +114,10 @@ use frontend\models\User;
       }
 
 
-//      public function getActive()
-//      {
-//          return $this->hasOne(User::className(), ['id' => 'active_call_uid']);
-//      }
+      public function getActive()
+      {
+          return $this->hasOne(User::className(), ['id' => 'active_call_uid']);
+      }
 
 
 
