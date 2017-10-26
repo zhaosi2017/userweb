@@ -215,6 +215,22 @@ $module = $this->context->module->id;
 
                     </ul>
                 </li>
+                <li class="<?php if(Yii::$app->controller->id == 'call-record'  ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-tasks"></i>
+                        <span class="nav-label">呼叫记录管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'index'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/call-record/index']) ?>">
+                                <i class="fa fa-bars"></i>
+                                <span>呼叫记录列表</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
             </ul>
         </div>
