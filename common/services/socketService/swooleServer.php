@@ -138,14 +138,14 @@ class swooleServer{
         }catch (\yii\base\ErrorException $exception){
             Yii::$app->db->close();
             Yii::$app->db->open();
-            file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($exception->getTraceAsString() , true).PHP_EOL , 8);
+            //file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($exception->getTraceAsString() , true).PHP_EOL , 8);
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }catch(\Error $error){
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }catch(\Exception $exception){
             Yii::$app->db->close();
             Yii::$app->db->open();
-            file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($exception->getTraceAsString() , true).PHP_EOL , 8);
+            //file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($exception->getTraceAsString() , true).PHP_EOL , 8);
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }
         return true;
@@ -185,12 +185,12 @@ class swooleServer{
         }catch (\Exception $exception){
             Yii::$app->db->close();
             Yii::$app->db->open();
-            file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($exception->getTraceAsString() , true).PHP_EOL , 8);
+            //file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($exception->getTraceAsString() , true).PHP_EOL , 8);
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }catch (\Error $error){
             Yii::$app->db->close();
             Yii::$app->db->open();
-            file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($error->getTraceAsString() , true).PHP_EOL , 8);
+            //file_put_contents('/tmp/exception-'.date("Y-m-d").'.log' ,date('Y-m-d H:i:s'). var_export($error->getTraceAsString() , true).PHP_EOL , 8);
             $server->push($frame->fd , json_encode($result ,JSON_UNESCAPED_UNICODE));
         }
     }
