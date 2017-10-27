@@ -158,6 +158,7 @@ class CallService {
         $catch = $this->_redisGetVByK($catch_key);
         $this->app = isset($catch['apps'])?unserialize($catch['apps']):'';
         if(empty($this->app)){
+            file_put_contents('/tmp/log_call_message.log' , var_export($catch , true).PHP_EOL , 8);
             return $result;
         }
         $this->to_user      = unserialize($catch['to_user']);
