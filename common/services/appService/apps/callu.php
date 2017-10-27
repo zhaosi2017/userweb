@@ -131,6 +131,7 @@ class callu {
             return false;
         }
         $data = json_decode($data);
+        $data->call_type = $data->call_type == 1?0:1;
         $service = new  CallService(Sinch::class);
         $service->from_user = $this->from_user;
         $service->to_user   = $this->to_user;
@@ -176,6 +177,7 @@ class callu {
      */
     private function _checkData($data){
         $data = json_decode($data);
+        $data->call_type = $data->call_type == 1?0:1;
         $user =  User::findOne(['token'=>$data->token]);   //身份校验
         $this->result['status'] = 1;
         $this->from_user   = $user;
