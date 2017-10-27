@@ -158,7 +158,6 @@ class CallService {
         $catch = $this->_redisGetVByK($catch_key);
         $this->app = isset($catch['apps'])?unserialize($catch['apps']):'';
         if(empty($this->app)){
-            file_put_contents('/tmp/log_call_message.log' , var_export($catch , true).PHP_EOL , 8);
             return $result;
         }
         $this->to_user      = unserialize($catch['to_user']);
@@ -171,9 +170,12 @@ class CallService {
         }
         $this->_saveRecord($catch);                   //保存通话记录
         $tmp = $this->_redisGetVByK($this->group_id , false);
+        file_put_contents('/tmp/log_call_message.log' , var_export($tmp , true).PHP_EOL , 8);
         if(!isset($tmp['call_type']) || empty($tmp['call_type']) ){
+            file_put_contents('/tmp/log_call_message.log' , '*********'.PHP_EOL , 8);
             return $result;
         }
+        file_put_contents('/tmp/log_call_message.log' , "-----------".PHP_EOL , 8);
         if(!$this->_Event_ActionResult($catch)){
             $numbers = json_decode($catch['numbers']);
             if(empty($numbers)){
