@@ -34,8 +34,8 @@ use frontend\models\User;
         ];
 
 
-        const CALLRECORD_TYPE_UNURGENT  = 1;
-        const CALLRECORD_TYPE_URGENT    = 2;
+        const CALLRECORD_TYPE_UNURGENT  = 0;
+        const CALLRECORD_TYPE_URGENT    = 1;
 
         static public $type_map = [
             self::CALLRECORD_TYPE_UNURGENT =>'联系电话呼叫',
