@@ -103,7 +103,6 @@ class callu {
         $client  = new \GuzzleHttp\Client();
         try{
             $response = $client->send($request , ['timeout'=>10]);
-            file_put_contents('/tmp/log_call_message.log' , var_export($response->getStatusCode() , true).PHP_EOL , 8);
         }catch (\Exception $e){
             $response = new Response(500);
         }catch(\Error $e){
