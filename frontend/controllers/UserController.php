@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use frontend\models\BindApps\BindAppForm;
+use frontend\models\BindApps\DeleteAppForm;
 use frontend\models\Channel;
 use frontend\models\EmailForm\UserEmail;
 use frontend\models\EmailForm\UserUpdateEmail;
@@ -59,7 +60,7 @@ class UserController extends AuthController
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['telegram-list','bind-app','bind-potato','bind-telegram','potato-list','nickname','send-email','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
+                        'actions' => ['delete-app','telegram-list','bind-app','bind-potato','bind-telegram','potato-list','nickname','send-email','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
                             'delete-user-phone','update-email','user-question-list','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
@@ -101,6 +102,7 @@ class UserController extends AuthController
                     'bind-app'=>['post'],
                     'bind-potato'=>['post'],
                     'bind-telegram'=>['post'],
+                    'delete-app'=>['post'],
 
                 ],
             ],
@@ -827,6 +829,24 @@ class UserController extends AuthController
             $bindAppForm->phone_number = isset($data['phone_number']) ? $data['phone_number'] : 0;
             $bindAppForm->code = isset($data['code']) ? $data['code'] : 0;
             return $bindAppForm->bindTelegram();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionDeleteApp()
+    {
+        try {
+            $data = $this->getRequestContent();
+            $bindAppForm = new DeleteAppForm();
+            $bindAppForm->type = isset($data['type']) ? $data['type'] :'';
+            $bindAppForm->country_code = isset($data['country_code']) ? (int)$data['country_code'] : 0;
+            $bindAppForm->phone_number = isset($data['phone_number']) ? $data['phone_number'] : 0;
+            return $bindAppForm->deleteApp();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
