@@ -5,6 +5,7 @@ use frontend\models\UserPhone;
 use frontend\models\ErrCode;
 use frontend\services\SmsService;
 use Yii;
+use frontend\models\User;
 class UserPhoneForm extends UserPhone
 {
     public function rules()
@@ -29,10 +30,12 @@ class UserPhoneForm extends UserPhone
         {
             return $this->jsonResponse([],'手机号添加不能超过10个','1',ErrCode::PHONE_TOTAL_NOT_OVER_TEN);
         }
-        $user = UserPhone ::find()->where(['user_id'=>$userId , 'phone_country_code'=>$this->phone_country_code,'user_phone_number'=>$this->user_phone_number])->one();
-        if(!empty($user))
+        $user = UserPhone ::find()->where(['phone_country_code'=>$this->phone_country_code,'user_phone_number'=>$this->user_phone_number])->one();
+        $_user = User ::find()->where(['country_code'=>$this->phone_country_code,'phone_number'=>$this->user_phone_number])->one();
+
+        if(!empty($user) || !empty($_user))
         {
-            return $this->jsonResponse([],'该手机号已被添加，不能重复添加','1',ErrCode::COUNTRY_CODE_PHONE_EXIST);
+            return $this->jsonResponse([],'该手机号已被占用，不能添加','1',ErrCode::COUNTRY_CODE_PHONE_EXIST);
         }
         $smsService = new SmsService();
         return $smsService->sendMessage($this->phone_country_code.$this->user_phone_number);
