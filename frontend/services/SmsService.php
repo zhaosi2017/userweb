@@ -136,6 +136,7 @@ class SmsService
     {
         $redis = Yii::$app->redis;
         $_code = $redis->hget($number,'code');//验证码
+
         $_expire_code = $redis->get($number.self::EXPIRE_NUMBER);//过期验证码
 
 
