@@ -33,6 +33,7 @@ use  frontend\services\SmsService;
 class BindAppForm extends UserAppBind
 {
 
+    const APP_BIND_LIMIT_NUM = 10;
     public $country_code;
     public $phone_number;
     public $type;
@@ -68,10 +69,19 @@ class BindAppForm extends UserAppBind
     public function validatePhone($attribute)
     {
 
+        $userId = \Yii::$app->user->id;
+        $num = UserAppBind::find()->where(['user_id'=>$userId,'type'=>$this->type])->count();
+
+        if($num >=self::APP_BIND_LIMIT_NUM)
+        {
+            $this->addError('phone_number', '最多绑定'.self::APP_BIND_LIMIT_NUM.'个'.UserAppBind::$typeArr[$this->type]);
+        }
+
         $rows = UserAppBind::find()->where(['type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number])->one();
         if(!empty($rows)){
             $this->addError('phone_number', '该'.UserAppBind::$typeArr[$this->type].'已绑定，请更换再试');
         }
+
 
     }
 
