@@ -21,6 +21,7 @@ use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
 use frontend\models\SecurityQuestion;
 use frontend\services\UcodeService;
+use frontend\models\UserAppBind;
 /**
  * Class Friends
  * @package frontend\models\Friends
@@ -122,6 +123,9 @@ class LoginForm extends User
                         }
                         unset($data['header_img']);
                     }
+                    $data['userPotatoNum'] = UserAppBind::find()->where(['user_id'=>$user->id,'type'=>UserAppBind::APP_TYPE_POTATO])->count();
+                    $data['userTelegramNum'] = UserAppBind::find()->where(['user_id'=>$user->id,'type'=>UserAppBind::APP_TYPE_TELEGRAM])->count();
+
 
                     $data['userPhoneNum'] = $userPhoneNum;
                     $data['urgentContactNum'] = $urgentContactNum;

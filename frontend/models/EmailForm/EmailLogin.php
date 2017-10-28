@@ -2,6 +2,7 @@
 namespace frontend\models\EmailForm;
 
 use frontend\models\User;
+use frontend\models\UserAppBind;
 use frontend\models\UserLoginLogs\UserLoginLog;
 use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
@@ -96,7 +97,8 @@ class EmailLogin extends User
                         }
                         unset($data['header_img']);
                     }
-
+                    $data['userPotatoNum'] = UserAppBind::find()->where(['user_id'=>$user->id,'type'=>UserAppBind::APP_TYPE_POTATO])->count();
+                    $data['userTelegramNum'] = UserAppBind::find()->where(['user_id'=>$user->id,'type'=>UserAppBind::APP_TYPE_TELEGRAM])->count();
 
                     $data['userPhoneNum'] = $userPhoneNum;
                     $data['urgentContactNum'] = $urgentContactNum;
