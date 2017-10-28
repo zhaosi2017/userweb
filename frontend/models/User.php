@@ -372,7 +372,7 @@ class User extends FActiveRecord implements IdentityInterface
     public function addUserPhone($userId)
     {
 
-        $res = UserPhone::find()->where(['user_id'=>$userId,'phone_country_code'=>$this->country_code,'user_phone_number'=>$this->phone_number])->one();
+        $res = UserPhone::find()->where(['phone_country_code'=>$this->country_code,'user_phone_number'=>$this->phone_number])->one();
         if(!empty($res)){
             return true;
         }
