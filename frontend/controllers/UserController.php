@@ -14,6 +14,7 @@ use frontend\models\ResetPasswords\ResetPasswordMessageForm;
 use frontend\models\ResetPasswords\ResetPasswordForm;
 use frontend\models\Question;
 use frontend\models\SecurityQuestion;
+use frontend\models\UserAppBind;
 use frontend\models\UserForm\PhoneSortForm;
 use frontend\models\UserForm\UrgentContactSortForm;
 use frontend\models\UserForm\UserImageForm;
@@ -52,12 +53,12 @@ class UserController extends AuthController
                     [
                         'allow' => true,
                         'actions' => ['register-user','user-question','login','reset-message','register',
-                            'forget-password','reset-password','reset-pass-phone','reset-pass-question'],
+                            'forget-password','reset-password','reset-pass-phone','reset-pass-question','test'],
                         'roles' => ['?'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['nickname','send-email','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
+                        'actions' => ['telegram-list','potato-list','nickname','send-email','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
                             'delete-user-phone','update-email','user-question-list','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
@@ -718,6 +719,54 @@ class UserController extends AuthController
 //            $model->sort = isset($data['sort']) ? $data['sort'] : '';
             $model->data = $data;
             return $model->sort();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+    public function actionTest()
+    {
+        $redis = Yii::$app->redis;
+        $redis->hostname = Yii::$app->params['remote_web_redis_host'];
+        $redis->password = Yii::$app->params['remote_web_reids_pass'];
+        $redis->database = Yii::$app->params['redis_web_redis_db'];
+        $redis->port = Yii::$app->params['redis_web_redis_port'];
+        $redis->set('m1','2');
+        $redis->expire(10);
+
+        return ($redis->get('m1'));die;
+    }
+
+
+    public function actionPotatoList()
+    {
+        try {
+            $data = $this->getRequestContent();
+            $whiteList = new UserAppBind();
+            $p = isset($data['p']) ? (int)$data['p'] : 0;
+            return $whiteList->potatoLists($p);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+    public function actionTelegramList()
+    {
+        try {
+            $data = $this->getRequestContent();
+            $whiteList = new UserAppBind();
+            $p = isset($data['p']) ? (int)$data['p'] : 0;
+            return $whiteList->telegramLists($p);
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
