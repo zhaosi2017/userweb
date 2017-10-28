@@ -68,7 +68,8 @@ class DeleteAppForm extends UserAppBind
 
     public function validatePhone($attribute)
     {
-        $rows = UserAppBind::find()->where(['type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number])->one();
+        $userId = \Yii::$app->user->id;
+        $rows = UserAppBind::find()->where(['user_id'=>$userId,'type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number])->one();
         if(empty($rows)) {
             $this->addError('phone_number', '该数据不存在');
         }
@@ -80,7 +81,8 @@ class DeleteAppForm extends UserAppBind
     {
         if($this->validate())
         {
-           $userAppBind =  UserAppBind::findOne(['type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number]);
+            $userId = \Yii::$app->user->id;
+           $userAppBind =  UserAppBind::findOne(['user_id'=>$userId,'type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number]);
            if($userAppBind->delete())
            {
                return  $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
