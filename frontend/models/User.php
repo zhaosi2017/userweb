@@ -204,16 +204,24 @@ class User extends FActiveRecord implements IdentityInterface
 
     protected function getUserIdentity()
     {
+        $_user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
 
+        if(empty($_user))
+        {
+            $_userPhone =UserPhone::find()->select('user_id')->where(['phone_country_code'=>$this->country_code, 'user_phone_number'=>$this->phone_number])->one();
+            if(!empty($_userPhone)){
+                $_user = User::find()->where(['id'=>$_userPhone['user_id']])->one();
 
-       $user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
-       if(empty($user))
+            }
+        }
+
+       if(empty($_user))
        {
            return false;
        }else{
-            if( Yii::$app->getSecurity()->validatePassword($this->password, $user->password))
+            if( Yii::$app->getSecurity()->validatePassword($this->password, $_user->password))
            {
-               return $user;
+               return $_user;
            }
            return false;
        }
