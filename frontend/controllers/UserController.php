@@ -844,8 +844,7 @@ class UserController extends AuthController
             $data = $this->getRequestContent();
             $bindAppForm = new DeleteAppForm();
             $bindAppForm->type = isset($data['type']) ? $data['type'] :'';
-            $bindAppForm->country_code = isset($data['country_code']) ? (int)$data['country_code'] : 0;
-            $bindAppForm->phone_number = isset($data['phone_number']) ? $data['phone_number'] : 0;
+            $bindAppForm->id = isset($data['id']) ? (int)$data['id'] : '';
             return $bindAppForm->deleteApp();
         }catch (Exception $e)
         {

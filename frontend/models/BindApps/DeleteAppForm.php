@@ -42,17 +42,12 @@ class DeleteAppForm extends UserAppBind
     {
         return [
 
-            ['country_code', 'integer'],
-            ['phone_number','string'],
-            [['country_code'],'required'],
-            [['phone_number'],'required','message'=>'请输入4-11位手机号码'],
+            ['id','integer'],
             ['type','integer'],
+            [['id'],'required'],
             [['type'],'required'],
-            ['country_code','match','pattern'=>'/^[1-9]{1}[0-9]{0,5}$/','message'=>'{attribute}必须为1到6位纯数字'],
-            ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'请输入4-11位手机号码'],
             ['type','ValidateType'],
-            ['phone_number','validatePhone'],
-
+            ['id','checkId'],
 
         ];
     }
@@ -66,10 +61,12 @@ class DeleteAppForm extends UserAppBind
 
     }
 
-    public function validatePhone($attribute)
+
+
+    public function checkId($attribute)
     {
         $userId = \Yii::$app->user->id;
-        $rows = UserAppBind::find()->where(['user_id'=>$userId,'type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number])->one();
+        $rows = UserAppBind::find()->where(['user_id'=>$userId,'type'=>$this->type,'id'=>$this->id])->one();
         if(empty($rows)) {
             $this->addError('phone_number', '该数据不存在');
         }
@@ -82,7 +79,7 @@ class DeleteAppForm extends UserAppBind
         if($this->validate())
         {
             $userId = \Yii::$app->user->id;
-           $userAppBind =  UserAppBind::findOne(['user_id'=>$userId,'type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number]);
+           $userAppBind =  UserAppBind::findOne(['user_id'=>$userId,'type'=>$this->type,'id'=>$this->id]);
            if($userAppBind->delete())
            {
                return  $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
