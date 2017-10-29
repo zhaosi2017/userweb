@@ -35,7 +35,7 @@ class SmsService
 //                return $this->jsonResponse(['code'=>$verifyCode],'操作成功',0,ErrCode::SUCCESS);
 //            }
 //            $msg =  '您注册客优的验证码为:'.$verifyCode.',有效期5分钟.';
-            $msg ='You are registering callu for the verification code:'.$verifyCode.',Valid for 5 minutes.';
+            $msg ='Your verification code for callu:'.$verifyCode.',Valid for 5 minutes.';
 
             try {
                 $_sms = Yii::$app->sms;
