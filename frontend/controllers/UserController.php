@@ -106,6 +106,8 @@ class UserController extends AuthController
                     'bind-telegram'=>['post'],
                     'delete-app'=>['post'],
                     'sort-app'=>['post'],
+                    'potato-sort'=>['post'],
+                    'telegram-sort'=>['post'],
 
                 ],
             ],
