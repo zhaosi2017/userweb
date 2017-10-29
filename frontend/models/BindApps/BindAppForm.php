@@ -74,7 +74,7 @@ class BindAppForm extends UserAppBind
 
         if($num >=self::APP_BIND_LIMIT_NUM)
         {
-            $this->addError('phone_number', '最多绑定'.self::APP_BIND_LIMIT_NUM.'个'.UserAppBind::$typeArr[$this->type]);
+            $this->addError('phone_number', '最多绑定'.self::APP_BIND_LIMIT_NUM.'个账号');
         }
 
         $rows = UserAppBind::find()->where(['type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number])->one();
