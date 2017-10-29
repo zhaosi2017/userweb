@@ -60,7 +60,7 @@ class BindAppForm extends UserAppBind
 
     public function ValidateType($attribute)
     {
-        if(!array_key_exists($this->type,BindAppForm::$typeArr)){
+        if(!array_key_exists($this->type,UserAppBind::$typeArr)){
             $this->addError('type', '绑定的类型错误');
         }
 

@@ -43,7 +43,7 @@ class UserAppBind extends FActiveRecord
         $userId = Yii::$app->user->id ;
         $limit =  self::PAGE_NUM;
         $offset = $p == 0 ? 0: self::PAGE_NUM*$p;
-        $res = self::find()->where(['user_id'=>$userId,'type'=>UserAppBind::APP_TYPE_POTATO])->offset($offset)->limit($limit)->orderBy('id desc')->all();
+        $res = self::find()->where(['user_id'=>$userId,'type'=>UserAppBind::APP_TYPE_POTATO])->offset($offset)->limit($limit)->orderBy('sort asc ,id desc')->all();
         return  $this->jsonResponse($res,'操作成功',0, ErrCode::SUCCESS);
 
     }
@@ -55,7 +55,7 @@ class UserAppBind extends FActiveRecord
         $userId = Yii::$app->user->id ;
         $limit =  self::PAGE_NUM;
         $offset = $p == 0 ? 0: self::PAGE_NUM*$p;
-        $res = self::find()->where(['user_id'=>$userId,'type'=>UserAppBind::APP_TYPE_TELEGRAM])->offset($offset)->limit($limit)->orderBy('id desc')->all();
+        $res = self::find()->where(['user_id'=>$userId,'type'=>UserAppBind::APP_TYPE_TELEGRAM])->offset($offset)->limit($limit)->orderBy('sort asc ,id desc')->all();
         return  $this->jsonResponse($res,'操作成功',0, ErrCode::SUCCESS);
 
     }

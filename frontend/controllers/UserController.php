@@ -18,6 +18,8 @@ use frontend\models\Question;
 use frontend\models\SecurityQuestion;
 use frontend\models\UserAppBind;
 use frontend\models\UserForm\PhoneSortForm;
+use frontend\models\BindApps\SortAppForm;
+use frontend\models\BindApps\TelegramSortForm;
 use frontend\models\UserForm\UrgentContactSortForm;
 use frontend\models\UserForm\UserImageForm;
 use frontend\models\UserPhone;
@@ -60,7 +62,7 @@ class UserController extends AuthController
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete-app','telegram-list','bind-app','bind-potato','bind-telegram','potato-list','nickname','send-email','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
+                        'actions' => ['potato-sort','telegram-sort','delete-app','telegram-list','bind-app','bind-potato','bind-telegram','potato-list','nickname','send-email','urgent-contact-sort','phone-sort','channel-list','update-channel','update-question',
                             'question-list','reset-message','set-user-phone','check-user-phone','user-phone-list',
                             'delete-user-phone','update-email','user-question-list','logout','update-image','urgent-contact-list','set-urgent-contact','delete-urgent-contact'],
                         'roles' => ['@'],
@@ -103,6 +105,7 @@ class UserController extends AuthController
                     'bind-potato'=>['post'],
                     'bind-telegram'=>['post'],
                     'delete-app'=>['post'],
+                    'sort-app'=>['post'],
 
                 ],
             ],
@@ -846,6 +849,41 @@ class UserController extends AuthController
             $bindAppForm->type = isset($data['type']) ? $data['type'] :'';
             $bindAppForm->id = isset($data['id']) ? (int)$data['id'] : '';
             return $bindAppForm->deleteApp();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+    public function actionPotatoSort()
+    {
+        $data = $this->getRequestContent();
+
+        try {
+            $model = new SortAppForm();
+            $model->data = $data;
+            return $model->sort();
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+    public function actionTelegramSort()
+    {
+        $data = $this->getRequestContent();
+
+        try {
+            $model = new TelegramSortForm();
+            $model->data = $data;
+            return $model->sort();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);

@@ -26,6 +26,7 @@ class SmsService
             $switch = Yii::$app->params['sms_send_enable'];
             $redis = Yii::$app->redis;
             $verifyCode = $this->getVerifyCode($number);
+            return $verifyCode;
             if($this->rateLimit($number))
             {
                 return $this->jsonResponse([],'操作太频繁，每5分钟最多发送5次',1,ErrCode::SUCCESS);
