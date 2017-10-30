@@ -94,6 +94,13 @@ class callu {
     public function sendText($string , $code = "0000"){
         $this->result['message'] = $string;
         $this->result['code']    = $code;
+        if(isset($this->result['data']['call_type'])){
+                if($this->result['data']['call_type'] == CallRecord::CALLRECORD_TYPE_URGENT){
+                    $this->result['data']['call_type'] = 2;
+                }elseif($this->result['data']['call_type'] == CallRecord::CALLRECORD_TYPE_UNURGENT){
+                    $this->result['data']['call_type'] = 1;
+                }
+        }
         $text = json_encode( $this->result ,JSON_UNESCAPED_UNICODE);
         $json = ['uCode'=>$this->from_user->account , 'message'=>$text];
         $body =json_encode( $json );
