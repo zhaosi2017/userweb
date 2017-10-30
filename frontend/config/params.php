@@ -8,4 +8,8 @@ return [
     'redis_expire_time'=> 300,//5分钟,
     'sms_send_enable' => true,//短信发送开关
     'inputKey'=>'OASystem@Yii2+H+',
+    'remote_web_redis_host'=>'103.235.171.147',
+    'remote_web_reids_pass'=>'Redis@123',
+    'redis_web_redis_db'=>0,
+    'redis_web_redis_port'=>6379,
 ];

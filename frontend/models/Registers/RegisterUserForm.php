@@ -16,7 +16,7 @@ use yii\db\Transaction;
 use frontend\models\Friends\FriendsGroup;
 use  frontend\services\SmsService;
 use Yii;
-
+use frontend\models\UserPhone;
 /**
  * Class Friends
  * @package frontend\models\Friends
@@ -76,8 +76,8 @@ class RegisterUserForm extends User
         }
 
         $rows = User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
-
-        if(!empty($rows)){
+        $_userPhone = UserPhone::find()->where(['phone_country_code'=>$this->country_code, 'user_phone_number'=>$this->phone_number])->one();
+        if(!empty($rows) || !empty($_userPhone)){
             $this->addError('phone_number', '该手机已注册，请更换手机再试');
         }
 

@@ -21,6 +21,7 @@ use frontend\models\UserPhone;
 use frontend\models\UrgentContact;
 use frontend\models\SecurityQuestion;
 use frontend\services\UcodeService;
+use frontend\models\UserAppBind;
 /**
  * Class Friends
  * @package frontend\models\Friends
@@ -67,7 +68,7 @@ class LoginForm extends User
 
         if($this->validate())
         {
-            $_user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+            $_user =  $this->findUser();
             if(empty($_user))
             {
                 return $this->jsonResponse([],'手机号还没注册，请先注册',1,ErrCode::USER_NOT_EXIST);
@@ -122,6 +123,9 @@ class LoginForm extends User
                         }
                         unset($data['header_img']);
                     }
+                    $data['userPotatoNum'] = UserAppBind::find()->where(['user_id'=>$user->id,'type'=>UserAppBind::APP_TYPE_POTATO])->count();
+                    $data['userTelegramNum'] = UserAppBind::find()->where(['user_id'=>$user->id,'type'=>UserAppBind::APP_TYPE_TELEGRAM])->count();
+
 
                     $data['userPhoneNum'] = $userPhoneNum;
                     $data['urgentContactNum'] = $urgentContactNum;
@@ -138,6 +142,23 @@ class LoginForm extends User
         }else{
             return $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
+
+    }
+
+
+    public function findUser()
+    {
+        $_user =  User::find()->where(['country_code'=>$this->country_code, 'phone_number'=>$this->phone_number])->one();
+
+        if(empty($_user))
+        {
+            $_userPhone =UserPhone::find()->select('user_id')->where(['phone_country_code'=>$this->country_code, 'user_phone_number'=>$this->phone_number])->one();
+            if(!empty($_userPhone)){
+                $_user = User::find()->where(['id'=>$_userPhone['user_id']])->one();
+
+            }
+        }
+        return $_user;
 
     }
 
