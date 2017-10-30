@@ -39,10 +39,10 @@ class CallRecordDetail extends CallRecord
             }
 
             $userId = Yii::$app->user->id;
-            if($user->id == $userId)
-            {
-                return $this->jsonResponse([],'数据非法','1',ErrCode::USER_NOT_EXIST);
-            }
+//            if($user->id == $userId)
+//            {
+//                return $this->jsonResponse([],'数据非法','1',ErrCode::USER_NOT_EXIST);
+//            }
             $offset = $this->p == 0 ? 0: self::PAGE_NUM*($this->p);
 
 
