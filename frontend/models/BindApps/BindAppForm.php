@@ -105,7 +105,7 @@ class BindAppForm extends UserAppBind
                 $userBind->app_name   = $dataArr['3'];
                 $userBind->type       = UserAppBind::APP_TYPE_POTATO;
                 if ($userBind->save()) {
-                    $redis->del($this->bindCode);
+                    $redis->del($this->code);
                     return $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
                 }else{
                     return  $this->jsonResponse([],$userBind->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
@@ -145,7 +145,7 @@ class BindAppForm extends UserAppBind
                     $userBind->app_name = $dataArr['3'];
                     $userBind->type = UserAppBind::APP_TYPE_TELEGRAM;
                     if ($userBind->save()) {
-                        \Yii::$app->redis->del($this->bindCode);
+                        \Yii::$app->redis->del($this->code);
                         return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
                     } else {
                         return $this->jsonResponse([], $userBind->getErrors(), 1, ErrCode::DATA_SAVE_ERROR);
