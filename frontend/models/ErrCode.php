@@ -71,6 +71,8 @@ class ErrCode
     const EMAIL_SEND_FAILURE = '2043';//邮件发送失败
     const EMAIL_HAD_ALREADY_EXISTS = '2044';//邮件发送失败
     const PASSWORD_ERROR = '2045';//密码错误
+    const POTATO_ACCOUNT_EXISTS = '2046';
+    const TELEGRAM_ACCOUNT_EXISTS = '2047';
 
 
 

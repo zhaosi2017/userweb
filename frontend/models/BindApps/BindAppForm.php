@@ -34,25 +34,14 @@ class BindAppForm extends UserAppBind
 {
 
     const APP_BIND_LIMIT_NUM = 10;
-    public $country_code;
-    public $phone_number;
-    public $type;
     public $code;
 
     public function rules()
     {
         return [
 
-            ['country_code', 'integer'],
-            ['phone_number','string'],
-            [['country_code'],'required'],
-            [['phone_number'],'required','message'=>'请输入4-11位手机号码'],
-            ['type','integer'],
-            [['type'],'required'],
-            ['country_code','match','pattern'=>'/^[1-9]{1}[0-9]{0,5}$/','message'=>'{attribute}必须为1到6位纯数字'],
-            ['phone_number','match','pattern'=>'/^[0-9]{4,11}$/','message'=>'请输入4-11位手机号码'],
-            ['type','ValidateType'],
-            ['phone_number','validatePhone'],
+            [['code'],'required'],
+            ['code','validatePhone'],
 
 
         ];
@@ -77,10 +66,6 @@ class BindAppForm extends UserAppBind
             $this->addError('phone_number', '最多绑定'.self::APP_BIND_LIMIT_NUM.'个账号');
         }
 
-        $rows = UserAppBind::find()->where(['type'=>$this->type,'app_country_code'=>$this->country_code, 'app_phone'=>$this->phone_number])->one();
-        if(!empty($rows)){
-            $this->addError('phone_number', '该'.UserAppBind::$typeArr[$this->type].'已绑定，请更换再试');
-        }
 
 
     }
@@ -92,24 +77,42 @@ class BindAppForm extends UserAppBind
     public function bindPotato()
     {
         if($this->validate())
+
         {
-            $userbind = new UserAppBind();
-            $userbind->create_at = time();
-            $userbind->app_number = $this->country_code.$this->phone_number;
-            $userbind->user_id = \Yii::$app->user->id;
-            $userbind->app_country_code = $this->country_code;
-            $userbind->app_phone = $this->phone_number;
-            $userbind->type = $this->type;
-            $sms = new SmsService();
-            if($res = $sms->checkSms($userbind->app_number,$this->code))
-            {
-                return $this->jsonResponse([],$res,1,ErrCode::CODE_ERROR);
+
+            $redis = \Yii::$app->redis;
+            $redis->hostname = \Yii::$app->params['remote_web_redis_host'];
+            $redis->password =  \Yii::$app->params['remote_web_reids_pass'];
+            $redis->database =  \Yii::$app->params['redis_web_redis_db'];
+            $redis->port =  \Yii::$app->params['redis_web_redis_port'];
+
+            if (!$redis->exists($this->code) || !($potatoData= $redis->get($this->code))) {
+                return $this->jsonResponse([],'验证码错误',1,ErrCode::CODE_ERROR);
             }
-            if($userbind->save())
+            $data = \Yii::$app->security->decryptByKey(base64_decode($potatoData), \Yii::$app->params['potato']);
+            $dataArr = explode('-', $data);
+            $_userAppBind = UserAppBind::find()->where(['type'=>UserAppBind::APP_TYPE_POTATO,'app_userid'=>$dataArr['1']])->one();
+            if(!empty($_userAppBind))
             {
-                return $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
-            }else{
-                return  $this->jsonResponse([],$userbind->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
+                return $this->jsonResponse([],'该potato已被占用',1,ErrCode::POTATO_ACCOUNT_EXISTS);
+            }
+            if ($dataArr[0] == \Yii::$app->params['potato_pre']) {
+
+                $userBind = new UserAppBind ();
+                $userBind->app_userid = $dataArr['1'];
+                $userBind->user_id = \Yii::$app->user->id;
+                $userBind->app_number = $dataArr['2'];
+                $userBind->app_name   = $dataArr['3'];
+                $userBind->type       = UserAppBind::APP_TYPE_POTATO;
+                if ($userBind->save()) {
+                    $redis->del($this->bindCode);
+                    return $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
+                }else{
+                    return  $this->jsonResponse([],$userBind->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
+                }
+
+            } else {
+                return $this->jsonResponse([],'验证码错误',1,ErrCode::CODE_ERROR);
             }
 
         }else{
@@ -121,31 +124,42 @@ class BindAppForm extends UserAppBind
 
     public function bindTelegram()
     {
-        if($this->validate())
-        {
-            $userbind = new UserAppBind();
-            $userbind->create_at = time();
-            $userbind->app_number = $this->country_code.$this->phone_number;
-            $userbind->user_id = \Yii::$app->user->id;
-            $userbind->app_country_code = $this->country_code;
-            $userbind->app_phone = $this->phone_number;
-            $userbind->type = $this->type;
-            $sms = new SmsService();
-            if($res = $sms->checkSms($userbind->app_number,$this->code))
-            {
-                return $this->jsonResponse([],$res,1,ErrCode::CODE_ERROR);
+        if ($this->validate()) {
+            if (!($telegramData = \Yii::$app->redis->exists($this->code))) {
+                return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
             }
-            if($userbind->save())
-            {
-                return $this->jsonResponse([],'操作成功',0,ErrCode::SUCCESS);
-            }else{
-                return  $this->jsonResponse([],$userbind->getErrors(),1,ErrCode::DATA_SAVE_ERROR);
+            $data = \Yii::$app->security->decryptByKey(base64_decode($telegramData), \Yii::$app->params['potato']);
+            $dataArr = explode('-', $data);
+            $_userAppBind = UserAppBind::find()->where(['type' => UserAppBind::APP_TYPE_POTATO, 'app_number' => $dataArr['2'], 'app_userid' => $dataArr['1']])->one();
+            if (!empty($_userAppBind)) {
+                return $this->jsonResponse([], '该potato已被占用', 1, ErrCode::POTATO_ACCOUNT_EXISTS);
+            }
+            if ($dataArr[0] == \Yii::$app->params['potato_pre']) {
+
+
+                if ($dataArr[0] == \Yii::$app->params['telegram_pre']) {
+                    $userBind = new UserAppBind ();
+                    $userBind->app_userid = $dataArr['1'];
+                    $userBind->user_id = \Yii::$app->user->id;
+                    $userBind->app_number = $dataArr['2'];
+                    $userBind->app_name = $dataArr['3'];
+                    $userBind->type = UserAppBind::APP_TYPE_TELEGRAM;
+                    if ($userBind->save()) {
+                        \Yii::$app->redis->del($this->bindCode);
+                        return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
+                    } else {
+                        return $this->jsonResponse([], $userBind->getErrors(), 1, ErrCode::DATA_SAVE_ERROR);
+                    }
+
+                } else {
+                    return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
+                }
+
+            } else {
+                return $this->jsonResponse([], $this->getErrors(), 1, ErrCode::VALIDATION_NOT_PASS);
             }
 
-        }else{
-            return  $this->jsonResponse([],$this->getErrors(),1,ErrCode::VALIDATION_NOT_PASS);
         }
-
     }
 
     public function sendMessage()

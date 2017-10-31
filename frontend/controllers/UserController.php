@@ -787,23 +787,23 @@ class UserController extends AuthController
         }
     }
 
-    public function actionBindApp()
-    {
-        try {
-            $data = $this->getRequestContent();
-            $bindAppForm = new BindAppForm();
-            $bindAppForm->type = isset($data['type']) ? $data['type'] :'';
-            $bindAppForm->country_code = isset($data['country_code']) ? (int)$data['country_code'] : 0;
-            $bindAppForm->phone_number = isset($data['phone_number']) ? $data['phone_number'] : 0;
-            return $bindAppForm->sendMessage();
-        }catch (Exception $e)
-        {
-            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
-        }catch (\Exception $e)
-        {
-            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
-        }
-    }
+//    public function actionBindApp()
+//    {
+//        try {
+//            $data = $this->getRequestContent();
+//            $bindAppForm = new BindAppForm();
+//            $bindAppForm->type = isset($data['type']) ? $data['type'] :'';
+//            $bindAppForm->country_code = isset($data['country_code']) ? (int)$data['country_code'] : 0;
+//            $bindAppForm->phone_number = isset($data['phone_number']) ? $data['phone_number'] : 0;
+//            return $bindAppForm->sendMessage();
+//        }catch (Exception $e)
+//        {
+//            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+//        }catch (\Exception $e)
+//        {
+//            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+//        }
+//    }
 
     public function actionBindPotato()
     {
@@ -811,8 +811,6 @@ class UserController extends AuthController
             $data = $this->getRequestContent();
             $bindAppForm = new BindAppForm();
             $bindAppForm->type = UserAppBind::APP_TYPE_POTATO;
-            $bindAppForm->country_code = isset($data['country_code']) ? (int)$data['country_code'] : 0;
-            $bindAppForm->phone_number = isset($data['phone_number']) ? $data['phone_number'] : 0;
             $bindAppForm->code = isset($data['code']) ? $data['code'] : 0;
             return $bindAppForm->bindPotato();
         }catch (Exception $e)
@@ -830,8 +828,6 @@ class UserController extends AuthController
             $data = $this->getRequestContent();
             $bindAppForm = new BindAppForm();
             $bindAppForm->type = UserAppBind::APP_TYPE_TELEGRAM;
-            $bindAppForm->country_code = isset($data['country_code']) ? (int)$data['country_code'] : 0;
-            $bindAppForm->phone_number = isset($data['phone_number']) ? $data['phone_number'] : 0;
             $bindAppForm->code = isset($data['code']) ? $data['code'] : 0;
             return $bindAppForm->bindTelegram();
         }catch (Exception $e)

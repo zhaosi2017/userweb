@@ -12,4 +12,8 @@ return [
     'remote_web_reids_pass'=>'Redis@123',
     'redis_web_redis_db'=>0,
     'redis_web_redis_port'=>6379,
+    'potato'=>'callcenter',
+    'potato_pre' => 'ccpotato',
+    'telegram' => 'callcenter',
+    'telegram_pre' => 'cctelegram',
 ];
