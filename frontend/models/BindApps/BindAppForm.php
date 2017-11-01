@@ -131,17 +131,14 @@ class BindAppForm extends UserAppBind
             $redis->database =  \Yii::$app->params['redis_web_redis_db'];
             $redis->port =  \Yii::$app->params['redis_web_redis_port'];
 
-            file_put_contents('/tmp/mytest.log','1'.PHP_EOL,8);
+
             if (!($redis->exists($this->code)) || !($telegramData = $redis->get($this->code))) {
-                file_put_contents('/tmp/mytest.log','2'.PHP_EOL,8);
                 return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
             }
             $data = \Yii::$app->security->decryptByKey(base64_decode($telegramData), \Yii::$app->params['telegram']);
             $dataArr = explode('-', $data);
-            file_put_contents('/tmp/mytest.log','3'.PHP_EOL,8);
             if(!isset($dataArr['1']) || !isset($dataArr['2']) || !isset($dataArr['3']))
             {
-                file_put_contents('/tmp/mytest.log','4'.PHP_EOL,8);
                 return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
             }
             $_userAppBind = UserAppBind::find()->where(['type' => UserAppBind::APP_TYPE_TELEGRAM,  'app_userid' => $dataArr['1']])->one();
@@ -164,7 +161,6 @@ class BindAppForm extends UserAppBind
                 }
 
             } else {
-                file_put_contents('/tmp/mytest.log','5'.PHP_EOL,8);
                 return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
             }
 
