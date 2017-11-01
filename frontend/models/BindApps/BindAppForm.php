@@ -125,41 +125,54 @@ class BindAppForm extends UserAppBind
     public function bindTelegram()
     {
         if ($this->validate()) {
-            if (!($telegramData = \Yii::$app->redis->exists($this->code))) {
+            $redis = \Yii::$app->redis;
+            $redis->hostname = \Yii::$app->params['remote_web_redis_host'];
+            $redis->password =  \Yii::$app->params['remote_web_reids_pass'];
+            $redis->database =  \Yii::$app->params['redis_web_redis_db'];
+            $redis->port =  \Yii::$app->params['redis_web_redis_port'];
+
+            file_put_contents('/tmp/mytest.log','1'.PHP_EOL,8);
+            if (!($redis->exists($this->code)) || !($telegramData = $redis->get($this->code))) {
+                file_put_contents('/tmp/mytest.log','2'.PHP_EOL,8);
                 return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
             }
-            $data = \Yii::$app->security->decryptByKey(base64_decode($telegramData), \Yii::$app->params['potato']);
+            $data = \Yii::$app->security->decryptByKey(base64_decode($telegramData), \Yii::$app->params['telegram']);
             $dataArr = explode('-', $data);
-            $_userAppBind = UserAppBind::find()->where(['type' => UserAppBind::APP_TYPE_POTATO, 'app_number' => $dataArr['2'], 'app_userid' => $dataArr['1']])->one();
-            if (!empty($_userAppBind)) {
-                return $this->jsonResponse([], '该potato已被占用', 1, ErrCode::POTATO_ACCOUNT_EXISTS);
+            file_put_contents('/tmp/mytest.log','3'.PHP_EOL,8);
+            if(!isset($dataArr['1']) || !isset($dataArr['2']) || !isset($dataArr['3']))
+            {
+                file_put_contents('/tmp/mytest.log','4'.PHP_EOL,8);
+                return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
             }
-            if ($dataArr[0] == \Yii::$app->params['potato_pre']) {
+            $_userAppBind = UserAppBind::find()->where(['type' => UserAppBind::APP_TYPE_TELEGRAM,  'app_userid' => $dataArr['1']])->one();
+            if (!empty($_userAppBind)) {
+                return $this->jsonResponse([], '该telegram已被占用', 1, ErrCode::POTATO_ACCOUNT_EXISTS);
+            }
 
-
-                if ($dataArr[0] == \Yii::$app->params['telegram_pre']) {
-                    $userBind = new UserAppBind ();
-                    $userBind->app_userid = $dataArr['1'];
-                    $userBind->user_id = \Yii::$app->user->id;
-                    $userBind->app_number = $dataArr['2'];
-                    $userBind->app_name = $dataArr['3'];
-                    $userBind->type = UserAppBind::APP_TYPE_TELEGRAM;
-                    if ($userBind->save()) {
-                        \Yii::$app->redis->del($this->code);
-                        return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
-                    } else {
-                        return $this->jsonResponse([], $userBind->getErrors(), 1, ErrCode::DATA_SAVE_ERROR);
-                    }
-
+            if ($dataArr[0] == \Yii::$app->params['telegram_pre']) {
+                $userBind = new UserAppBind ();
+                $userBind->app_userid = $dataArr['1'];
+                $userBind->user_id = \Yii::$app->user->id;
+                $userBind->app_number = $dataArr['2'];
+                $userBind->app_name = $dataArr['3'];
+                $userBind->type = UserAppBind::APP_TYPE_TELEGRAM;
+                if ($userBind->save()) {
+                    \Yii::$app->redis->del($this->code);
+                    return $this->jsonResponse([], '操作成功', 0, ErrCode::SUCCESS);
                 } else {
-                    return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
+                    return $this->jsonResponse([], $userBind->getErrors(), 1, ErrCode::DATA_SAVE_ERROR);
                 }
 
             } else {
-                return $this->jsonResponse([], $this->getErrors(), 1, ErrCode::VALIDATION_NOT_PASS);
+                file_put_contents('/tmp/mytest.log','5'.PHP_EOL,8);
+                return $this->jsonResponse([], '验证码错误', 1, ErrCode::CODE_ERROR);
             }
 
+        } else {
+            return $this->jsonResponse([], $this->getErrors(), 1, ErrCode::VALIDATION_NOT_PASS);
         }
+
+
     }
 
     public function sendMessage()
