@@ -37,7 +37,7 @@ class SortAppForm extends UserAppBind
 
         if(!is_array($this->data))
         {
-            return $this->jsonResponse([],$this->getErrors(),1,ErrCode::REQUEST_DATA_ERROR);
+            return $this->jsonResponse([],'参数错误',1,ErrCode::REQUEST_DATA_ERROR);
         }
 
         $userId = \Yii::$app->user->id;
