@@ -67,5 +67,12 @@ class WhiteList extends FActiveRecord
 //
 //    }
 
+    public function getWhiteStatus()
+    {
+        $userId = Yii::$app->user->id;
+        $res  = User::find()->select('whitelist_switch')->where(['id'=>$userId])->one();
+        return $this->jsonResponse($res,'操作成功',0,ErrCode::SUCCESS);
+    }
+
 
 }
