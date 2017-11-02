@@ -29,7 +29,7 @@ class WhiteListController extends AuthController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['remove', 'add', 'list','switch'],
+                        'actions' => ['remove', 'add', 'list','switch','status'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -40,7 +40,8 @@ class WhiteListController extends AuthController
                     'remove' => ['post'],
                     'add' => ['post'],
                     'list' => ['post'],
-                    'switch'=>['post']
+                    'switch'=>['post'],
+                    'status'=>['post'],
 
                 ],
             ],
@@ -112,6 +113,22 @@ class WhiteListController extends AuthController
             $whiteList = new WhiteListSearchForm();
             $p = isset($data['p']) ? (int)$data['p'] : 0;
             return $whiteList->lists($p);
+        }catch (Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
+        }catch (\Exception $e)
+        {
+            return $this->jsonResponse('',$e->getMessage(),1, ErrCode::NETWORK_ERROR);
+        }
+    }
+
+
+    public function actionStatus()
+    {
+        try {
+
+            $whiteList = new WhiteList();
+            return $whiteList->getWhiteStatus();
         }catch (Exception $e)
         {
             return $this->jsonResponse('',$e->getMessage(),1, ErrCode::UNKNOWN_ERROR);
