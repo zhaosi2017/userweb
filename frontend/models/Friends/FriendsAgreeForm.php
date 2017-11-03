@@ -70,6 +70,7 @@ class FriendsAgreeForm extends FriendsRequest
                     $fromFriend->create_at = $time;
                     $fromFriend->direction = 0;//被邀请
                     $fromFriend->link_time = 0;
+                    $fromFriend->is_new_friend = Friends::NOT_IS_NEW_FRIEND;
 
 
                     if (!$fromFriend->save()) {
