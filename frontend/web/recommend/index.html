@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        
+        <title>客优活动推广页</title>
+        <link href="css/main.css?v=1.2" rel="stylesheet" type="text/css" />
+         <style>
+            /*二维码漂浮*/
+            figure{margin:0;}
+            #ewm{   margin-right: -530px;
+                position: fixed;
+                top: 8rem;
+                right: 50%;
+                text-align: center;
+                width: 7rem;
+                height: 8.3rem;
+                overflow: hidden;
+                background: #fff;
+            }
+            #ewm>img{width: 80%;}
+            #ewm>figcaption{background: #fff;color: #333;}
+            #ewm>figcaption:first-of-type{position: relative;
+                bottom: -0.1rem;
+                font-size: .65rem;
+                padding: .4rem;}
+            #ewm>figcaption:nth-of-type(2){position:relative;top:-0.2rem;line-height: 1rem;font-size: .6rem;}
+            @media(max-width: 1084px){#ewm{display: none;}}
+            /*warn_tips*/
+            .warn_tip{display:none;z-index:96;position:fixed;top:11rem;left:0;right:0;font-size:.8rem;border-radius:.25rem;opacity:.8;margin:0 auto;padding:1rem 1.65rem 1rem 1.75rem;background: #000;width: 14.2rem;color: #fff;line-height: 1.2rem;}
+            .warn_tip>strong{font-size:1rem;font-weight:normal;text-align:center;border: .1rem solid #fff;border-radius: 50%;position:relative;float:left;width: 1.2rem;height: 1.2rem;}
+            .warn_tip>span{padding: 0 0 0 .2rem;}
+            .img a{display: inline-block;width:4.5rem;height: 2rem;margin: 1rem 0 0 1rem;}
+        </style>
+    </head>
+        <div class="main">
+            <section class="down-wrap">
+            	<img data-original="images/img1.png" alt="">
+                <a href="https://itunes.apple.com/us/app/客优/id1281191882?l=zh&ls=1&mt=8"></a>
+            </section>
+            <section>
+                <img data-original="images/img2.png" alt="">
+            </section>
+            <section>
+                <img data-original="images/img3.png" alt="">
+            </section>
+            <section>
+                <img data-original="images/img4.png" alt="">
+            </section>
+            <section>
+                <img data-original="images/img5.png" alt="">
+            </section>
+            <section>
+                <img data-original="images/img6.png" alt="">
+            </section>
+            <section>
+                <img data-original="images/img7.png" alt="">
+            </section>
+            <section>
+                <img data-original="images/img8.png" alt="">
+            </section>
+            <section>
+                <img data-original="images/img9.png" alt="">
+            </section>
+        </div>
+                
+    <body>
+        <script src="js/pageFit.js?v=1"></script>
+        <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.lazyload.js"></script>
+        <script>
+
+            $(function(){
+                $("img").lazyload({
+                    effect:"fadeIn"
+                });
+            })
+            
+        </script>
+        <!-- 二维码漂浮 -->
+        <figure id="ewm">
+        <figcaption>客优ios客户端</figcaption>
+        <img src="images/qr-code.png"/>
+        <figcaption>扫我下载</figcaption>
+        </figure>
+        
+        <p class="warn_tip">
+            <strong>!</strong><span></span>
+        </p>
+
+    </body>
+    
+</html>

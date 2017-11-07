@@ -1,0 +1,77 @@
+  /*
+* @Author: xiechao
+* @Date:   2016-03-25 11:13:18
+* @Last Modified by:   xiechao
+* @Last Modified time: 2017-01-21 17:51:07
+*/
+html{
+    font-size: 30px;        /*30px=1rem*/
+    font-family: '微软雅黑';
+    margin:0px auto;
+}
+@media (min-width:320px) and (max-width:345px){
+    html{
+        font-size: 17.7777777777777px;
+    }
+}
+@media (min-width:345px) and (max-width:360px){
+    html{
+        font-size: 20px;
+    }
+}
+@media (min-width:361px) and (max-width:375px){
+    html{
+        font-size: 20.8333333333333px;
+    }
+}
+body{
+    position: relative;
+    min-width: 13.333333333333rem;   /*maxwidth(320px)/12px 12px为最小能识别*/
+    max-width: 18rem;           /*minwidth(720px)/20*/
+    margin:0px auto;            /*rem值=实际长度/20*/
+    padding: 0px;
+    font-size: 0.55rem;
+    background: #F0F0F0;
+}
+*{
+    margin:0;
+    padding:0;
+}
+h4,p{
+    margin:0px;
+    font-weight: normal;
+}
+em{
+    font-style: normal;
+    color: #F78118;
+}
+a{
+    text-decoration: none;
+}
+img{
+    border: none;
+}
+ul,li{margin:0rem;padding:0rem;list-style: none;}
+html,body{
+    height:100%;
+}
+.main{
+    background: #fff;
+    height:100%;
+}
+.main section img{
+    width:100%;
+    display: block;
+}
+.down-wrap{
+    position: relative;
+}
+  .down-wrap a{
+      width: 5rem;
+      height: 1.6rem;
+      background: #fff;
+      position: absolute;
+      left: 23%;
+      top: 48%;
+      opacity: 0;
+  }
