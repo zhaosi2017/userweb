@@ -44,7 +44,7 @@ class VersionForm extends Version
             $_version =  Version::find()->where(['platform'=>$this->platform])->orderBy('id desc')->one();
             if(empty($_version))
             {
-                return $this->jsonResponse([],$this->platform . ' versions data is empty', '1', ErrCode::THE_PLATFORM_VERSION_NO_DATA);
+                return $this->jsonResponse([],$this->platform . '已是最新版本', '1', ErrCode::THE_PLATFORM_VERSION_NO_DATA);
             }
             $data = [];
             $data['version'] = $_version['version'];
