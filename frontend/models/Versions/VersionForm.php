@@ -49,7 +49,7 @@ class VersionForm extends Version
             $data = [];
             $data['version'] = $_version['version'];
             $data['content'] = $_version['info'];
-            $data['url']    = $_version['url'];
+            $data['url']    = Yii::$app->params['frontendBaseDomain']. $_version['url'];
             return $this->jsonResponse($data,'操作成功', '0', ErrCode::SUCCESS);
         }else{
             return $this->jsonResponse([],$this->getErrors(), '1', ErrCode::VALIDATION_NOT_PASS);
