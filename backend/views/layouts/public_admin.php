@@ -231,6 +231,22 @@ $module = $this->context->module->id;
 
                     </ul>
                 </li>
+                <li class="<?php if(Yii::$app->controller->id == 'composite'  ){ echo 'active';}else{ echo '';}?>">
+                    <a href="#">
+                        <i class="fa fa-tasks"></i>
+                        <span class="nav-label">综合管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if(Yii::$app->controller->action->id == 'index'){ echo 'active';}?>">
+                            <a href="<?= Url::to(['/composite/platform-index']) ?>">
+                                <i class="fa fa-bars"></i>
+                                <span>app平台版本列表</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
             </ul>
         </div>

@@ -224,3 +224,48 @@ ALTER TABLE `friends` ADD `is_new_friend` TINYINT(1) NOT NULL DEFAULT '0' COMMEN
 /************************邮箱字段（目前暂时不加，只是做的预留，以后如果加邮箱注册等功能在添加）*******************************／
 ALTER TABLE `user` ADD `email` VARCHAR(64) NULL DEFAULT NULL COMMENT '邮箱' AFTER `account`;
 ************************************************************************************************/
+
+
+
+
+
+
+CREATE TABLE `manager` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `auth_key` varchar(64) DEFAULT NULL,
+  `password` varchar(64) NOT NULL DEFAULT '',
+  `account` text,
+  `nickname` text,
+  `role_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `status` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `remark` text,
+  `login_ip` varchar(64) NOT NULL DEFAULT '',
+  `create_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `update_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `create_at` int(11) DEFAULT '0',
+  `update_at` int(11) DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `manager`
+--
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `manager`
+--
+ALTER TABLE `manager`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `manager`
+--
+ALTER TABLE `manager`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
