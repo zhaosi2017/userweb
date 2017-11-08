@@ -44,6 +44,7 @@ class AuthController extends Controller
                         'send-sms',
                         'active-one',
                         'active-app',
+                        'check',
                     ],
                 ]
             ]
@@ -67,7 +68,7 @@ class AuthController extends Controller
         }
         $arr = ['login', 'register', 'register-user','user-question','reset-message','forget-password','reset-password','reset-pass-phone','reset-pass-question','register-email','send-sms','active-one','active-app'];
         $_action = \Yii::$app->controller->action->id;
-        if(in_array($_action , ['event-sinch' , 'test'])){    //三方的回调数据校验不再这里
+        if(in_array($_action , ['event-sinch' , 'test','check'])){    //三方的回调数据校验不再这里
               return true;
         }
         if(in_array($_action,$arr))
