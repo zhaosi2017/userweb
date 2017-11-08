@@ -30,8 +30,9 @@ class VersionController extends AuthController
                     [
                         'allow' => true,
                         'actions' => ['check'],
-                        'roles' => ['@'],
+                        'roles' => ['?'],
                     ],
+
                 ],
             ],
             'verbs' => [
