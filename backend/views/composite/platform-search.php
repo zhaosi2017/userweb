@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use  frontend\models\Versions\Version;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\ChannelSearch */
@@ -11,7 +12,7 @@ use yii\widgets\ActiveForm;
 <div class="channel-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['platform-index'],
         'method' => 'get',
         'options' => ['class'=>'form-inline'],
     ]); ?>
@@ -22,11 +23,11 @@ use yii\widgets\ActiveForm;
             <div class="text-left no-padding">
 
                 <?= $form->field($model, 'search_type')->dropDownList([
-                    1 => '优码',
-                    2 => '昵称',
-                    3 => '手机号',
-                ],['prompt' => '全部'])->label(false) ?>
-                <?= $form->field($model, 'search_keywords')->textInput()->label(false) ?>
+                1 => Version::PLATFORM_IOS,
+                2 => Version::PLATFORM_ANDROID,
+                ],['prompt' => '全部'])->label('类型：') ?>
+
+                <?= $form->field($model, 'search_keywords')->textInput()->label('版本号：') ?>
                 <div class="form-group">
                     <?= Html::submitButton('搜索', ['class' => 'btn btn-primary m-t-n-xs','id'=>'search']) ?>
                     &nbsp;

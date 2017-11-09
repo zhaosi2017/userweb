@@ -20,13 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
             'id',
-            'account',
-            'email',
-            'country_code',
-            'phone_number',
-            'token',
-            'nickname',
-            'username',
+            'platform',
+            'version',
+            'url',
+            'info',
 
 //            ['class' => 'yii\grid\ActionColumn'],
             [
@@ -43,6 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+
+    <p class="text-right">
+        <?= Html::a('新增平台版本', ['platform-create'], ['class' => 'btn btn-primary m-t-n-xs']) ?>
+    </p>
 
 
 </div>
