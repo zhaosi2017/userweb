@@ -248,6 +248,12 @@ CREATE TABLE `manager` (
 
 --
 -- 转存表中的数据 `manager`
+-- Admin@one, 11111111a,  test1234, 11111111a
+INSERT INTO `manager` (`id`, `auth_key`, `password`, `account`, `nickname`, `role_id`, `status`, `remark`, `login_ip`, `create_id`, `update_id`, `create_at`, `update_at`) VALUES
+(1, 'z3zimegHFYVYcgsiGHpBqXJpC1DdzQ0C', '$2y$13$9SFBVaqv1c.P1vL4NG5EAOjdzEd8NHLxJks81mQn9sAEMknK8LaLG', '/ngfx96HY864MrwMxtO2eTMwODBmMTVhMDhhYjcwMGI3NjI2ZDNkM2Q4OWFlYmE4ZWQzMTNiMTM0OGQxNDQwZmFjYjRmOTRmYjY4MTA5YmVVN5eRR+YqseMCBiVZSSZdwHkyrYU4g57V0oCLFjTG9A==', 'aYXOqhLJrsxRR5+TamQ1XTMxOTE3ZjViY2FiZjQ3ZDFhYzRmNmY0MWVkYzI2ZDU5MmZjOGJkODU2OGI2OWFhMjFiOGMxM2VhNWNkOWM2YzYjjBsB9lkZD0x8AC3Kbed4VLcMtbu7U9KsKcCrOqfiOg==', 1, 0, '', '127.0.0.1', 0, 0, 1493796028, 1507796672),
+(2, 'QKDX7a2HPxP4y6kFhwjM4iHDMYL0u_fQ', '$2y$13$5j/Oeke3ZPGA3ovc35eOPuxgbnylExXIQeokKpiLQIy5uz9j7q.VO', 'xB6KjMeKvRPn2KbuowlXlTZkZTIwNmU5MTk3YzUwNWIwODE4ZDM4MGZkYTgzM2FiNDhhZDlkNTg4ZTk1MzVlNWM3ZTNiMmI3Yjk1MGJmZWaTAweAD3FHBnrhI+EpNh1oShv7IRCU/1MOM/jwMQmLNw==', 'Sy1h8BJK3QBV2vBntF4JlGE4NWRlYmI2MzA5NjQzM2E0NGUwZTNmNTYxZDQ5ZTUxYTdiYjJhY2VhZWFjMDk3NGRmMTk0NjRmNjg1OTU4NTkUbeF2hCJlv7honfHMTVbm92oOrpePHI2sl2roHp+caQ==', 0, 0, '', '127.0.0.1', 0, 0, 1507795947, 1507796624);
+--
+-- 转存表中的数据 `manager`
 --
 
 --
