@@ -12,6 +12,8 @@ use frontend\models\UrgentContact;
 use frontend\models\User;
 use frontend\models\UserPhone;
 use Yii;
+use frontend\models\WhiteLists\WhiteList;
+use frontend\models\BlackLists\BlackList;
 
 class FriendsSearch extends User
 {
@@ -98,14 +100,22 @@ class FriendsSearch extends User
             }
             $userId = \Yii::$app->user->id;
             $_friend = Friends::find()->where(['user_id'=>$userId,'friend_id'=>$user->id])->one();
+
+            $white =   WhiteList::findOne(['white_uid'=>$user->id,'uid'=>\Yii::$app->user->id]);
+
+            $black =  BlackList::findOne(['black_uid'=>$user->id,'uid'=>\Yii::$app->user->id]);
+
             $userPhoneNum =  UserPhone::find()->where(['user_id'=>$user->id])->count();
             $urgentContactNum =  UrgentContact::find()->where(['user_id'=>$user->id])->count();
             $data['id']=$user['id'];
-            $data['nickname']=isset($_friend['remark']) && $_friend['remark'] ? $_friend['remark']:   $user['nickname'];
+            $data['nickname']= $user['nickname'];
             $data['account']=$user['account'];
+            $data['remark'] = isset($_friend['remark']) && $_friend['remark'] ? $_friend['remark']: '';
             $data['channel']=$user['channel'];
             $data['header_url']= $user['header_img'] ? \Yii::$app->params['frontendBaseDomain'].$user['header_img'] :'';
             $data['userPhoneNum']=$userPhoneNum;
+            $data['white_status'] =empty($white)? 0 : 1;
+            $data['black_status'] = empty($black)? 0 :1;
             $data['urgentContactNum']=$urgentContactNum;
             $data['is_friend'] = empty($_friend) ? false : true;
             $data['is_self'] = $user->id == $userId ? true : false;
