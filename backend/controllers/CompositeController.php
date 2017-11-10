@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\PasswordForm;
 use backend\models\Composites\CompositePlatformSearch;
 use backend\models\Users\UserSearch;
+use backend\models\Composites\VersionForm;
 use frontend\models\Versions\Version;
 use Yii;
 use backend\models\Admin;
@@ -36,10 +37,11 @@ class CompositeController extends PController
 
     public function actionPlatformCreate()
     {
-        $model = new Version();
+        $model = new VersionForm();
         $upload = new PlatformUploadForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) ) {
+            $model->save();
             return $this->redirect(['platform-index', 'id' => $model->id]);
         } else {
             return $this->render('platform-create', [
@@ -54,7 +56,8 @@ class CompositeController extends PController
     {
         $uploadForm = new PlatformUploadForm();
         if(Yii::$app->request->isPost){
-            $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+            $uploadForm->url = UploadedFile::getInstance($uploadForm, 'url');
+
             if($imageUrl = $uploadForm->upload()){
                 echo Json::encode([
                     'imageUrl'    => $imageUrl,

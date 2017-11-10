@@ -21,12 +21,16 @@ use frontend\models\Versions\Version;
     ]); ?>
 
     <?= $form->field($model, 'platform')->dropDownList([
-        1 => Version::PLATFORM_IOS,
-        2 => Version::PLATFORM_ANDROID,
+
+        Version::PLATFORM_ANDROID => Version::PLATFORM_ANDROID,
+        Version::PLATFORM_IOS => Version::PLATFORM_IOS,
     ])->label('类型：') ?>
 
     <?= $form->field($model, 'version')->textInput(['maxlength' => true]) ?>
-
+    <?= $form->field($model, 'info')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+    <label   style="width: 100px;display: none;" for="channel-name"></label>
+    <label style="display: none;"  id="old-images" baseUrl="<?=\Yii::$app->params['fileBaseDomain']?>" ></label>
     <?= $form->field($upload , 'url')->widget(\kartik\file\FileInput::className(),[
         'options'   => [
             'accept'  => 'images/*',
@@ -36,16 +40,18 @@ use frontend\models\Versions\Version;
         'pluginOptions' => [
             'uploadUrl' => Url::to(['platform-upload']),
             'uploadExtraData' => [
-                'model' => 'channel',
+                'model' => 'version',
             ]
         ],
         //fileupload为上传成功后触发的，三个参数，主要是第二个，有formData，jqXHR以及response参数，上传成功后返回的ajax数据可以在response获取
         'pluginEvents'  => [
             'fileuploaded'  => "function (object, data){
+             console.log(data.response.imageUrl);
                 $('.channel-image').find('input').val(data.response.imageUrl);
+               
                 var tmp = $('#old-images').attr('baseUrl');
                 if (typeof(tmp) != 'undefined') {
-                    $('#old-images').find('img').attr('src', tmp+data.response.imageUrl);
+                    $('#version-url').val( tmp+data.response.imageUrl);
                 }
 		    }",
             // 错误的冗余机制.
@@ -65,3 +71,20 @@ use frontend\models\Versions\Version;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+<?php
+$this->registerJs(
+    '$("#versionform-platform").change(function () {
+        console.log($("#versionform-platform").val());
+        if($("#versionform-platform").val() =="android")
+        {
+               $(".field-platformuploadform-url").show();
+        }else{
+            $(".field-platformuploadform-url").hide();
+        }
+    })'
+);
+?>
+
+   
