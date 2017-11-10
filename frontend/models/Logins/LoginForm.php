@@ -130,6 +130,7 @@ class LoginForm extends User
                     $data['userPhoneNum'] = $userPhoneNum;
                     $data['urgentContactNum'] = $urgentContactNum;
                     $data['isSetQuestion'] = $isSetQuestion > 0 ? true :false;
+                    $data['websocktUrl'] = Yii::$app->params['websocket_app_url'];
                     return $this->jsonResponse($data,'登录成功',0,ErrCode::SUCCESS);
                 }else{
                     return $this->jsonResponse($identity,'登录失败',1,ErrCode::LOGIN_UPDATE_TOKEN_ERROR);

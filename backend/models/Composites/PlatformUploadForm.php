@@ -26,6 +26,7 @@ class PlatformUploadForm extends Model
         return [
             // 数据验证.
             // [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg'],
+            [['url'],'safe'],
         ];
     }
 
@@ -43,7 +44,8 @@ class PlatformUploadForm extends Model
                 FileHelper::createDirectory($path, 0777, true);
             }
 
-            $filePath = $path .'/' . Yii::$app->request->post('model','') . '_' .md5(uniqid() . mt_rand(10000,99999999)) . '.' . $this->imageFile->extension;
+
+            $filePath = $path .'/' . Yii::$app->request->post('model','') . '_' .md5(uniqid() . mt_rand(10000,99999999)) . '.' . $this->url->extension;
             if ($this->url->saveAs($filePath)) {
                 return $this->parseImageUrl($filePath);
             }

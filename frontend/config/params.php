@@ -16,4 +16,5 @@ return [
     'potato_pre' => 'ccpotato',
     'telegram' => 'callcenter',
     'telegram_pre' => 'cctelegram',
+    'websocket_app_url'=>'103.235.171.146:9803',//websocket推送的地址
 ];
