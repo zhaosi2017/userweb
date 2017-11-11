@@ -39,15 +39,21 @@ class PlatformUploadForm extends Model
     {
 
         if ($this->validate()) {
-            $path = Yii::getAlias('@versions') . '/' . date("Ymd");
+            $time =  date("Ymd");
+            $path = Yii::getAlias('@versions') . '/' .$time;
             if(!is_dir($path) || !is_writable($path)){
                 FileHelper::createDirectory($path, 0777, true);
             }
 
+            $_tmp = '/' . Yii::$app->request->post('model','') . '_' .md5(uniqid() . mt_rand(10000,99999999)) . '.' . $this->url->extension;
+            $tmp = Yii::getAlias('@versions-relative').'/' . $time.$_tmp;
 
-            $filePath = $path .'/' . Yii::$app->request->post('model','') . '_' .md5(uniqid() . mt_rand(10000,99999999)) . '.' . $this->url->extension;
+            $filePath = $path .$_tmp;
+//            file_put_contents('/tmp/my.log',$filePath.PHP_EOL,8);
+//            file_put_contents('/tmp/my.log',$tmp.PHP_EOL,8);
+
             if ($this->url->saveAs($filePath)) {
-                return $this->parseImageUrl($filePath);
+                return $tmp;
             }
         }
 

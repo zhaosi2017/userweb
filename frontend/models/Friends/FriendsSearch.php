@@ -38,9 +38,10 @@ class FriendsSearch extends User
        {
            $data =  User::find()
                ->select(['id','nickname','account','header_img'])
-             // ->orWhere(['like','account',$this->search_word])
+              ->orWhere(['like','account',$this->search_word])
               //->orWhere(['like','nickname',$this->search_word])->distinct()->all() ;
-               ->orWhere(['account'=>$this->search_word])
+             //  ->orWhere(['account'=>$this->search_word])
+               ->limit(10)
                ->distinct()->all();
               //->orWhere(['nickname'=>$nickName])->distinct()->all() ;
            $tmp = [];
@@ -63,15 +64,18 @@ class FriendsSearch extends User
                $data = User::find()
                         ->select(['id','nickname','account','header_img'])
                         ->distinct()->all();
+                $i = 0;
                 foreach($data as $item){
                     if($item->nickname == $this->search_word){
-                        $tmp[0]['id'] = $item->id;
-                        $tmp[0]['nickname'] = $item->nickname;
-                        $tmp[0]['account'] = $item->account;
-                        $tmp[0]['header_url'] = $item->header_img;
-                        $tmp[0]['is_friend'] =isset($_friends[$item->id]) ? true : false;
-                        $tmp[0]['is_self'] = $userId == $item->id ? true : false;
-                        break;
+
+                        $tmp[$i]['id'] = $item->id;
+                        $tmp[$i]['nickname'] = $item->nickname;
+                        $tmp[$i]['account'] = $item->account;
+                        $tmp[$i]['header_url'] = $item->header_img;
+                        $tmp[$i]['is_friend'] =isset($_friends[$item->id]) ? true : false;
+                        $tmp[$i]['is_self'] = $userId == $item->id ? true : false;
+                        $i++;
+
                     }
                 }
 
