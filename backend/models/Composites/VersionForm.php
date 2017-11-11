@@ -22,45 +22,23 @@ class VersionForm extends Version
             // username and password are both required
             [['platform','version', 'info', 'url'], 'required'],
             [['platform', 'version', 'info','url'], 'string'],
+            ['platform','checkPlatform'],
         ];
     }
 
-    public function validatePassword($attribute)
+    public function checkPlatform()
     {
-        $identity = (Object) Yii::$app->user->identity;
-        if(!Yii::$app->getSecurity()->validatePassword($this->password, $identity->password)){
-            $this->addError($attribute, '管理员原密码错误');
-        }
+
+       $res =  Version::find()->where(['platform'=>$this->platform,'version'=>$this->version])->one();
+
+       if(!empty($res))
+       {
+           $this->addError('platform','该'.$this->platform.'已经存在该版本号:'.$this->version);
+       }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'password' => '原密码',
-            'newPassword' => '新密码',
-            'rePassword' => '重复新密码',
-        ];
-    }
 
-    public function updateSave()
-    {
-        if($this->validate()){
-            if(Yii::$app->user->id){
-                $user = Admin::findOne(Yii::$app->user->id);
-                $user->scenario = 'passwordupdate';
-                $user->password = $this->newPassword;
-//                $user->deleteLoginNum();
-                if($user->save()){
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
+
+
 
 }

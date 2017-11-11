@@ -48,8 +48,14 @@ class VersionForm extends Version
             }
             $data = [];
             $data['version'] = $_version['version'];
+            $data['platform'] = $_version['platform'];
             $data['content'] = $_version['info'];
             $data['url']    = $_version['url'];
+            if($_version['platform']==Version::PLATFORM_ANDROID)
+            {
+                $data['url'] = Yii::$app->params['fileVersionBaseDomain'].'/'.$_version['url'];
+            }
+
             return $this->jsonResponse($data,'操作成功', '0', ErrCode::SUCCESS);
         }else{
             return $this->jsonResponse([],$this->getErrors(), '1', ErrCode::VALIDATION_NOT_PASS);

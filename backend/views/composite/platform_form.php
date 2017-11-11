@@ -27,8 +27,8 @@ use frontend\models\Versions\Version;
     ])->label('类型：') ?>
 
     <?= $form->field($model, 'version')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'info')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'info')->textarea(['maxlength' => true]) ?>
+    <?= $form->field($model, 'url')->textInput(['maxlength' => true,'title'=>'ios直接填写地址，安卓需先上传文件自动补齐地址','placeholder' =>'ios直接填写地址，安卓需先上传文件自动补齐地址']) ?>
     <label   style="width: 100px;display: none;" for="channel-name"></label>
     <label style="display: none;"  id="old-images" baseUrl="<?=\Yii::$app->params['fileBaseDomain']?>" ></label>
     <?= $form->field($upload , 'url')->widget(\kartik\file\FileInput::className(),[
@@ -51,7 +51,7 @@ use frontend\models\Versions\Version;
                
                 var tmp = $('#old-images').attr('baseUrl');
                 if (typeof(tmp) != 'undefined') {
-                    $('#version-url').val( tmp+data.response.imageUrl);
+                    $('#versionform-url').val(data.response.imageUrl);
                 }
 		    }",
             // 错误的冗余机制.
@@ -80,7 +80,9 @@ $this->registerJs(
         if($("#versionform-platform").val() =="android")
         {
                $(".field-platformuploadform-url").show();
+              
         }else{
+          
             $(".field-platformuploadform-url").hide();
         }
     })'

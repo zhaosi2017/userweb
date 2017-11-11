@@ -41,8 +41,17 @@ class CompositeController extends PController
         $upload = new PlatformUploadForm();
 
         if ($model->load(Yii::$app->request->post()) ) {
-            $model->save();
-            return $this->redirect(['platform-index', 'id' => $model->id]);
+            if($model->save())
+            {
+                return $this->redirect(['platform-index', 'id' => $model->id]);
+            }else{
+                return $this->render('platform-create', [
+                    'model' => $model,
+                    'upload' => $upload,
+                ]);
+            }
+
+
         } else {
             return $this->render('platform-create', [
                 'model' => $model,
@@ -78,9 +87,9 @@ class CompositeController extends PController
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionPlatformUpdate($id)
     {
-        return $this->render('view', [
+        return $this->render('platform-update', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -93,5 +102,13 @@ class CompositeController extends PController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /**
+     * 用户绑定的POTAOT TELEGERAM列表
+     */
+    public function actionAppIndex()
+    {
+
     }
 }
