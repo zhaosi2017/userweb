@@ -38,4 +38,12 @@ class Version extends FActiveRecord
         return 'version';
     }
 
+    public function rules()
+    {
+        return [
+
+            [['url', 'version', 'platform','info'], 'safe'],
+        ];
+    }
+
 }

@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\PasswordForm;
 use backend\models\Composites\CompositePlatformSearch;
 use backend\models\Users\UserSearch;
+use backend\models\Composites\VersionForm;
 use frontend\models\Versions\Version;
 use Yii;
 use backend\models\Admin;
@@ -36,11 +37,21 @@ class CompositeController extends PController
 
     public function actionPlatformCreate()
     {
-        $model = new Version();
+        $model = new VersionForm();
         $upload = new PlatformUploadForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['platform-index', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) ) {
+            if($model->save())
+            {
+                return $this->redirect(['platform-index', 'id' => $model->id]);
+            }else{
+                return $this->render('platform-create', [
+                    'model' => $model,
+                    'upload' => $upload,
+                ]);
+            }
+
+
         } else {
             return $this->render('platform-create', [
                 'model' => $model,
@@ -54,7 +65,8 @@ class CompositeController extends PController
     {
         $uploadForm = new PlatformUploadForm();
         if(Yii::$app->request->isPost){
-            $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+            $uploadForm->url = UploadedFile::getInstance($uploadForm, 'url');
+
             if($imageUrl = $uploadForm->upload()){
                 echo Json::encode([
                     'imageUrl'    => $imageUrl,
@@ -75,9 +87,9 @@ class CompositeController extends PController
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionPlatformUpdate($id)
     {
-        return $this->render('view', [
+        return $this->render('platform-update', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -90,5 +102,13 @@ class CompositeController extends PController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /**
+     * 用户绑定的POTAOT TELEGERAM列表
+     */
+    public function actionAppIndex()
+    {
+
     }
 }

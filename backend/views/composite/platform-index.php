@@ -29,10 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '操作',
-                'template' => '{view}',
+                'template' => '{platform-update}',
                 'buttons' => [
-                    'view' => function($url){
-                        return Html::a('查看',$url);
+                    'platform-update' => function($url){
+                        return Html::a('修改',$url);
                     },
 
 

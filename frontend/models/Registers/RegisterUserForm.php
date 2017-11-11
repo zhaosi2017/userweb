@@ -133,7 +133,8 @@ class RegisterUserForm extends User
                     $user->email = '';
                     $user->username = '';
                     $user->nickname = '';
-                    $data = $user;
+                    $data = $user->toArray();
+                    $data['websocktUrl'] = Yii::$app->params['websocket_app_url'];
                     $smsService->delCode($number);
                     return $this->jsonResponse($data,'注册成功',0,ErrCode::SUCCESS);
 
